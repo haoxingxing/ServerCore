@@ -1,0 +1,39 @@
+    
+version: 1.1.0.{build}
+
+configuration:
+- Release
+
+environment:
+  matrix:
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    VS_VERSION: 15 2017
+    VS_PLATFORM: win32
+#  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+#    VS_VERSION: 15 2017
+#    VS_PLATFORM: x64
+before_build:
+- git submodule update --init --recursive
+- cmake .
+
+build:
+  project: ServerCore.sln
+  parallel: true
+
+
+artifacts:
+  - path: build\Release\ServerCore*.exe
+    name: win32
+
+deploy:
+  release: $(APPVEYOR_REPO_TAG_NAME)
+  description: 'Auto Build'
+  provider: GitHub
+  auth_token:
+    secure: zzjxrxxBJUyzPt1vJ+2gwDyLIFw7jX6+5XhKEe3/gCQAmDQGdNE+cvrhnzZR9hPh
+  artifacts: win32
+  draft: false
+  force_update: true
+  prerelease: false
+  on:       
+     APPVEYOR_REPO_TAG: true        # deploy on tag push only

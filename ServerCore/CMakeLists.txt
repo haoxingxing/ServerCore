@@ -1,0 +1,7 @@
+﻿cmake_minimum_required (VERSION 3.8)
+
+aux_source_directory(. src)
+add_executable (ServerCore ${src})
+set_target_properties(ServerCore PROPERTIES DEBUG_POSTFIX "d") 
+set_target_properties(ServerCore PROPERTIES OUTPUT_NAME "ServerCore.${PLAT}")
+link_directories(${OUTDIR})
