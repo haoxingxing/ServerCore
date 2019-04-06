@@ -1,5 +1,6 @@
 #ifndef DATABASE_H
 #define DATABASE_H
+
 #include <map>
 #include <utility>
 #include <algorithm>
@@ -9,7 +10,16 @@
 #include "file.h"
 #include "log.h"
 #include "ServerCore.h"
-
+/* Check A Type of Element
+ * d: a database var
+ * k: the key string for object
+ * t: Type in _data::status
+ *		Int
+ *		String
+ *		Bool
+ *		Void
+ */
+#define if_type_is(d,k,t) (d.contains(k)?((d[k]->what())==(_data::t)):false)
 class _data {
 public:
 	_data(int i);
@@ -30,11 +40,11 @@ public:
 	}d;
 	enum status
 	{
-		INT,
-		STRING,
-		BOOL,
-		NONE
-	}s = NONE;
+		Int,
+		String,
+		Bool,
+		Void
+	}s = Void;
 	void clearValue();
 	_data::status what();
 	std::pair<bool, int> getInt();
@@ -44,39 +54,40 @@ public:
 
 class _database {
 public:
-	_database(std::string filename = data_file);
-	~_database();
+	_database(bool isfile = false, std::string filename = "");
+	virtual ~_database();
 	// Insert a element
-	void insert(const std::string& key, _data* value);
+	virtual void insert(const std::string& key, _data* value);
 	// Remove a element
-	void remove(const std::string& key);
+	virtual	void remove(const std::string& key);
 	// Access a element
-	_data* get(const std::string& key);
+	virtual _data* get(const std::string& key);
 	// Access a element
-	_data* operator[](const std::string& key);
-
+	virtual _data* operator[](const std::string& key);
+	// Load database from file
+	virtual void loadfromfile();
+	// Write database to file
+	virtual void writetofile();
+	// Get Whole data map
+	virtual std::map<std::string, _data*> data_();
+	// Find if a key exists
+	virtual bool contains(const std::string& key);
 	static std::vector<std::string> SplitString(const std::string& s, const std::string& c);
-private:
+protected:
 	// Convert a element into the string database
-	static void str_insert(std::string& str, const std::string& key, _data*);
+	virtual void str_insert(std::string& str, const std::string& key, _data*);
 	// Create a database string
-	static std::string create_database_string();
+	virtual std::string create_database_string();
 	// Convert database to string
-	static std::string map_to_str(const std::map<std::string, _data*> &);
+	virtual std::string map_to_str(const std::map<std::string, _data*> &);
 	// Convert string to database
-	static std::map<std::string, _data*> str_to_map(const std::string &str);
+	virtual std::map<std::string, _data*> str_to_map(const std::string &str);
 	// Convert string to hex string
 	static std::string str_to_hex(const std::string&, bool upper = false);
 	// Convert hex string to string
 	static std::string hex_to_str(const std::string&);
-	// Load database from file
-	void loadfromfile();
-	// Write database to file
-	void writetofile();
-
 	File *fp;
 	std::map<std::string, _data*> data;
+	bool isfile;
 };
-
-extern _database database;
 #endif // DATABASE_H

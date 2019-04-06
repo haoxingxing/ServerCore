@@ -4,10 +4,10 @@
 #include <cstdlib>
 
 #ifdef _WIN32
-#include <string>
+#include <String>
 #include <windows.h>
 #else
-#include <string.h>
+#include <String.h>
 #include <dlfcn.h>
 #include <errno.h>
 #endif
@@ -19,7 +19,7 @@ private:
 	int _libVersion;
 
 public:
-	typedef bool(*handle)(_database*);
+	typedef int(*handle)(_database*);
 #ifdef _WIN32
 	HMODULE _module;
 #else

@@ -1,15 +1,19 @@
 #include "database.h"
-_database::_database(std::string filename)
+_database::_database(bool _isfile, std::string filename) :isfile(_isfile)
 {
 	DEB(print_pointer(this));
-	fp = new File(filename);
-	this->loadfromfile();
+	if (isfile)
+	{
+		fp = new File(filename);
+	}
 }
 
 _database::~_database()
 {
-	this->writetofile();
-	delete fp;
+	if (isfile)
+	{
+		delete fp;
+	}
 	std::for_each(data.begin(), data.end(), [&](std::pair<std::string, _data*> d) {
 		delete d.second;
 	});
@@ -74,6 +78,19 @@ std::string _database::map_to_str(const std::map<std::string, _data*>& m)
 	return buf;
 }
 
+std::map<std::string, _data*> _database::data_()
+{
+	return data;
+}
+
+bool _database::contains(const std::string & key)
+{
+	if (data.find(key) != data.end())
+		return true;
+	else
+		return false;
+}
+
 std::vector<std::string> _database::SplitString(const std::string & s, const std::string & c)
 {
 	std::vector<std::string> v;
@@ -113,7 +130,7 @@ std::map<std::string, _data*> _database::str_to_map(const std::string& str)
 		if (v[i].find('@') == std::string::npos)
 		{
 			WARN("Invalid Group");
-			break;
+			continue;
 		}
 		std::vector<std::string> b = SplitString(v[i], "@");
 		switch (b[1].at(0))
@@ -165,7 +182,7 @@ std::string _database::hex_to_str(const std::string & hex)
 }
 
 void _database::loadfromfile()
-{
+{	
 	data = str_to_map(fp->read());
 }
 
@@ -185,19 +202,19 @@ void _database::str_insert(std::string & str, const std::string& key, _data* d)
 	str += str_to_hex(key);
 	str += '@';
 	switch (d->what()) {
-	case _data::INT:
+	case _data::Int:
 		str += '#';
 		str += std::to_string(d->getInt().second);
 		break;
-	case _data::BOOL:
+	case _data::Bool:
 		str += '$';
 		str += std::to_string(d->getBool().second);
 		break;
-	case _data::STRING:
+	case _data::String:
 		str += '%';
 		str += str_to_hex(d->getString().second);
 		break;
-	case _data::NONE:
+	case _data::Void:
 		str += '&';
 		break;
 	};
@@ -247,36 +264,36 @@ _data::~_data()
 void _data::setValue(int i)
 {
 	clearValue();
-	s = INT;
+	s = Int;
 	d.i = i;
 }
 
 void _data::setValue(const char * st)
 {
 	clearValue();
-	s = STRING;
+	s = String;
 	d.str = new std::string(st);
 }
 
 void _data::setValue(const std::string &st)
 {
 	clearValue();
-	s = STRING;
+	s = String;
 	d.str = new std::string(st);
 }
 
 void _data::setValue(bool b)
 {
 	clearValue();
-	s = BOOL;
+	s = Bool;
 	d.boolean = b;
 }
 
 void _data::clearValue()
 {
-	if (s == STRING)
+	if (s == String)
 		delete d.str;
-	s = NONE;
+	s = Void;
 }
 
 _data::status _data::what()
@@ -286,16 +303,15 @@ _data::status _data::what()
 
 std::pair<bool, int> _data::getInt()
 {
-	return std::pair<bool, int>(s == INT, (s == INT) ? d.i : 0);
+	return std::pair<bool, int>(s == Int, (s == Int) ? d.i : 0);
 }
 
 std::pair<bool, std::string> _data::getString()
 {
-	return std::pair<bool, std::string>(s == STRING, (s == STRING) ? *d.str : std::string());
+	return std::pair<bool, std::string>(s == String, (s == String) ? *d.str : std::string());
 }
 
 std::pair<bool, bool> _data::getBool()
 {
-	return std::pair<bool, bool>(s == BOOL, (s == BOOL) ? d.boolean : false);
+	return std::pair<bool, bool>(s == Bool, (s == Bool) ? d.boolean : false);
 }
-_database database;

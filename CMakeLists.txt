@@ -1,16 +1,17 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 
 project ("ServerCore")
-MESSAGE(STATUS "###################################")
 
 include_directories(${PROJECT_BINARY_DIR})
 find_package(Git)
+MESSAGE(STATUS "###################################")
+
 execute_process(COMMAND ${GIT_EXECUTABLE} describe --abbrev=6 --dirty --always --tags WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} OUTPUT_VARIABLE  GIT_REPO_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE      )
 execute_process(COMMAND ${GIT_EXECUTABLE} log -1 --format=%cd --date=short WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} OUTPUT_VARIABLE  GIT_REPO_DATE OUTPUT_STRIP_TRAILING_WHITESPACE                    )
 execute_process(COMMAND ${GIT_EXECUTABLE} log -1 --format=%H WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} OUTPUT_VARIABLE  GIT_REPO_HASH_L OUTPUT_STRIP_TRAILING_WHITESPACE                                )
 file(WRITE ${PROJECT_BINARY_DIR}/repo_version.h "#define REPO_VERSION \"${GIT_REPO_VERSION}\"\n#define REPO_DATE \"${GIT_REPO_DATE}\"\n#define REPO_HASH \"${GIT_REPO_HASH}\"\n"                     )
-string(SUBSTRING ${GIT_REPO_HASH_L} 0 5 GIT_REPO_HASH     )
-string(TOLOWER ${GIT_REPO_HASH} GIT_REPO_HASH             )
+String(SUBSTRING ${GIT_REPO_HASH_L} 0 5 GIT_REPO_HASH     )
+String(TOLOWER ${GIT_REPO_HASH} GIT_REPO_HASH             )
 add_definitions(-DARCH=${ARCH})
 IF (WIN32)  
     set(PLAT "win32")

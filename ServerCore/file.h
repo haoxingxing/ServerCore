@@ -1,7 +1,7 @@
 #ifndef FILE_H
 #define FILE_H
 #include <cstdio>
-#include <string>
+#include <String>
 #include <fstream>
 #include <iostream>
 #include "log.h"

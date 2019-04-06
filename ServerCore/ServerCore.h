@@ -1,16 +1,27 @@
 ﻿#pragma once
 /*
-	This file contains some public defines
+ *	This file contains some public defines
  */
 #include "log.h"
 #define data_file "data"
- // convert pointer to printable
+/*
+ * convert pointer to std::string
+ *  ptr -> long long -> std::string
+ */
 #define print_pointer(ptr) std::string("["+std::to_string((long long)ptr)+"]")
 
-// debug
+/*
+ * Print Debug Information
+ * Level: Debug 
+ * With __FUNCTION__
+ */
 #define DEB(info) log::print(log::Debug,"["+std::string(__FUNCTION__)+"]"+info)
 
- //log macro
+/*
+ * Print Notice Information
+ * Level: Info
+ * With __FUNCTION__
+ */
 #define LOG(info) log::print(log::Info,"["+std::string(__FUNCTION__)+"]"+info)
 
 // success
@@ -21,3 +32,10 @@
 
 // warning
 #define WARN(info) log::print(log::Warning,"["+std::string(__FUNCTION__)+"]"+info)
+
+/*
+ * Exit The Program With Error Info
+ * 1. print Error Info
+ * 2. exit
+ */
+#define EXIT_ERR(info) ERR(info);exit(EXIT_FAILURE)

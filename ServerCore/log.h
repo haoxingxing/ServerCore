@@ -1,7 +1,7 @@
-#ifndef COLOR_PRINT_H
-#define COLOR_PRINT_H
+#ifndef COLOR_PRInt_H
+#define COLOR_PRInt_H
 #include <iostream>
-#include <string>
+#include <String>
 class log {
 public:
 	enum log_level
