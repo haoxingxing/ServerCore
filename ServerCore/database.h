@@ -46,13 +46,19 @@ public:
 	_database(std::string filename = data_file);
 	~_database();
 
-	static std::string create_database_string();
-	static void str_insert(std::string& str, const std::string& key, _data&);
-	static std::string map_to_str(const std::map<std::string, _data> &);
 	static std::vector<std::string> SplitString(const std::string& s, const std::string& c);
-	static std::map<std::string, _data> str_to_map(const std::string &str);
 private:
+	// Convert a element into the string database
+	static void str_insert(std::string& str, const std::string& key, _data&);
+	// Create a database string
+	static std::string create_database_string();
+	// Convert database to string
+	static std::string map_to_str(const std::map<std::string, _data> &);
+	// Convert string to database
+	static std::map<std::string, _data> str_to_map(const std::string &str);
+	// Convert string to hex string
 	static std::string str_to_hex(const std::string&, bool upper = false);
+	// Convert hex string to string
 	static std::string hex_to_str(const std::string&);
 	void loadfromfile();
 	void writetofile();

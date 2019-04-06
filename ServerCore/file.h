@@ -7,13 +7,16 @@
 #include "log.h"
 class File {
 public:
+	// Open File to read and write
 	File(std::string filename);
 	~File();
+	// Read the whole file
 	const std::string read();
+	// Overwrite the file
 	bool write(const std::string& _str);
 private:
 	std::ifstream in;
-	std::ofstream out;	
-	std::string filename;	
+	std::ofstream out;
+	std::string filename;
 };
 #endif
