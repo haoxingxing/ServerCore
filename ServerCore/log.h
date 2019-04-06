@@ -6,10 +6,11 @@ class log {
 public:
 	enum log_level
 	{
-		NONE,
-		NOTICE,
-		WARN,
-		ERR
+		Debug,
+		Info,
+		Success,
+		Warning,
+		Error
 	};
 	static void print(log_level,const std::string &info,bool t = true);
 	static bool iscolored;

@@ -14,16 +14,19 @@ void log::print(log_level t,const std::string& info,bool i)
 	}
 	switch (t)
 	{
-	case log::NONE:
+	case log::Debug:
 		colorstr = "\033[0m";
 		break;
-	case log::NOTICE:
+	case log::Info:
 		colorstr = "\033[1m";
 		break;
-	case log::WARN:
+	case log::Success:
+		colorstr = "\033[32;1m";
+		break;
+	case log::Warning:
 		colorstr = "\033[33;1m";
 		break;
-	case log::ERR:
+	case log::Error:
 		colorstr = "\033[31;1m";
 		break;
 	}	

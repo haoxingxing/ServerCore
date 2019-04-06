@@ -3,18 +3,23 @@
 
 #include "ServerCore.h"
 #include "log.h"
+#include "file.h"
+#include "database.h"
+#include <iostream>
 using namespace std;
 
 int main()
 {
-	
-	log::print(log::NONE, "H",false);
-	log::print(log::NOTICE, "e",false);
-	log::print(log::WARN, "ll",false);
-	log::print(log::ERR, "o");
-	log::print(log::ERR, "W",false);
-	log::print(log::WARN, "o",false);
-	log::print(log::NOTICE, "r",false);
-	log::print(log::NONE, "ld");
+	_data d;
+	std::string a = _database::create_database_string();
+	d.setValue("Hello World");
+	_database::str_insert(a, "string", d);
+	d.setValue(233);
+	_database::str_insert(a, "int", d);
+	d.setValue(true);
+	_database::str_insert(a, "bool", d);
+	d.clearValue();
+	_database::str_insert(a, "void", d);
+	cout << a;
 	return 0;
 }
