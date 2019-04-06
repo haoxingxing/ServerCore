@@ -7,7 +7,7 @@ ConfigMgr::ConfigMgr(const std::string & config_name) :_database(true, config_na
 std::string ConfigMgr::create_database_string()
 {
 	return std::string(
-		"# Config File\n"
+		CONF_FILE_NOTICE_MSG
 	);
 }
 
@@ -53,7 +53,7 @@ std::map<std::string, _data*> ConfigMgr::str_to_map(const std::string & str)
 	std::map<std::string, _data*> buf;
 	if (str.size() == 0)
 	{
-		ERR("Invalid Database String");
+		ERR(TS_ID_1);
 		return buf;
 	}
 	std::vector<std::string> v = SplitString(str, "\n");
@@ -69,13 +69,13 @@ std::map<std::string, _data*> ConfigMgr::str_to_map(const std::string & str)
 		}
 		if (m.find('=') == std::string::npos)
 		{
-			WARN("Invalid Group: '=' Not Find");
+			WARN(TS_ID_2 ": '=' " TS_ID_4);
 			continue;
 		}
 		std::vector<std::string> b = SplitString(m, "=");
 		if (b.size() != 3)
 		{
-			WARN("Invalid Group: Check is there so many '=' sign");
+			WARN(TS_ID_2 ": " TS_ID_10 "'='" TS_ID_11);
 			continue;
 		}
 		switch (b[1].at(0))
@@ -93,7 +93,7 @@ std::map<std::string, _data*> ConfigMgr::str_to_map(const std::string & str)
 			buf.insert(std::make_pair(b[0], new _data()));
 			break;
 		default:
-			WARN("Invalid Type");
+			WARN(TS_ID_3);
 			break;
 		}
 	}

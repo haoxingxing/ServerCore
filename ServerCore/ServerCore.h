@@ -3,6 +3,7 @@
  *	This file contains some public defines
  */
 #include "log.h"
+#include "translates_CN.h"
 #define data_file "data"
 /*
  * convert pointer to std::string

@@ -24,17 +24,17 @@ void _database::insert(const std::string & key, _data* value)
 {
 	if (data.find(key) != data.end())
 	{
-		WARN("Already Exist [" + key + "],Removing");
+		WARN(TS_ID_5 " [" + key + "]," TS_ID_6);
 		this->remove(key);
 	}
-	LOG("Inserting [" + key + "," + print_pointer(value) + "]");
+	LOG(TS_ID_7" [" + key + "," + print_pointer(value) + "]");
 	data.insert(std::make_pair(key, value));
 	SUCC("");
 }
 
 void _database::remove(const std::string & key)
 {
-	LOG("Removing [" + key + "]");
+	LOG(TS_ID_6" [" + key + "]");
 	if (data.find(key) != data.end())
 	{
 		delete data[key];
@@ -43,13 +43,13 @@ void _database::remove(const std::string & key)
 	}
 	else
 	{
-		WARN("Not Find");
+		WARN(TS_ID_4);
 	}
 }
 
 _data* _database::get(const std::string & key)
 {
-	LOG("Accessing [" + key + "]");
+	LOG(TS_ID_8 " [" + key + "]");
 	if (data.find(key) != data.end())
 	{
 		SUCC("");
@@ -57,8 +57,8 @@ _data* _database::get(const std::string & key)
 	}
 	else
 	{
-		ERR("Not Find");
-		WARN("Creating a empty data to avoid nullptr");
+		ERR(TS_ID_4);
+		WARN(TS_ID_9);
 		this->insert(key, new _data);
 		return get(key);
 	}
@@ -114,14 +114,14 @@ std::map<std::string, _data*> _database::str_to_map(const std::string& str)
 	std::map<std::string, _data*> buf;
 	if (str.size() > 0)
 	{
-		if (str.at(0) != '\u0001') {
-			ERR("Invalid Database String");
+		if (str.at(0) != DB_START) {
+			ERR(TS_ID_1);
 			return buf;
 		}
 	}
 	else
 	{
-		ERR("Invalid Database String");
+		ERR(TS_ID_1);
 		return buf;
 	}
 	std::vector<std::string> v = SplitString(str, "|");
@@ -129,7 +129,7 @@ std::map<std::string, _data*> _database::str_to_map(const std::string& str)
 	{
 		if (v[i].find('@') == std::string::npos)
 		{
-			WARN("Invalid Group");
+			WARN(TS_ID_2);
 			continue;
 		}
 		std::vector<std::string> b = SplitString(v[i], "@");
@@ -148,7 +148,7 @@ std::map<std::string, _data*> _database::str_to_map(const std::string& str)
 			buf.insert(std::make_pair(hex_to_str(b[0]), new _data()));
 			break;
 		default:
-			WARN("Invalid Type");
+			WARN(TS_ID_3);
 			break;
 		}
 	}
@@ -193,9 +193,9 @@ void _database::writetofile()
 
 void _database::str_insert(std::string & str, const std::string& key, _data* d)
 {
-	if (str.at(0) != '\u0001')
+	if (str.at(0) != DB_START)
 	{
-		ERR("Invalid Database String");
+		ERR(TS_ID_1);
 		return;
 	}
 	str += '|';
@@ -222,7 +222,7 @@ void _database::str_insert(std::string & str, const std::string& key, _data* d)
 
 std::string _database::create_database_string()
 {
-	return std::string("\u0001");
+	return std::string() + DB_START;
 }
 
 _data::_data(int i)

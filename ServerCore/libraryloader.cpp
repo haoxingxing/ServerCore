@@ -36,13 +36,13 @@ bool Library::load(std::string libFilePath)
 {
 	if (_module != NULL)
 	{
-		std::cout << "The library has loaded !" << std::endl;
+		std::cout << TS_ID_13<< std::endl;
 		return false;
 	}
 
 	if (!fileIsExist(libFilePath))
 	{
-		std::cout << "The library is not exist!" << std::endl;
+		std::cout << TS_ID_14 << std::endl;
 	}
 #ifdef _WIN32
 	_module = LoadLibrary(libFilePath.data());
@@ -64,7 +64,7 @@ Library::handle Library::getSymbol(const string symbolName)
 {
 	if (_module == nullptr)
 	{
-		std::cout << "The library has not loaded !" << std::endl;
+		std::cout << "" << std::endl;
 	}
 #ifdef _WIN32
 	return (handle)GetProcAddress(_module, symbolName.c_str());

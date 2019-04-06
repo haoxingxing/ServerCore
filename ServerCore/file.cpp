@@ -19,7 +19,7 @@ const std::string File::read()
 	LOG(filename);
 	in.open(filename, std::ios::in);
 	if (!in) {
-		ERR("Can't open file: " + filename);
+		ERR(TS_ID_12 ": " + filename);
 		return std::string();
 	}
 	std::string str((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
@@ -33,7 +33,7 @@ bool File::write(const std::string &_str)
 	LOG(filename);
 	out.open(filename, std::ios::out | std::ios::trunc);
 	if (!out) {
-		ERR("Can't open file: " + filename);
+		ERR(TS_ID_12 ": " + filename);
 		return false;
 	}
 	out << _str;
