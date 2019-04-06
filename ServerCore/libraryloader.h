@@ -7,7 +7,7 @@
 #include <string>
 #include <windows.h>
 #else
-#include <String.h>
+#include <string.h>
 #include <dlfcn.h>
 #include <errno.h>
 #endif
