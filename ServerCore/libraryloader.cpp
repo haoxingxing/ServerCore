@@ -57,23 +57,23 @@ bool Library::load(std::string libFilePath)
 	}
 #ifdef _WIN32
 	_module = LoadLibrary(libFilePath.data());
-	if (_module = NULL)
+	if (_module == nullptr)
 	{
 		std::cout << GetLastError() << std::endl;
 	}
 #else
 	_module = dlopen(libFilePath.c_str(), RTLD_NOW | RTLD_GLOBAL);
-	if (_module = NULL)
+	if (_module == nullptr)
 	{
 		std::cout << strerror(errno) << std::endl;
 	}
 #endif
-	return _module != NULL;
+	return _module != nullptr;
 }
 
 Library::handle Library::getSymbol(const string symbolName)
 {
-	if (_module == NULL)
+	if (_module == nullptr)
 	{
 		std::cout << "The library has not loaded !" << std::endl;
 	}
@@ -82,7 +82,7 @@ Library::handle Library::getSymbol(const string symbolName)
 #else
 	return (handle)dlsym(_module, symbolName.c_str());
 #endif
-	}
+}
 
 void Library::releaseLibrary()
 {
@@ -91,8 +91,8 @@ void Library::releaseLibrary()
 #ifdef _WIN32
 		FreeLibrary(_module);
 #else
-		_module = NULL;
+		_module = nullptr;
 		_libPath = "";
 #endif
-}
+	}
 }
