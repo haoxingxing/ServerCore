@@ -41,9 +41,9 @@ public:
 	std::pair<bool, bool> getBool();
 };
 
-inline static class _database {
+class _database {
 public:
-	_database(std::string filename);
+	_database(std::string filename = data_file);
 	~_database();
 
 	static std::string create_database_string();
@@ -59,5 +59,7 @@ private:
 
 	File *fp;
 	std::map<std::string, _data> data;
-} database(data_file);
+};
+
+extern _database *database;
 #endif // DATABASE_H

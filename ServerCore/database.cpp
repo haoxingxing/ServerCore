@@ -222,3 +222,4 @@ std::pair<bool, bool> _data::getBool()
 {
 	return std::pair<bool, bool>(s == BOOL, (s == BOOL) ? d.boolean : false);
 }
+_database* database = new _database;
