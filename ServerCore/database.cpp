@@ -1,4 +1,4 @@
-#include "database.h"
+﻿#include "database.h"
 _database::_database(bool _isfile, std::string filename) :isfile(_isfile)
 {
 	DEB(print_pointer(this));

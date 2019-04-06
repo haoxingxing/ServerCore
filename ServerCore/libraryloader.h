@@ -1,10 +1,10 @@
-#ifndef LIBRARY_H_
+﻿#ifndef LIBRARY_H_
 #define LIBRARY_H_
 
 #include <cstdlib>
 
 #ifdef _WIN32
-#include <String>
+#include <string>
 #include <windows.h>
 #else
 #include <String.h>

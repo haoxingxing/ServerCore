@@ -1,4 +1,4 @@
-#ifndef CONFIG_MGR_H
+﻿#ifndef CONFIG_MGR_H
 #define CONFIG_MGR_H
 #include "file.h"
 #include "ServerCore.h"

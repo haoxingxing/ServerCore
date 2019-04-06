@@ -1,4 +1,4 @@
-#include "log.h"
+﻿#include "log.h"
 
 void log::print(log_level t,const std::string& info,bool i)
 {

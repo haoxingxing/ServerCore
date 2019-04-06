@@ -1,4 +1,4 @@
-#define TS_ID_1 "Invalid Database String"
+﻿#define TS_ID_1 "Invalid Database String"
 #define TS_ID_2 "Invalid Group"
 #define TS_ID_3 "Invalid Type"
 #define DB_START '\u0001'

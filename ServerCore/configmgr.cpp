@@ -1,4 +1,4 @@
-#include "configmgr.h"
+﻿#include "configmgr.h"
 
 ConfigMgr::ConfigMgr(const std::string & config_name) :_database(true, config_name + ".conf")
 {
