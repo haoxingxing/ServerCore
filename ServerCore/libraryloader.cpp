@@ -2,17 +2,6 @@
 #include <iostream>
 #include <sys/stat.h>
 
-#ifdef _WIN32
-#include <windows.h>
-#else
-#include <dlfcn.h>
-#include <errno.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <dlfcn.h>
-#endif
-
 using namespace std;
 
 bool  fileIsExist(std::string &libFilePath)

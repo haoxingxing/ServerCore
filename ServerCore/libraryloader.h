@@ -8,6 +8,8 @@
 #include <windows.h>
 #else
 #include <string.h>
+#include <dlfcn.h>
+#include <errno.h>
 #endif
 #include "database.h"
 
