@@ -11,11 +11,68 @@ _database::~_database()
 
 std::string _database::map_to_str(const std::map<std::string, _data>& m)
 {
-	std::string buf;
-	std::for_each(m.begin(), m.end(), [](std::pair<std::string, _data> d) {
-		//d.
+	std::string buf = create_database_string();
+	std::for_each(m.begin(), m.end(), [&](std::pair<std::string, _data> d) {
+		str_insert(buf, d.first, d.second);
 	});
-	return std::string();
+	return buf;
+}
+
+std::vector<std::string> _database::SplitString(const std::string & s, const std::string & c)
+{
+	std::vector<std::string> v;
+	std::string::size_type pos1, pos2;
+	pos2 = s.find(c);
+	pos1 = 0;
+	while (std::string::npos != pos2)
+	{
+		v.push_back(s.substr(pos1, pos2 - pos1));
+
+		pos1 = pos2 + c.size();
+		pos2 = s.find(c, pos1);
+	}
+	if (pos1 != s.length())
+		v.push_back(s.substr(pos1));
+	return v;
+}
+
+std::map<std::string, _data> _database::str_to_map(const std::string& str)
+{
+	std::map<std::string, _data> buf;
+	if (str.at(0) != '\u0001')
+	{
+		log::print(log::Error, "Invalid Database String");
+		return buf;
+	}
+	std::vector<std::string> v = SplitString(str, "|");
+	for (size_t i = 1; i < v.size(); ++i)
+	{
+		if (v[i].find('@') == std::string::npos)
+		{
+			log::print(log::Warning, "Invalid Group");
+			break;
+		}
+		std::vector<std::string> b = SplitString(v[i], "@");
+		switch (b[1].at(0))
+		{
+		case '#':
+			buf.insert(std::make_pair(hex_to_str(b[0]), _data(std::stoi(b[1].substr(1, b[1].length() - 1)))));
+			break;
+		case '$':
+			buf.insert(std::make_pair(hex_to_str(b[0]), _data(std::stoi(b[1].substr(1, b[1].length() - 1)) != 0)));
+			break;
+		case '%':
+			buf.insert(std::make_pair(hex_to_str(b[0]), _data(hex_to_str(b[1].substr(1, b[1].length() - 1)))));
+			break;
+		case '&':
+			buf.insert(std::make_pair(hex_to_str(b[0]), _data()));
+			break;
+		default:
+			log::print(log::Warning, "Invalid Type");
+			break;
+		}
+	}
+	return buf;
 }
 
 std::string _database::str_to_hex(const std::string& s, bool upper)
@@ -59,7 +116,6 @@ void _database::str_insert(std::string & str, const std::string& key, _data & d)
 		log::print(log::Error, "Invalid Database String");
 		return;
 	}
-	log::print(log::Debug, "Database String Inserting");
 	str += '|';
 	str += str_to_hex(key);
 	str += '@';
@@ -85,6 +141,31 @@ void _database::str_insert(std::string & str, const std::string& key, _data & d)
 std::string _database::create_database_string()
 {
 	return std::string("\u0001");
+}
+
+_data::_data(int i)
+{
+	setValue(i);
+}
+
+_data::_data(const char * st)
+{
+	setValue(st);
+}
+
+_data::_data(const std::string & st)
+{
+	setValue(st);
+}
+
+_data::_data(bool b)
+{
+	setValue(b);
+}
+
+_data::_data()
+{
+	clearValue();
 }
 
 void _data::setValue(int i)

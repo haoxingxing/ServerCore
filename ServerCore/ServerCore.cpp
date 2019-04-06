@@ -10,16 +10,15 @@ using namespace std;
 
 int main()
 {
-	_data d;
-	std::string a = _database::create_database_string();
-	d.setValue("Hello World");
-	_database::str_insert(a, "string", d);
-	d.setValue(233);
-	_database::str_insert(a, "int", d);
-	d.setValue(true);
-	_database::str_insert(a, "bool", d);
-	d.clearValue();
-	_database::str_insert(a, "void", d);
-	cout << a;
+	std::string a = _database::map_to_str(std::map<std::string, _data>({
+		std::make_pair("int_test",_data(2333)),
+		std::make_pair("char_test",_data("str")),
+		std::make_pair("string_test",_data("str")),
+		std::make_pair("true",_data(true)),
+		std::make_pair("false",_data(false)),
+		}));
+
+	cout << a << endl;
+	cout << _database::map_to_str(_database::str_to_map(a));
 	return 0;
 }
