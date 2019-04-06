@@ -12,7 +12,14 @@ public:
 		Warning,
 		Error
 	};
-	// Print logs with level
+	/*
+	Print logs with level
+	Debug
+	Info
+	Success
+	Warning
+	Error
+	*/
 	static void print(log_level, const std::string &info, bool t = true);
 	static bool iscolored;
 };

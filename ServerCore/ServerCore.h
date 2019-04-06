@@ -1,8 +1,23 @@
-﻿// ServerCore.h: 标准系统包含文件的包含文件
-// 或项目特定的包含文件。
+﻿#pragma once
+/*
+	This file contains some public defines
+ */
+#include "log.h"
+#define data_file "data"
+ // convert pointer to printable
+#define print_pointer(ptr) std::string("["+std::to_string((long long)ptr)+"]")
 
-#pragma once
+// debug
+#define DEB(info) log::print(log::Debug,"["+std::string(__FUNCTION__)+"]"+info)
 
-#include <iostream>
+ //log macro
+#define LOG(info) log::print(log::Info,"["+std::string(__FUNCTION__)+"]"+info)
 
-// TODO: 在此处引用程序需要的其他标头。
+// success
+#define SUCC(info) log::print(log::Success,"["+std::string(__FUNCTION__)+"]" + info)
+
+// error
+#define ERR(info) log::print(log::Error,"["+std::string(__FUNCTION__)+"]"+info)
+
+// warning
+#define WARN(info) log::print(log::Warning,"["+std::string(__FUNCTION__)+"]"+info)

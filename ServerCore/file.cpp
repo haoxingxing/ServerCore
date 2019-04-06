@@ -1,8 +1,8 @@
 #include "file.h"
 
-File::File(std::string _filename):filename(_filename)
+File::File(std::string _filename) :filename(_filename)
 {
-	log::print(log::Debug, "New File: " + filename);
+	DEB(print_pointer(this));
 }
 
 File::~File()
@@ -11,30 +11,33 @@ File::~File()
 		in.close();
 	if (!out)
 		out.close();
+	DEB(print_pointer(this));
 }
 
 const std::string File::read()
 {
-	log::print(log::Debug, "Read File: " + filename);
-	in.open(filename,std::ios::in);
-	if (!in) { 
-		log::print(log::Error, "Can't open file: " + filename);
+	LOG(filename);
+	in.open(filename, std::ios::in);
+	if (!in) {
+		ERR("Can't open file: " + filename);
 		return std::string();
 	}
-	std::string str((std::istreambuf_iterator<char>(in)),std::istreambuf_iterator<char>());
-	in.close();	
+	std::string str((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+	in.close();
+	SUCC("");
 	return str;
 }
 
 bool File::write(const std::string &_str)
 {
-	log::print(log::Debug, "Write File: " + filename);
-	out.open(filename,std::ios::out|std::ios::trunc);
+	LOG(filename);
+	out.open(filename, std::ios::out | std::ios::trunc);
 	if (!out) {
-		log::print(log::Error, "Can't open file: " + filename);
+		ERR("Can't open file: " + filename);
 		return false;
 	}
 	out << _str;
 	out.close();
+	SUCC("");
 	return false;
 }

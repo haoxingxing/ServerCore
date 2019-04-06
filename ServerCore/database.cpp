@@ -1,18 +1,74 @@
 #include "database.h"
 _database::_database(std::string filename)
 {
+	DEB(print_pointer(this));
 	fp = new File(filename);
+	this->loadfromfile();
 }
 
 _database::~_database()
 {
+	this->writetofile();
 	delete fp;
+	std::for_each(data.begin(), data.end(), [&](std::pair<std::string, _data*> d) {
+		delete d.second;
+	});
+	DEB(print_pointer(this));
 }
 
-std::string _database::map_to_str(const std::map<std::string, _data>& m)
+void _database::insert(const std::string & key, _data* value)
+{
+	if (data.find(key) != data.end())
+	{
+		WARN("Already Exist [" + key + "],Removing");
+		this->remove(key);
+	}
+	LOG("Inserting [" + key + "," + print_pointer(value) + "]");
+	data.insert(std::make_pair(key, value));
+	SUCC("");
+}
+
+void _database::remove(const std::string & key)
+{
+	LOG("Removing [" + key + "]");
+	if (data.find(key) != data.end())
+	{
+		delete data[key];
+		data.erase(data.find(key));
+		SUCC("");
+	}
+	else
+	{
+		WARN("Not Find");
+	}
+}
+
+_data* _database::get(const std::string & key)
+{
+	LOG("Accessing [" + key + "]");
+	if (data.find(key) != data.end())
+	{
+		SUCC("");
+		return data.at(key);
+	}
+	else
+	{
+		ERR("Not Find");
+		WARN("Creating a empty data to avoid nullptr");
+		this->insert(key, new _data);
+		return get(key);
+	}
+}
+
+_data* _database::operator[](const std::string & key)
+{
+	return this->get(key);
+}
+
+std::string _database::map_to_str(const std::map<std::string, _data*>& m)
 {
 	std::string buf = create_database_string();
-	std::for_each(m.begin(), m.end(), [&](std::pair<std::string, _data> d) {
+	std::for_each(m.begin(), m.end(), [&](std::pair<std::string, _data*> d) {
 		str_insert(buf, d.first, d.second);
 	});
 	return buf;
@@ -36,12 +92,19 @@ std::vector<std::string> _database::SplitString(const std::string & s, const std
 	return v;
 }
 
-std::map<std::string, _data> _database::str_to_map(const std::string& str)
+std::map<std::string, _data*> _database::str_to_map(const std::string& str)
 {
-	std::map<std::string, _data> buf;
-	if (str.at(0) != '\u0001')
+	std::map<std::string, _data*> buf;
+	if (str.size() > 0)
 	{
-		log::print(log::Error, "Invalid Database String");
+		if (str.at(0) != '\u0001') {
+			ERR("Invalid Database String");
+			return buf;
+		}
+	}
+	else
+	{
+		ERR("Invalid Database String");
 		return buf;
 	}
 	std::vector<std::string> v = SplitString(str, "|");
@@ -49,26 +112,26 @@ std::map<std::string, _data> _database::str_to_map(const std::string& str)
 	{
 		if (v[i].find('@') == std::string::npos)
 		{
-			log::print(log::Warning, "Invalid Group");
+			WARN("Invalid Group");
 			break;
 		}
 		std::vector<std::string> b = SplitString(v[i], "@");
 		switch (b[1].at(0))
 		{
 		case '#':
-			buf.insert(std::make_pair(hex_to_str(b[0]), _data(std::stoi(b[1].substr(1, b[1].length() - 1)))));
+			buf.insert(std::make_pair(hex_to_str(b[0]), new _data(std::stoi(b[1].substr(1, b[1].length() - 1)))));
 			break;
 		case '$':
-			buf.insert(std::make_pair(hex_to_str(b[0]), _data(std::stoi(b[1].substr(1, b[1].length() - 1)) != 0)));
+			buf.insert(std::make_pair(hex_to_str(b[0]), new _data(std::stoi(b[1].substr(1, b[1].length() - 1)) != 0)));
 			break;
 		case '%':
-			buf.insert(std::make_pair(hex_to_str(b[0]), _data(hex_to_str(b[1].substr(1, b[1].length() - 1)))));
+			buf.insert(std::make_pair(hex_to_str(b[0]), new _data(hex_to_str(b[1].substr(1, b[1].length() - 1)))));
 			break;
 		case '&':
-			buf.insert(std::make_pair(hex_to_str(b[0]), _data()));
+			buf.insert(std::make_pair(hex_to_str(b[0]), new _data()));
 			break;
 		default:
-			log::print(log::Warning, "Invalid Type");
+			WARN("Invalid Type");
 			break;
 		}
 	}
@@ -103,34 +166,36 @@ std::string _database::hex_to_str(const std::string & hex)
 
 void _database::loadfromfile()
 {
+	data = str_to_map(fp->read());
 }
 
 void _database::writetofile()
 {
+	fp->write(map_to_str(data));
 }
 
-void _database::str_insert(std::string & str, const std::string& key, _data & d)
+void _database::str_insert(std::string & str, const std::string& key, _data* d)
 {
 	if (str.at(0) != '\u0001')
 	{
-		log::print(log::Error, "Invalid Database String");
+		ERR("Invalid Database String");
 		return;
 	}
 	str += '|';
 	str += str_to_hex(key);
 	str += '@';
-	switch (d.what()) {
+	switch (d->what()) {
 	case _data::INT:
 		str += '#';
-		str += std::to_string(d.getInt().second);
+		str += std::to_string(d->getInt().second);
 		break;
 	case _data::BOOL:
 		str += '$';
-		str += std::to_string(d.getBool().second);
+		str += std::to_string(d->getBool().second);
 		break;
 	case _data::STRING:
 		str += '%';
-		str += str_to_hex(d.getString().second);
+		str += str_to_hex(d->getString().second);
 		break;
 	case _data::NONE:
 		str += '&';
@@ -146,26 +211,37 @@ std::string _database::create_database_string()
 _data::_data(int i)
 {
 	setValue(i);
+	DEB(print_pointer(this));
 }
 
 _data::_data(const char * st)
 {
 	setValue(st);
+	DEB(print_pointer(this));
 }
 
 _data::_data(const std::string & st)
 {
 	setValue(st);
+	DEB(print_pointer(this));
 }
 
 _data::_data(bool b)
 {
 	setValue(b);
+	DEB(print_pointer(this));
 }
 
 _data::_data()
 {
 	clearValue();
+	DEB(print_pointer(this));
+}
+
+_data::~_data()
+{
+	clearValue();
+	DEB(print_pointer(this));
 }
 
 void _data::setValue(int i)
@@ -222,4 +298,4 @@ std::pair<bool, bool> _data::getBool()
 {
 	return std::pair<bool, bool>(s == BOOL, (s == BOOL) ? d.boolean : false);
 }
-_database* database = new _database;
+_database database;
