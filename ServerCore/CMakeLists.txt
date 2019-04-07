@@ -8,3 +8,4 @@ if (UNIX)
 	TARGET_LINK_LIBRARIES(ServerCore dl)
 endif()
 link_directories(${OUTDIR})
+

@@ -40,3 +40,17 @@
  * 2. exit
  */
 #define EXIT_ERR(info) ERR(info);exit(EXIT_FAILURE)
+
+typedef std::uint64_t hash_t;
+constexpr hash_t prime = 0x100000001B3ull;
+constexpr hash_t basis = 0xCBF29CE484222325ull;
+
+hash_t hash_(char const* str);
+constexpr hash_t hash_compile_time(char const* str, hash_t last_value = basis)
+{
+	return *str ? hash_compile_time(str + 1, (*str ^ last_value) * prime) : last_value;
+}
+constexpr hash_t operator "" _hash(char const* p, size_t)
+{
+	return hash_compile_time(p);
+}

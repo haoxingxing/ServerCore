@@ -11,15 +11,14 @@
 #include "log.h"
 #include "ServerCore.h"
 /* Check A Type of Element
- * d: a database var
- * k: the key string for object
+ * d: a _data var
  * t: Type in _data::status
  *		Int
  *		String
  *		Bool
  *		Void
  */
-#define if_type_is(d,k,t) (d.contains(k)?((d[k]->what())==(_data::t)):false)
+#define if_type_is(d,t) (((d->what())==(_data::t)))
 class _data {
 public:
 	_data(int i);

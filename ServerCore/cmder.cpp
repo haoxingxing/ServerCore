@@ -50,18 +50,40 @@ _data* cmder::convert_var(std::string token)
 	else
 	{
 		_data* ptr;
-		switch (token.at(0))
+		auto v = _database::SplitString(token," ");
+		std::string key,arg;
+		key = v[0];
+		arg = token.substr(token.find(key)+(token==key)?key.length():key.length()+1);			
+		switch (hash_(key.c_str()))
 		{
-		case 'i':
-			ptr = new _data(std::stoi(token.substr(4)));
+		case "int"_hash:
+		{
+			int b = 0;
+			try {
+				b = std::stoi(arg);
+			}
+			catch (...) {
+				WARN(TS_ID_27);
+			}
+			ptr = new _data(b);
 			break;
-		case 'b':
-			ptr = new _data(std::stoi(token.substr(5)) != 0);
+		}
+		case "bool"_hash:
+		{
+			int b = 0;
+			try {
+				b = std::stoi(arg);
+			}
+			catch (...) {
+				WARN(TS_ID_27);
+			}
+			ptr = new _data(b != 0);
 			break;
-		case 's':
-			ptr = new _data(token.substr(7));
+		}
+		case "string"_hash:
+			ptr = new _data(arg);
 			break;
-		case 'v':
+		case "void"_hash:
 		    ptr = new _data();
 			break;
 		default:
@@ -112,7 +134,9 @@ std::map<std::string, std::function<void(std::vector<_data*>)>> executable::stat
 	CMD_PAIR("echo",&executable::echo),
 	CMD_PAIR("endl",&executable::endl),
 	CMD_PAIR("system",&executable::_system),
-	CMD_PAIR("cast",&executable::cast)
+	CMD_PAIR("cast",&executable::cast),
+	CMD_PAIR("log",&executable::log_verbose),
+	CMD_PAIR("cin",&executable::cin)
 	});
 
 void executable::execute(cmder::cmd command)
@@ -212,4 +236,41 @@ void executable::cast(std::vector<_data*> args)
 		ERR(TS_ID_19 TS_ID_23);		
 		break;
 	}
+}
+
+void executable::log_verbose(std::vector<_data*> args)
+{
+	log::verbose;
+	if (args.size() != 1)
+	{
+		ERR(TS_ID_24 "1" TS_ID_25 TS_ID_26);
+		return;
+	}
+	if (if_type_is(args[0], Int)) {
+		log::verbose = (log::log_level)args[0]->getInt().second;
+	}
+	else
+	{
+		ERR(TS_ID_19);
+	}
+	
+}
+
+void executable::cin(std::vector<_data*> args)
+{
+	for_each(args.begin(), args.end(), [&](_data* d) {
+		switch (d->what())
+		{
+		case _data::String:
+		{
+			std::string str;
+			std::cin >> str;
+			d->setValue(str);
+			break;
+		}
+		default:
+			ERR(TS_ID_19);
+			break;
+		}
+	});
 }

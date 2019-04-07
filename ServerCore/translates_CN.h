@@ -40,3 +40,4 @@
 #define TS_ID_24 "接受"
 #define TS_ID_25 "个"
 #define TS_ID_26 "参数"
+#define TS_ID_27 "无法转换为数字"

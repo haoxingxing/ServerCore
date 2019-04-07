@@ -30,12 +30,13 @@ public:
 	static void execute(cmder::cmd command);
 	/*
 	 * Built-in Function:
-	 *
 	 */
 	static void endl(std::vector<_data*>);
 	static void echo(std::vector<_data*>);
 	static void _system(std::vector<_data*>);
 	static void cast(std::vector<_data*>);
+	static void log_verbose(std::vector<_data*>);
+	static void cin(std::vector<_data*>);
 protected:
 private:
 };

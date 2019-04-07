@@ -11,6 +11,7 @@ std::string ConfigMgr::create_database_string()
 	);
 }
 
+
 void ConfigMgr::str_insert(std::string & str, const std::string & key, _data * d)
 {
 	str += "var ";
