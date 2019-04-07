@@ -8,8 +8,8 @@ void cmder::run()
 	{
 		DEB(mgr.commands[i]);
 		Recover.push_back( std::vector<_data *>());
-		executable::execute(ResolveCommand(mgr.commands[i]));
-		for_each(Recover[i].begin(), Recover[i].end(), [&](_data* hd) {
+		executable(mgr).execute(ResolveCommand(mgr.commands[i]));
+		for_each(Recover[i].begin(), Recover[i].end(), [&](_data* hd) {			
 			delete hd;
 		});
 		SUCC( mgr.commands[i]);
@@ -30,7 +30,7 @@ cmder::cmd cmder::ResolveCommand(std::string str)
 		ERR(TS_ID_15 ")");
 		return buf;
 	}
-	buf.first = _database::SplitString(str, "(")[0];
+	buf.first = _database::SplitString(str, "(")[0];	
 	str = _database::SplitString(_database::SplitString(str, "(")[1],")")[0];
 	std::vector<std::string> args = _database::SplitString(str, ",");
 	for (size_t i = 0; i < args.size(); ++i)
@@ -43,12 +43,8 @@ cmder::cmd cmder::ResolveCommand(std::string str)
 
 _data* cmder::convert_var(std::string token)
 {	
-	if (token.find("var ") != token.npos)
-	{
-		return mgr[token.substr(4)];
-	}
-	else
-	{
+
+		bool isuse = false;
 		_data* ptr;
 		auto v = _database::SplitString(token," ");
 		std::string key,arg;
@@ -87,13 +83,24 @@ _data* cmder::convert_var(std::string token)
 		    ptr = new _data();
 			break;
 		default:
-			WARN(TS_ID_3);
-			ptr = new _data();
+			if (!mgr.contains(key))
+			{
+				ptr = new _data();
+				mgr.insert(key, ptr);
+			}
+			ptr = mgr[key];
+			isuse = true;
 			break;
 		}		
-		Recover.at(what_now).push_back(ptr);
+		if (!isuse)
+			Recover.at(what_now).push_back(ptr);
 		return ptr;
-	}
+}
+
+
+executable::executable(ConfigMgr& m):mgr(m)
+{
+
 }
 
 void executable::insert_static_function(const std::string & key, const std::function<void(std::vector<_data*>)>& value)
@@ -136,7 +143,8 @@ std::map<std::string, std::function<void(std::vector<_data*>)>> executable::stat
 	CMD_PAIR("system",&executable::_system),
 	CMD_PAIR("cast",&executable::cast),
 	CMD_PAIR("log",&executable::log_verbose),
-	CMD_PAIR("cin",&executable::cin)
+	CMD_PAIR("cin",&executable::cin),
+	CMD_PAIR("var",&executable::var)
 	});
 
 void executable::execute(cmder::cmd command)
@@ -179,7 +187,7 @@ void executable::cast(std::vector<_data*> args)
 	{
 		ERR(TS_ID_24 "2" TS_ID_25 TS_ID_26);
 	}
-	switch (args[0]->what())	
+	switch (args[0]->what())
 	{
 	case _data::String:
 		switch (args[1]->what())
@@ -191,8 +199,8 @@ void executable::cast(std::vector<_data*> args)
 			args[1]->setValue(stoi(args[0]->getString().second));
 			break;
 		case _data::Bool:
-			args[1]->setValue(args[0]->getString().second=="true"?true:false);
-			break;		
+			args[1]->setValue(args[0]->getString().second == "true" ? true : false);
+			break;
 		default:
 			ERR(TS_ID_19 TS_ID_23);
 			break;
@@ -202,7 +210,7 @@ void executable::cast(std::vector<_data*> args)
 		switch (args[1]->what())
 		{
 		case _data::String:
-			args[1]->setValue(args[0]->getBool().second?"true":"false");
+			args[1]->setValue(args[0]->getBool().second ? "true" : "false");
 			break;
 		case _data::Int:
 			args[1]->setValue((int)(args[0]->getBool().second));
@@ -215,7 +223,7 @@ void executable::cast(std::vector<_data*> args)
 			break;
 		};
 		break;
-	case _data::Int:	
+	case _data::Int:
 		switch (args[1]->what())
 		{
 		case _data::String:
@@ -233,7 +241,7 @@ void executable::cast(std::vector<_data*> args)
 		};
 		break;
 	default:
-		ERR(TS_ID_19 TS_ID_23);		
+		ERR(TS_ID_19 TS_ID_23);
 		break;
 	}
 }
@@ -273,4 +281,30 @@ void executable::cin(std::vector<_data*> args)
 			break;
 		}
 	});
+}
+
+void executable::var(std::vector<_data*> args)
+{
+	if (args.size() == 2)
+	{
+		switch (args[1]->what())
+		{
+		case _data::String:
+			args[0]->setValue(args[1]->getString().second);
+			break;
+		case _data::Int:
+			args[0]->setValue(args[1]->getInt().second);
+			break;
+		case _data::Bool:
+			args[0]->setValue(args[1]->getBool().second);
+			break;
+		case _data::Void:
+			args[0]->clearValue();
+			break;
+		};
+	}
+	else
+	{
+		ERR(TS_ID_24 "2" TS_ID_25 TS_ID_26);
+	}
 }

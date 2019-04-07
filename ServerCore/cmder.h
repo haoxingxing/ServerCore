@@ -7,8 +7,8 @@
 #include <cstdlib>
 
 #define CMD_PAIR(key,value) std::make_pair(key,std::function<void(std::vector<_data*>)>(value))
-
 class cmder {
+	friend ConfigMgr;
 public:
 	cmder(ConfigMgr&);
 	// Run Functions in ConfigMgr
@@ -24,10 +24,11 @@ private:
 class executable
 {
 public:
+	executable(ConfigMgr&);
 	static void insert_static_function(const std::string& key,const std::function<void(std::vector<_data*>)>& value);
 	static std::function<void(std::vector<_data*>)> call(const std::string&key);
 	static std::map<std::string, std::function<void(std::vector<_data*>)>> static_functions;
-	static void execute(cmder::cmd command);
+	void execute(cmder::cmd command);
 	/*
 	 * Built-in Function:
 	 */
@@ -37,8 +38,10 @@ public:
 	static void cast(std::vector<_data*>);
 	static void log_verbose(std::vector<_data*>);
 	static void cin(std::vector<_data*>);
+	static void var(std::vector<_data*>);
 protected:
 private:
+	ConfigMgr& mgr;
 };
 
 #endif

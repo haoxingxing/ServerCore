@@ -1,5 +1,5 @@
 ﻿#include "configmgr.h"
-
+#include "cmder.h"
 ConfigMgr::ConfigMgr(const std::string & config_name) :_database(true, config_name + ".conf")
 {
 }
@@ -78,44 +78,7 @@ void ConfigMgr::str_to_map(const std::string & str)
 		{
 			continue;
 		}
-		if (m.substr(0, 4) == "var ")
-		{
-			m = m.substr(4);
-			if (m.find('=') == std::string::npos)
-			{
-				WARN(TS_ID_2 ": '=' " TS_ID_4);
-				continue;
-			}
-			std::vector<std::string> b = SplitString(m, "=");
-			if (!(b.size() <=3 && b.size() >= 2 ))
-			{
-				WARN(TS_ID_2 ": " TS_ID_10 "'='" TS_ID_11);
-				continue;			
-			}			
-			switch (b[1].at(0))
-			{
-			case 'i':
-				insert(b[0], new _data((b.size()==3)?std::stoi(b[2]):0));
-				break;
-			case 'b':
-				insert(b[0], new _data((b.size() == 3)?(std::stoi(b[2]) != 0):false));
-				break;
-			case 's':
-				insert(b[0], new _data((b.size() == 3)?b[2]:""));
-				break;
-			case 'v':
-				insert(b[0], new _data());
-				break;
-			default:
-				WARN(TS_ID_3);
-				break;
-			}
-			DEB("var " + b[0] + "(" + b[1] + ")");
-		}
-		else
-		{
-			commands.push_back(m);
-			DEB("cmd " + m);
-		}
+		commands.push_back(m);
+		DEB("cmd " + m);
 	}
 }
