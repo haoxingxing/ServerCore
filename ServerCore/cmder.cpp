@@ -95,7 +95,7 @@ void executable::echo(std::vector<_data*> args)
 			std::cout << d->getInt().second;
 			break;
 		case _data::Bool:
-			std::cout << (d->getBool().second) ? "true" : "false";
+			std::cout << ((d->getBool().second) ? "true" : "false");
 			break;
 		case _data::String:
 			std::cout << d->getString().second;
