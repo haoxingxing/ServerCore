@@ -49,7 +49,7 @@ _data* cmder::convert_var(std::string token)
 		auto v = _database::SplitString(token," ");
 		std::string key,arg;
 		key = v[0];
-		arg = token.substr(token.find(key)+(token==key)?key.length():key.length()+1);			
+		arg = token.substr(token.find(key)+((token==key)?key.length():(key.length()+1)));			
 		switch (hash_(key.c_str()))
 		{
 		case "int"_hash:
@@ -248,7 +248,6 @@ void executable::cast(std::vector<_data*> args)
 
 void executable::log_verbose(std::vector<_data*> args)
 {
-	log::verbose;
 	if (args.size() != 1)
 	{
 		ERR(TS_ID_24 "1" TS_ID_25 TS_ID_26);
