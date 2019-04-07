@@ -2,6 +2,8 @@
 
 void log::print(log_level t,const std::string& info,bool i)
 {
+	if (t < verbose)
+		return;
 	std::string colorstr;
 	std::string colorend = "\033[0m";
 	if (!iscolored) {
@@ -37,3 +39,4 @@ void log::print(log_level t,const std::string& info,bool i)
 }
 
 bool log::iscolored = true;
+log::log_level log::verbose = Info;

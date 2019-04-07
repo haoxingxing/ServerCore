@@ -19,10 +19,24 @@
 							 "# 语句:\n"\
 							 "# 示例: LoadLibrary(string Here We Go)\n"\
 							 "# 共有4种类型: int bool string void\n"
-#define TS_ID_10 "太多 '=' 号了"
+#define TS_ID_10 "太多 "
 #define TS_ID_11 "标识"
 #define TS_ID_12 "无法打开文件"
 #define TS_ID_13 "库未载入"
 #define TS_ID_14 "库不存在"
 #define TS_ID_15 "未找到标签"
 #define TS_ID_16 "处理命令中"
+#define TS_ID_17 "未找到命令"
+#define TS_ID_18 "完成"
+#define TS_ID_19 "不允许的类型 "
+// string
+#define TS_ID_20 "字符串(string)"
+// int
+#define TS_ID_21 "数字(int)"
+// bool
+#define TS_ID_22 "布尔(bool)"
+// void
+#define TS_ID_23 "空(void)"
+#define TS_ID_24 "接受"
+#define TS_ID_25 "个"
+#define TS_ID_26 "参数"

@@ -2,16 +2,17 @@
 #define COLOR_PRInt_H
 #include <iostream>
 #include <string>
+
 class log {
 public:
-	enum log_level
+	static enum log_level
 	{
 		Debug,
 		Info,
 		Success,
 		Warning,
 		Error
-	};
+	}verbose;
 	/*
 	Print logs with level
 	Debug

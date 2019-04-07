@@ -16,7 +16,7 @@ File::~File()
 
 const std::string File::read()
 {
-	LOG(filename);
+	DEB(filename);
 	in.open(filename, std::ios::in);
 	if (!in) {
 		ERR(TS_ID_12 ": " + filename);
@@ -30,7 +30,7 @@ const std::string File::read()
 
 bool File::write(const std::string &_str)
 {
-	LOG(filename);
+	DEB(filename);
 	out.open(filename, std::ios::out | std::ios::trunc);
 	if (!out) {
 		ERR(TS_ID_12 ": " + filename);

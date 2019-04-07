@@ -27,14 +27,14 @@ void _database::insert(const std::string & key, _data* value)
 		WARN(TS_ID_5 " [" + key + "]," TS_ID_6);
 		this->remove(key);
 	}
-	LOG(TS_ID_7" [" + key + "," + print_pointer(value) + "]");
+	DEB(TS_ID_7" [" + key + "," + print_pointer(value) + "]");
 	data.insert(std::make_pair(key, value));
 	SUCC("");
 }
 
 void _database::remove(const std::string & key)
 {
-	LOG(TS_ID_6" [" + key + "]");
+	DEB(TS_ID_6" [" + key + "]");
 	if (data.find(key) != data.end())
 	{
 		delete data[key];
@@ -49,7 +49,7 @@ void _database::remove(const std::string & key)
 
 _data* _database::get(const std::string & key)
 {
-	LOG(TS_ID_8 " [" + key + "]");
+	DEB(TS_ID_8 " [" + key + "]");
 	if (data.find(key) != data.end())
 	{
 		SUCC("");
