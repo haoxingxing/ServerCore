@@ -15,6 +15,20 @@ String(TOLOWER ${GIT_REPO_HASH} GIT_REPO_HASH             )
 add_definitions(-DARCH=${ARCH})
 IF (WIN32)  
     set(PLAT "win32")
+	if (MSVC)
+    set(CompilerFlags
+        CMAKE_CXX_FLAGS
+        CMAKE_CXX_FLAGS_DEBUG
+        CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_C_FLAGS
+        CMAKE_C_FLAGS_DEBUG
+        CMAKE_C_FLAGS_RELEASE
+        )
+    foreach(CompilerFlag ${CompilerFlags})
+        string(REPLACE "/MD" "/MT" ${CompilerFlag} "${${CompilerFlag}}")
+		string(REPLACE "/MDd" "/MTd" ${CompilerFlag} "${${CompilerFlag}}")
+    endforeach()
+endif(MSVC)
 ELSEIF (APPLE)  
     set(PLAT "macos")
 ELSEIF (UNIX)  
