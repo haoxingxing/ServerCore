@@ -8,7 +8,7 @@
 #define TS_ID_7 "Inserting"
 #define TS_ID_8 "Accessing"
 #define TS_ID_9 "Creating a empty data to avoid nullptr"
-#define CONF_FILE_NOTICE_MSG "# Config File\n"
+#define CONF_FILE_NOTICE_MSG "# Config File\n# Use 'var' to create variable\n# e.g.: var name=string=Daniel\n# All four kinds of type:int bool string void"
 #define TS_ID_10 "Check is there so many "
 #define TS_ID_11 "sign"
 #define TS_ID_12 "Can't open file"

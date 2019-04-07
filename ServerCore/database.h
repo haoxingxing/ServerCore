@@ -79,9 +79,9 @@ protected:
 	// Create a database string
 	virtual std::string create_database_string();
 	// Convert database to string
-	virtual std::string map_to_str(const std::map<std::string, _data*> &);
+	virtual std::string map_to_str();
 	// Convert string to database
-	virtual std::map<std::string, _data*> str_to_map(const std::string &str);
+	virtual void str_to_map(const std::string &str);
 	// Convert string to hex string
 	static std::string str_to_hex(const std::string&, bool upper = false);
 	// Convert hex string to string

@@ -7,11 +7,13 @@
 class ConfigMgr : public _database {
 public:
 	ConfigMgr(const std::string& config_name);
+	std::vector<std::string> commands;
 protected:
 	std::string create_database_string() override;
 	void str_insert(std::string& str, const std::string& key, _data*) override;
-	std::string map_to_str(const std::map<std::string, _data*> &) override;
-	std::map<std::string, _data*> str_to_map(const std::string &str) override;
+	void cmd_insert(std::string& str, const std::string& command);
+	std::string map_to_str() override;
+	void str_to_map(const std::string &str) override;
 };
 
 #endif // CONFIG_MGR_H

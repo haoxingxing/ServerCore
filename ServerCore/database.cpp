@@ -69,10 +69,10 @@ _data* _database::operator[](const std::string & key)
 	return this->get(key);
 }
 
-std::string _database::map_to_str(const std::map<std::string, _data*>& m)
+std::string _database::map_to_str()
 {
 	std::string buf = create_database_string();
-	std::for_each(m.begin(), m.end(), [&](std::pair<std::string, _data*> d) {
+	std::for_each(data.begin(), data.end(), [&](std::pair<std::string, _data*> d) {
 		str_insert(buf, d.first, d.second);
 	});
 	return buf;
@@ -109,20 +109,19 @@ std::vector<std::string> _database::SplitString(const std::string & s, const std
 	return v;
 }
 
-std::map<std::string, _data*> _database::str_to_map(const std::string& str)
+void _database::str_to_map(const std::string& str)
 {
-	std::map<std::string, _data*> buf;
 	if (str.size() > 0)
 	{
 		if (str.at(0) != DB_START) {
 			ERR(TS_ID_1);
-			return buf;
+			return;
 		}
 	}
 	else
 	{
 		ERR(TS_ID_1);
-		return buf;
+		return;
 	}
 	std::vector<std::string> v = SplitString(str, "|");
 	for (size_t i = 1; i < v.size(); ++i)
@@ -136,23 +135,22 @@ std::map<std::string, _data*> _database::str_to_map(const std::string& str)
 		switch (b[1].at(0))
 		{
 		case '#':
-			buf.insert(std::make_pair(hex_to_str(b[0]), new _data(std::stoi(b[1].substr(1, b[1].length() - 1)))));
+			insert(hex_to_str(b[0]), new _data(std::stoi(b[1].substr(1, b[1].length() - 1))));
 			break;
 		case '$':
-			buf.insert(std::make_pair(hex_to_str(b[0]), new _data(std::stoi(b[1].substr(1, b[1].length() - 1)) != 0)));
+			insert(hex_to_str(b[0]), new _data(std::stoi(b[1].substr(1, b[1].length() - 1)) != 0));
 			break;
 		case '%':
-			buf.insert(std::make_pair(hex_to_str(b[0]), new _data(hex_to_str(b[1].substr(1, b[1].length() - 1)))));
+			insert(hex_to_str(b[0]), new _data(hex_to_str(b[1].substr(1, b[1].length() - 1))));
 			break;
 		case '&':
-			buf.insert(std::make_pair(hex_to_str(b[0]), new _data()));
+			insert(hex_to_str(b[0]), new _data());
 			break;
 		default:
 			WARN(TS_ID_3);
 			break;
 		}
 	}
-	return buf;
 }
 
 std::string _database::str_to_hex(const std::string& s, bool upper)
@@ -183,12 +181,12 @@ std::string _database::hex_to_str(const std::string & hex)
 
 void _database::loadfromfile()
 {	
-	data = str_to_map(fp->read());
+	str_to_map(fp->read());
 }
 
 void _database::writetofile()
 {
-	fp->write(map_to_str(data));
+	fp->write(map_to_str());
 }
 
 void _database::str_insert(std::string & str, const std::string& key, _data* d)

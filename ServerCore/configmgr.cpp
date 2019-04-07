@@ -13,6 +13,7 @@ std::string ConfigMgr::create_database_string()
 
 void ConfigMgr::str_insert(std::string & str, const std::string & key, _data * d)
 {
+	str += "var ";
 	str += key;
 	str += "=";
 	switch (d->what()) {
@@ -39,22 +40,31 @@ void ConfigMgr::str_insert(std::string & str, const std::string & key, _data * d
 	str += "\n";
 }
 
-std::string ConfigMgr::map_to_str(const std::map<std::string, _data*>& m)
+void ConfigMgr::cmd_insert(std::string & str, const std::string & command)
+{
+	str += command;
+	str += "\n";
+}
+
+std::string ConfigMgr::map_to_str()
 {
 	std::string buf = create_database_string();
-	std::for_each(m.begin(), m.end(), [&](std::pair<std::string, _data*> d) {
+	std::for_each(data.begin(), data.end(), [&](std::pair<std::string, _data*> d) {
 		str_insert(buf, d.first, d.second);
 	});
+	for (size_t i = 0; i < commands.size(); ++i)
+	{
+		cmd_insert(buf, commands[i]);
+	}
 	return buf;
 }
 
-std::map<std::string, _data*> ConfigMgr::str_to_map(const std::string & str)
+void ConfigMgr::str_to_map(const std::string & str)
 {
-	std::map<std::string, _data*> buf;
 	if (str.size() == 0)
 	{
 		ERR(TS_ID_1);
-		return buf;
+		return;
 	}
 	std::vector<std::string> v = SplitString(str, "\n");
 	for (size_t i = 0; i < v.size(); ++i)
@@ -67,35 +77,42 @@ std::map<std::string, _data*> ConfigMgr::str_to_map(const std::string & str)
 		{
 			continue;
 		}
-		if (m.find('=') == std::string::npos)
+		if (m.substr(0, 4) == "var ")
 		{
-			WARN(TS_ID_2 ": '=' " TS_ID_4);
-			continue;
+			m = m.substr(4);
+			if (m.find('=') == std::string::npos)
+			{
+				WARN(TS_ID_2 ": '=' " TS_ID_4);
+				continue;
+			}
+			std::vector<std::string> b = SplitString(m, "=");
+			if (b.size() != 3)
+			{
+				WARN(TS_ID_2 ": " TS_ID_10 "'='" TS_ID_11);
+				continue;
+			}
+			switch (b[1].at(0))
+			{
+			case 'i':
+				insert(b[0], new _data(std::stoi(b[2])));
+				break;
+			case 'b':
+				insert(b[0], new _data(std::stoi(b[2]) != 0));
+				break;
+			case 's':
+				insert(b[0], new _data(b[2]));
+				break;
+			case 'v':
+				insert(b[0], new _data());
+				break;
+			default:
+				WARN(TS_ID_3);
+				break;
+			}
 		}
-		std::vector<std::string> b = SplitString(m, "=");
-		if (b.size() != 3)
+		else
 		{
-			WARN(TS_ID_2 ": " TS_ID_10 "'='" TS_ID_11);
-			continue;
-		}
-		switch (b[1].at(0))
-		{
-		case 'i':
-			buf.insert(std::make_pair(b[0], new _data(std::stoi(b[2]))));
-			break;
-		case 'b':
-			buf.insert(std::make_pair(b[0], new _data(std::stoi(b[2]) != 0)));
-			break;
-		case 's':
-			buf.insert(std::make_pair(b[0], new _data(b[2])));
-			break;
-		case 'v':
-			buf.insert(std::make_pair(b[0], new _data()));
-			break;
-		default:
-			WARN(TS_ID_3);
-			break;
+			commands.push_back(m);
 		}
 	}
-	return buf;
 }
