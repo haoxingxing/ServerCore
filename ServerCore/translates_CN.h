@@ -13,12 +13,11 @@
 #define TS_ID_9 "创建空项来避免空指针"
 #define CONF_FILE_NOTICE_MSG "# 配置文件\n" \
 							 "# 使用var来创建变量\n" \
-							 "# 例如: var name=string=Daniel\n"\
+							 "# 例如: var(name,string Daniel)\n"\
+							 "#       LoadLibrary(string Here We Go)\n"\
 							 "# 共有4种类型: int bool string void\n"\
-							 "# 注意:关闭文件时会重写文件 清除注释 将变量提前到语句前\n"\
-							 "# 语句:\n"\
-							 "# 示例: LoadLibrary(string Here We Go)\n"\
-							 "# 共有4种类型: int bool string void\n"
+							 "# 注意:关闭文件时会重写文件 清除注释 将变量提前到语句前\n"
+
 #define TS_ID_10 "太多 "
 #define TS_ID_11 "标识"
 #define TS_ID_12 "无法打开文件"
