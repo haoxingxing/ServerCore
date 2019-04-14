@@ -1,6 +1,6 @@
 ﻿#include "configmgr.h"
 #include "cmder.h"
-ConfigMgr::ConfigMgr(const std::string & config_name) :_database(true, config_name + ".conf")
+ConfigMgr::ConfigMgr(const bool& open_file, const std::string& config_name) :_database(open_file, config_name)
 {
 }
 
@@ -11,37 +11,36 @@ std::string ConfigMgr::create_database_string()
 	);
 }
 
+//void ConfigMgr::str_insert(std::string & str, const std::string & key, _data * d)
+//{
+//	str += "var ";
+//	str += key;
+//	str += "=";
+//	switch (d->what()) {
+//	case _data::Int:
+//		str += "int";
+//		str += "=";
+//		str += std::to_string(d->getInt().second);
+//		break;
+//	case _data::Bool:
+//		str += "bool";
+//		str += "=";
+//		str += std::to_string(d->getBool().second);
+//		break;
+//	case _data::String:
+//		str += "string";
+//		str += "=";
+//		str += d->getString().second;
+//		break;
+//	case _data::Void:
+//		str += "void";
+//		str += "=";
+//		break;
+//	};
+//	str += "\n";
+//}
 
-void ConfigMgr::str_insert(std::string & str, const std::string & key, _data * d)
-{
-	str += "var ";
-	str += key;
-	str += "=";
-	switch (d->what()) {
-	case _data::Int:
-		str += "int";
-		str += "=";
-		str += std::to_string(d->getInt().second);
-		break;
-	case _data::Bool:
-		str += "bool";
-		str += "=";
-		str += std::to_string(d->getBool().second);
-		break;
-	case _data::String:
-		str += "string";
-		str += "=";
-		str += d->getString().second;
-		break;
-	case _data::Void:
-		str += "void";
-		str += "=";
-		break;
-	};
-	str += "\n";
-}
-
-void ConfigMgr::cmd_insert(std::string & str, const std::string & command)
+void ConfigMgr::cmd_insert(std::string& str, const std::string& command)
 {
 	str += command;
 	str += "\n";
@@ -52,7 +51,7 @@ std::string ConfigMgr::map_to_str()
 	std::string buf = create_database_string();
 	std::for_each(data.begin(), data.end(), [&](std::pair<std::string, _data*> d) {
 		str_insert(buf, d.first, d.second);
-	});
+		});
 	for (size_t i = 0; i < commands.size(); ++i)
 	{
 		cmd_insert(buf, commands[i]);
@@ -60,7 +59,7 @@ std::string ConfigMgr::map_to_str()
 	return buf;
 }
 
-void ConfigMgr::str_to_map(const std::string & str)
+void ConfigMgr::str_to_map(const std::string& str)
 {
 	if (str.size() == 0)
 	{

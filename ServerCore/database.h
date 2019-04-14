@@ -21,34 +21,23 @@
 #define if_type_is(d,t) (((d->what())==(_data::t)))
 class _data {
 public:
-	_data(int i);
-	_data(const char *st);
-	_data(const std::string&st);
-	_data(bool b);
-	_data();
-	~_data();
-	void setValue(int i);
-	void setValue(const char *);
-	void setValue(const std::string&);
-	void setValue(bool b);
-	union _datas
-	{
-		int i;
-		std::string *str;
-		bool boolean;
-	}d;
-	enum status
-	{
-		Int,
-		String,
-		Bool,
-		Void
-	}s = Void;
-	void clearValue();
-	_data::status what();
-	std::pair<bool, int> getInt();
-	std::pair<bool, std::string> getString();
-	std::pair<bool, bool> getBool();
+	_data(std::string _type);
+	virtual std::string what() {
+		return type;
+	};
+	virtual _data* copy() { return nullptr; };
+private:
+	std::string type;
+};
+
+class string : public _data {
+public:
+	string(const std::string& v);
+	operator std::string& () {
+		return data;
+	}
+private:
+	std::string data;
 };
 
 class _database {
@@ -71,6 +60,7 @@ public:
 	virtual std::map<std::string, _data*> data_();
 	// Find if a key exists
 	virtual bool contains(const std::string& key);
+
 	static std::vector<std::string> SplitString(const std::string& s, const std::string& c);
 protected:
 	// Convert a element into the string database
@@ -80,12 +70,12 @@ protected:
 	// Convert database to string
 	virtual std::string map_to_str();
 	// Convert string to database
-	virtual void str_to_map(const std::string &str);
+	virtual void str_to_map(const std::string& str);
 	// Convert string to hex string
 	static std::string str_to_hex(const std::string&, bool upper = false);
 	// Convert hex string to string
 	static std::string hex_to_str(const std::string&);
-	File *fp;
+	File* fp;
 	std::map<std::string, _data*> data;
 	bool isfile;
 };

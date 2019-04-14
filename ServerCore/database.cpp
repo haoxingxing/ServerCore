@@ -6,6 +6,10 @@ _database::_database(bool _isfile, std::string filename) :isfile(_isfile)
 	{
 		fp = new File(filename);
 	}
+	else
+	{
+		fp = nullptr;
+	}
 }
 
 _database::~_database()
@@ -16,11 +20,11 @@ _database::~_database()
 	}
 	std::for_each(data.begin(), data.end(), [&](std::pair<std::string, _data*> d) {
 		delete d.second;
-	});
+		});
 	DEB(print_pointer(this));
 }
 
-void _database::insert(const std::string & key, _data* value)
+void _database::insert(const std::string& key, _data* value)
 {
 	if (data.find(key) != data.end())
 	{
@@ -59,7 +63,7 @@ _data* _database::get(const std::string & key)
 	{
 		ERR(TS_ID_4);
 		WARN(TS_ID_9);
-		this->insert(key, new _data);
+		this->insert(key, new _data("void"));
 		return get(key);
 	}
 }
@@ -74,7 +78,7 @@ std::string _database::map_to_str()
 	std::string buf = create_database_string();
 	std::for_each(data.begin(), data.end(), [&](std::pair<std::string, _data*> d) {
 		str_insert(buf, d.first, d.second);
-	});
+		});
 	return buf;
 }
 
@@ -109,51 +113,51 @@ std::vector<std::string> _database::SplitString(const std::string & s, const std
 	return v;
 }
 
-void _database::str_to_map(const std::string& str)
+void _database::str_to_map(const std::string & str)
 {
-	if (str.size() > 0)
-	{
-		if (str.at(0) != DB_START) {
-			ERR(TS_ID_1);
-			return;
-		}
-	}
-	else
-	{
-		ERR(TS_ID_1);
-		return;
-	}
-	std::vector<std::string> v = SplitString(str, "|");
-	for (size_t i = 1; i < v.size(); ++i)
-	{
-		if (v[i].find('@') == std::string::npos)
-		{
-			WARN(TS_ID_2);
-			continue;
-		}
-		std::vector<std::string> b = SplitString(v[i], "@");
-		switch (b[1].at(0))
-		{
-		case '#':
-			insert(hex_to_str(b[0]), new _data(std::stoi(b[1].substr(1, b[1].length() - 1))));
-			break;
-		case '$':
-			insert(hex_to_str(b[0]), new _data(std::stoi(b[1].substr(1, b[1].length() - 1)) != 0));
-			break;
-		case '%':
-			insert(hex_to_str(b[0]), new _data(hex_to_str(b[1].substr(1, b[1].length() - 1))));
-			break;
-		case '&':
-			insert(hex_to_str(b[0]), new _data());
-			break;
-		default:
-			WARN(TS_ID_3);
-			break;
-		}
-	}
+//	if (str.size() > 0)
+//	{
+//		if (str.at(0) != DB_START) {
+//			ERR(TS_ID_1);
+//			return;
+//		}
+//	}
+//	else
+//	{
+//		ERR(TS_ID_1);
+//		return;
+//	}
+//	std::vector<std::string> v = SplitString(str, "|");
+//	for (size_t i = 1; i < v.size(); ++i)
+//	{
+//		if (v[i].find('@') == std::string::npos)
+//		{
+//			WARN(TS_ID_2);
+//			continue;
+//		}
+//		std::vector<std::string> b = SplitString(v[i], "@");
+//		switch (b[1].at(0))
+//		{
+//		case '#':
+//			insert(hex_to_str(b[0]), new _data(std::stoi(b[1].substr(1, b[1].length() - 1))));
+//			break;
+//		case '$':
+//			insert(hex_to_str(b[0]), new _data(std::stoi(b[1].substr(1, b[1].length() - 1)) != 0));
+//			break;
+//		case '%':
+//			insert(hex_to_str(b[0]), new _data(hex_to_str(b[1].substr(1, b[1].length() - 1))));
+//			break;
+//		case '&':
+////			insert(hex_to_str(b[0]), new _data());
+//			break;
+//		default:
+//			WARN(TS_ID_3);
+//			break;
+//		}
+//	}
 }
 
-std::string _database::str_to_hex(const std::string& s, bool upper)
+std::string _database::str_to_hex(const std::string & s, bool upper)
 {
 	std::ostringstream ret;
 
@@ -180,7 +184,7 @@ std::string _database::hex_to_str(const std::string & hex)
 }
 
 void _database::loadfromfile()
-{	
+{
 	str_to_map(fp->read());
 }
 
@@ -189,33 +193,33 @@ void _database::writetofile()
 	fp->write(map_to_str());
 }
 
-void _database::str_insert(std::string & str, const std::string& key, _data* d)
+void _database::str_insert(std::string & str, const std::string & key, _data * d)
 {
-	if (str.at(0) != DB_START)
-	{
-		ERR(TS_ID_1);
-		return;
-	}
-	str += '|';
-	str += str_to_hex(key);
-	str += '@';
-	switch (d->what()) {
-	case _data::Int:
-		str += '#';
-		str += std::to_string(d->getInt().second);
-		break;
-	case _data::Bool:
-		str += '$';
-		str += std::to_string(d->getBool().second);
-		break;
-	case _data::String:
-		str += '%';
-		str += str_to_hex(d->getString().second);
-		break;
-	case _data::Void:
-		str += '&';
-		break;
-	};
+	//if (str.at(0) != DB_START)
+	//{
+	//	ERR(TS_ID_1);
+	//	return;
+	//}
+	//str += '|';
+	//str += str_to_hex(key);
+	//str += '@';
+	//switch (d->what()) {
+	//case _data::Int:
+	//	str += '#';
+	//	str += std::to_string(d->getInt().second);
+	//	break;
+	//case _data::Bool:
+	//	str += '$';
+	//	str += std::to_string(d->getBool().second);
+	//	break;
+	//case _data::String:
+	//	str += '%';
+	//	str += str_to_hex(d->getString().second);
+	//	break;
+	//case _data::Void:
+	//	str += '&';
+	//	break;
+	//};
 }
 
 std::string _database::create_database_string()
@@ -223,93 +227,11 @@ std::string _database::create_database_string()
 	return std::string() + DB_START;
 }
 
-_data::_data(int i)
+_data::_data(std::string _type) :type(_type)
 {
-	setValue(i);
-	DEB(print_pointer(this));
 }
 
-_data::_data(const char * st)
+string::string(const std::string & v) : _data("string")
 {
-	setValue(st);
-	DEB(print_pointer(this));
-}
-
-_data::_data(const std::string & st)
-{
-	setValue(st);
-	DEB(print_pointer(this));
-}
-
-_data::_data(bool b)
-{
-	setValue(b);
-	DEB(print_pointer(this));
-}
-
-_data::_data()
-{
-	clearValue();
-	DEB(print_pointer(this));
-}
-
-_data::~_data()
-{
-	clearValue();
-	DEB(print_pointer(this));
-}
-
-void _data::setValue(int i)
-{
-	clearValue();
-	s = Int;
-	d.i = i;
-}
-
-void _data::setValue(const char * st)
-{
-	clearValue();
-	s = String;
-	d.str = new std::string(st);
-}
-
-void _data::setValue(const std::string &st)
-{
-	clearValue();
-	s = String;
-	d.str = new std::string(st);
-}
-
-void _data::setValue(bool b)
-{
-	clearValue();
-	s = Bool;
-	d.boolean = b;
-}
-
-void _data::clearValue()
-{
-	if (s == String)
-		delete d.str;
-	s = Void;
-}
-
-_data::status _data::what()
-{
-	return s;
-}
-
-std::pair<bool, int> _data::getInt()
-{
-	return std::pair<bool, int>(s == Int, (s == Int) ? d.i : 0);
-}
-
-std::pair<bool, std::string> _data::getString()
-{
-	return std::pair<bool, std::string>(s == String, (s == String) ? *d.str : std::string());
-}
-
-std::pair<bool, bool> _data::getBool()
-{
-	return std::pair<bool, bool>(s == Bool, (s == Bool) ? d.boolean : false);
+	data = v;
 }

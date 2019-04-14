@@ -60,7 +60,7 @@ bool Library::load(std::string libFilePath)
 	return _module != nullptr;
 }
 
-Library::handle Library::getSymbol(const string symbolName)
+Library::handle Library::getSymbol(const std::string symbolName)
 {
 	if (_module == nullptr)
 	{
