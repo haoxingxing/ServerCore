@@ -22,7 +22,7 @@ build:
 
 
 artifacts:
-  - path: build\Release\ServerCore*.exe
+  - path: build\*\*
     name: win32
 
 deploy:
