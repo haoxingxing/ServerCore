@@ -39,3 +39,4 @@
 #define TS_ID_26 "参数"
 #define TS_ID_27 "无法转换为数字"
 #define TS_ID_28 "类型已存在"
+#define TS_ID_29 "类型不匹配"

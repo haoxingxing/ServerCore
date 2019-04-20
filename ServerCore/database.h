@@ -5,12 +5,17 @@
 #include <vector>
 #include <iomanip>
 #include "file.h"
+#include "ServerCore.h"
 
 class data
 {
 public:
-	explicit data(const std::string& _type) :type(_type) {};
-	virtual ~data() = default;
+	explicit data(const std::string& _type) :type(_type) {
+		DEB(print_pointer(this));
+	};
+	virtual ~data(){
+		DEB(print_pointer(this));
+	};
 	virtual std::string what() { return type; };
 	virtual void delete_this() { delete this; };
 	virtual data* convert_type(const std::string&) { return nullptr; };
@@ -23,14 +28,37 @@ private:
 class data_container
 {
 public:
-	explicit data_container(const std::string& type = "void"):type_(type){};
-	~data_container() = default;
+	explicit data_container(const std::string& type = "void",data* d = nullptr):d(d),type_(type){
+		DEB(print_pointer(this));
+	};
+	~data_container(){
+		DEB(print_pointer(this));
+		if (d != nullptr)
+			d->delete_this();
+		d = nullptr;		
+	};
 	std::string what() const { return type_; };
-
+	void swap(data_container* s)
+	{
+		if (this->type_!=s->type_)
+		{
+			ERR(TS_ID_29);
+		}
+		else
+		{
+			data* dt = d;
+			this->d = s->d;
+			s->d = dt;
+		}
+	}
 	void save(data* da)
 	{	
 		if (d!=nullptr)delete d;
 		if (da->what() == type_){d = da;}else{d = da->convert_type(type_);}
+	};
+	data_container* copy() const
+	{
+		return new data_container(type_, d);
 	};
 	data* get() const {	return d;};
 	explicit operator data*() const{return d;};

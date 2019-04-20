@@ -1,5 +1,5 @@
 ﻿#include "cmder.h"
-
+#include <algorithm>
 cmder::cmder()
 {
 }
@@ -51,7 +51,7 @@ std::pair<std::string, std::vector<std::string>> cmder::ProcessCmd(std::string s
 	buf.second = buf_;
 	return buf;
 }
-data* cmder::convert_var(std::string token)
+data_container* cmder::convert_var(std::string token)
 {
 	auto x = ProcessCmd(token);
 	if (x.first.find(" ") != std::basic_string<char, std::char_traits<char>, std::allocator<char>>::npos)
@@ -60,11 +60,11 @@ data* cmder::convert_var(std::string token)
 		{
 			auto ptr = new data_container(database::SplitString(x.first, " ")[0]);
 			insert(database::SplitString(x.first, " ")[1], ptr);
-			return ptr->get();
+			return ptr;
 		}
 		else
-		{
-			return (*this)[x.first]->get();
+		{		
+			return (*this)[x.first]->copy();
 		}
 	}
 	else
@@ -77,18 +77,21 @@ data* cmder::convert_var(std::string token)
 				{
 					str += ((str.size()!=0)?",":"") + x.second[i];
 				}
-				return new data_string(str);
+				return new data_container("string",new data_string(str));
 			}
 			_SWITCH_DEFAULT {
-				std::vector<data*> v;
+				cmd c;
 				for (size_t i = 0; i < x.second.size(); ++i)
 				{
-					v.push_back(convert_var(x.second[i]));
+					c.second.push_back(convert_var(x.second[i]));
 				}
-				cmd c;
 				c.first = x.first;
-				c.second = v;
-				return executable(*this).execute(c);
+				auto t= executable(*this).execute(c);
+				//for (size_t i = 0; i < c.second.size(); ++i)
+				//{
+				//	delete c.second[i];
+				//}
+				return t;
 			}
 		_SWITCH_END
 	}
@@ -98,24 +101,24 @@ executable::executable(cmder_conf& m) :mgr(m)
 {
 }
 
-void executable::insert_static_function(const std::string& key, const std::function<data* (std::vector<data*>)>& value)
+void executable::insert_static_function(const std::string& key, const std::function<data_container* (std::vector<data_container*>)>& value)
 {
 	DEB(TS_ID_7 " " + key);
 	static_functions.insert(std::make_pair(key, value));
 }
 
-std::function<data* (std::vector<data*>)> executable::call(const std::string & key)
+std::function<data_container* (std::vector<data_container*>)> executable::call(const std::string & key)
 {
 	DEB(TS_ID_8 " " + key);
 	return static_functions[key];
 }
 
-std::map<std::string, std::function<data*(std::vector<data*>)>> executable::static_functions({
+std::map<std::string, std::function<data_container*(std::vector<data_container*>)>> executable::static_functions({
 	CMD_PAIR("var",&executable::var)
 	 
 });
 
-data * executable::execute(cmder::cmd command) const
+data_container* executable::execute(cmder::cmd command) const
 {
 	if (static_functions.find(command.first) == static_functions.end())
 	{
@@ -125,13 +128,14 @@ data * executable::execute(cmder::cmd command) const
 	return static_functions[command.first](command.second);
 }
 
-data* executable::echo(std::vector<data*> n)
+data_container* executable::echo(std::vector<data_container*> n)
 {
 
 	return nullptr;
 }
 
-data* executable::var(std::vector<data*> args)
+data_container* executable::var(std::vector<data_container*> args)
 {
+	args[0]->swap(args[1]);
 	return nullptr;
 }
