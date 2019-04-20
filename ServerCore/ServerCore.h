@@ -41,16 +41,11 @@
  */
 #define EXIT_ERR(info) ERR(info);exit(EXIT_FAILURE)
 
-typedef std::uint64_t hash_t;
-constexpr hash_t prime = 0x100000001B3ull;
-constexpr hash_t basis = 0xCBF29CE484222325ull;
 
-hash_t hash_(char const* str);
-constexpr hash_t hash_compile_time(char const* str, hash_t last_value = basis)
-{
-	return *str ? hash_compile_time(str + 1, (*str ^ last_value) * prime) : last_value;
+#define _SWITCH_BEGIN(str) {\
+std::string SWITCH_KEY=str;\
+if(false);
+#define _SWITCH_CASE(str) else if (SWITCH_KEY==str)
+#define _SWITCH_END \
 }
-constexpr hash_t operator "" _hash(char const* p, size_t)
-{
-	return hash_compile_time(p);
-}
+#define _SWITCH_DEFAULT else if (SWITCH_KEY==SWITCH_KEY)

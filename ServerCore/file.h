@@ -7,7 +7,7 @@ class file
 {
 public:
 	// Open File to read and write
-	file(std::string filename);
+	explicit file(std::string filename);
 	~file();
 	// Read the whole file
 	const std::string read();

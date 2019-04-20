@@ -1,6 +1,5 @@
 ﻿#include "cmder_conf.h"
 #include "cmder.h"
-#include <algorithm>
 cmder_conf::cmder_conf()
 {
 }

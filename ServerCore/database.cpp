@@ -1,8 +1,8 @@
 ﻿#include "database.h"
 #include <sstream>
 #include <algorithm>
-#include "file.h"
 #include "ServerCore.h"
+#include "file.h"
 
 database::database()
 {
@@ -11,7 +11,7 @@ database::database()
 
 database::~database()
 {
-	std::for_each(data.begin(), data.end(), [&](std::pair<std::string, data_container*> d) {
+	std::for_each(_data.begin(), _data.end(), [&](std::pair<std::string, data_container*> d) {
 		delete d.second;
 		});
 	DEB(print_pointer(this));
@@ -19,23 +19,23 @@ database::~database()
 
 void database::insert(const std::string& key, data_container* value)
 {
-	if (data.find(key) != data.end())
+	if (_data.find(key) != _data.end())
 	{
 		WARN(TS_ID_5 " [" + key + "]," TS_ID_6);
 		this->remove(key);
 	}
 	DEB(TS_ID_7" [" + key + "," + print_pointer(value) + "]");
-	data.insert(std::make_pair(key, value));
+	_data.insert(std::make_pair(key, value));
 	SUCC("");
 }
 
 void database::remove(const std::string & key)
 {
 	DEB(TS_ID_6" [" + key + "]");
-	if (data.find(key) != data.end())
+	if (_data.find(key) != _data.end())
 	{
-		delete data[key];
-		data.erase(data.find(key));
+		delete _data[key];
+		_data.erase(_data.find(key));
 		SUCC("");
 	}
 	else
@@ -47,10 +47,10 @@ void database::remove(const std::string & key)
 data_container* database::get(const std::string & key)
 {
 	DEB(TS_ID_8 " [" + key + "]");
-	if (data.find(key) != data.end())
+	if (_data.find(key) != _data.end())
 	{
 		SUCC("");
-		return data.at(key);
+		return _data.at(key);
 	}
 	else
 	{
@@ -61,14 +61,6 @@ data_container* database::get(const std::string & key)
 	}
 }
 
-
-bool database::contains(const std::string & key)
-{
-	if (data.find(key) != data.end())
-		return true;
-	else
-		return false;
-}
 
 std::vector<std::string> database::SplitString(const std::string & s, const std::string & c)
 {
@@ -113,19 +105,3 @@ std::string database::hex_to_str(const std::string & hex)
 	}
 	return newString;
 }
-
-bool data_container::register_type(std::string name, construction_handle hd)
-{
-	if (construction_handles.find(name) != construction_handles.end())
-	{
-		DEB(TS_ID_28);
-		return false;
-	}
-	else {
-		construction_handles.insert(std::make_pair(name, hd));		
-		return true;
-	}
-}
-
-
-std::map<std::string, data_container::construction_handle> data_container::construction_handles;

@@ -8,21 +8,10 @@
 using namespace std;
 
 int main()
-{
-	cmder t;	
+{	
+	file f("test.conf");	
+	cmder t;
+	t.str_to_map(f.read());
 	t.run();
 	return 0;
-}
-
-hash_t hash_(char const* str)
-{
-	hash_t ret{ basis };
-
-	while (*str) {
-		ret ^= *str;
-		ret *= prime;
-		str++;
-	}
-
-	return ret;
 }
