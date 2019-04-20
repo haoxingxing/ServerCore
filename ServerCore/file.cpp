@@ -1,11 +1,15 @@
 ﻿#include "file.h"
+#include <iostream>
+#include "log.h"
+#include "ServerCore.h"
+#include <cstdio>
 
-File::File(std::string _filename) :filename(_filename)
+file::file(std::string _filename) : filename(_filename)
 {
 	DEB(print_pointer(this));
 }
 
-File::~File()
+file::~file()
 {
 	if (!in)
 		in.close();
@@ -14,11 +18,12 @@ File::~File()
 	DEB(print_pointer(this));
 }
 
-const std::string File::read()
+const std::string file::read()
 {
 	DEB(filename);
 	in.open(filename, std::ios::in);
-	if (!in) {
+	if (!in)
+	{
 		ERR(TS_ID_12 ": " + filename);
 		return std::string();
 	}
@@ -28,11 +33,12 @@ const std::string File::read()
 	return str;
 }
 
-bool File::write(const std::string &_str)
+bool file::write(const std::string& _str)
 {
 	DEB(filename);
 	out.open(filename, std::ios::out | std::ios::trunc);
-	if (!out) {
+	if (!out)
+	{
 		ERR(TS_ID_12 ": " + filename);
 		return false;
 	}

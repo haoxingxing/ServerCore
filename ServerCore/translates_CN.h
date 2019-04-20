@@ -1,42 +1,41 @@
-ï»¿#if _MSC_VER >= 1600
-#pragma execution_character_set("utf-8")
-#endif
-#define TS_ID_1 "é”™è¯¯çš„æ•°æ®åº“å­—ç¬¦ä¸²"
-#define TS_ID_2 "é”™è¯¯çš„æ•°æ®ç»„"
-#define TS_ID_3 "é”™è¯¯çš„ç±»å‹"
+#pragma once
+#define TS_ID_1 "´íÎóµÄÊı¾İ¿â×Ö·û´®"
+#define TS_ID_2 "´íÎóµÄÊı¾İ×é"
+#define TS_ID_3 "´íÎóµÄÀàĞÍ"
 #define DB_START '\u0001'
-#define TS_ID_4 "æœªæ‰¾åˆ°"
-#define TS_ID_5 "å·²å­˜åœ¨"
-#define TS_ID_6 "æ­£åœ¨åˆ é™¤"
-#define TS_ID_7 "æ­£åœ¨æ’å…¥"
-#define TS_ID_8 "æ­£åœ¨è®¿é—®"
-#define TS_ID_9 "åˆ›å»ºç©ºé¡¹æ¥é¿å…ç©ºæŒ‡é’ˆ"
-#define CONF_FILE_NOTICE_MSG "# é…ç½®æ–‡ä»¶\n" \
-							 "# ä½¿ç”¨varæ¥åˆ›å»ºå˜é‡\n" \
-							 "# ä¾‹å¦‚: var(name,string Daniel)\n"\
+#define TS_ID_4 "Î´ÕÒµ½"
+#define TS_ID_5 "ÒÑ´æÔÚ"
+#define TS_ID_6 "ÕıÔÚÉ¾³ı"
+#define TS_ID_7 "ÕıÔÚ²åÈë"
+#define TS_ID_8 "ÕıÔÚ·ÃÎÊ"
+#define TS_ID_9 "´´½¨¿ÕÏîÀ´±ÜÃâ¿ÕÖ¸Õë"
+#define CONF_FILE_NOTICE_MSG "# ÅäÖÃÎÄ¼ş\n" \
+							 "# Ê¹ÓÃvarÀ´´´½¨±äÁ¿\n" \
+							 "# ÀıÈç: var(name,string Daniel)\n"\
 							 "#       LoadLibrary(string Here We Go)\n"\
-							 "# å…±æœ‰4ç§ç±»å‹: int bool string void\n"\
-							 "# æ³¨æ„:å…³é—­æ–‡ä»¶æ—¶ä¼šé‡å†™æ–‡ä»¶ æ¸…é™¤æ³¨é‡Š å°†å˜é‡æå‰åˆ°è¯­å¥å‰\n"
+							 "# ¹²ÓĞ4ÖÖÀàĞÍ: int bool string void\n"\
+							 "# ×¢Òâ:¹Ø±ÕÎÄ¼şÊ±»áÖØĞ´ÎÄ¼ş Çå³ı×¢ÊÍ ½«±äÁ¿ÌáÇ°µ½Óï¾äÇ°\n"
 
-#define TS_ID_10 "å¤ªå¤š "
-#define TS_ID_11 "æ ‡è¯†"
-#define TS_ID_12 "æ— æ³•æ‰“å¼€æ–‡ä»¶"
-#define TS_ID_13 "åº“æœªè½½å…¥"
-#define TS_ID_14 "åº“ä¸å­˜åœ¨"
-#define TS_ID_15 "æœªæ‰¾åˆ°æ ‡ç­¾"
-#define TS_ID_16 "å¤„ç†å‘½ä»¤ä¸­"
-#define TS_ID_17 "æœªæ‰¾åˆ°å‘½ä»¤"
-#define TS_ID_18 "å®Œæˆ"
-#define TS_ID_19 "ä¸å…è®¸çš„ç±»å‹ "
+#define TS_ID_10 "Ì«¶à "
+#define TS_ID_11 "±êÊ¶"
+#define TS_ID_12 "ÎŞ·¨´ò¿ªÎÄ¼ş"
+#define TS_ID_13 "¿âÎ´ÔØÈë"
+#define TS_ID_14 "¿â²»´æÔÚ"
+#define TS_ID_15 "Î´ÕÒµ½±êÇ©"
+#define TS_ID_16 "´¦ÀíÃüÁîÖĞ"
+#define TS_ID_17 "Î´ÕÒµ½ÃüÁî"
+#define TS_ID_18 "Íê³É"
+#define TS_ID_19 "²»ÔÊĞíµÄÀàĞÍ "
 // string
-#define TS_ID_20 "å­—ç¬¦ä¸²(string)"
+#define TS_ID_20 "×Ö·û´®(string)"
 // int
-#define TS_ID_21 "æ•°å­—(int)"
+#define TS_ID_21 "Êı×Ö(int)"
 // bool
-#define TS_ID_22 "å¸ƒå°”(bool)"
+#define TS_ID_22 "²¼¶û(bool)"
 // void
-#define TS_ID_23 "ç©º(void)"
-#define TS_ID_24 "æ¥å—"
-#define TS_ID_25 "ä¸ª"
-#define TS_ID_26 "å‚æ•°"
-#define TS_ID_27 "æ— æ³•è½¬æ¢ä¸ºæ•°å­—"
+#define TS_ID_23 "¿Õ(void)"
+#define TS_ID_24 "½ÓÊÜ"
+#define TS_ID_25 "¸ö"
+#define TS_ID_26 "²ÎÊı"
+#define TS_ID_27 "ÎŞ·¨×ª»»ÎªÊı×Ö"
+#define TS_ID_28 "ÀàĞÍÒÑ´æÔÚ"

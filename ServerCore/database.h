@@ -2,81 +2,94 @@
 #define DATABASE_H
 
 #include <map>
-#include <utility>
-#include <algorithm>
-#include <sstream>
 #include <vector>
 #include <iomanip>
 #include "file.h"
-#include "log.h"
-#include "ServerCore.h"
-/* Check A Type of Element
- * d: a _data var
- * t: Type in _data::status
- *		Int
- *		String
- *		Bool
- *		Void
- */
-#define if_type_is(d,t) (((d->what())==(_data::t)))
-class _data {
+
+class data_container
+{
 public:
-	_data(std::string _type);
-	virtual std::string what() {
-		return type;
+	class data;
+	typedef data*(*construction_handle)(std::vector<data*>);
+	explicit data_container(const std::string& type = "void"):type_(type){};
+	~data_container() = default;
+
+	std::string what() const
+	{
+		return type_;
 	};
-	virtual _data* copy() { return nullptr; };
+
+	class data
+	{
+	public:
+		explicit data(const std::string& _type):type(_type){};
+		virtual ~data() = default;
+
+		virtual std::string what()
+		{
+			return type;
+		};
+		virtual void delete_this() = 0;
+		virtual data* copy() = 0;
+		virtual data* convert_type(std::string type) = 0;
+	private:
+		std::string type;
+	};
+
+	bool register_type(std::string name, construction_handle hd);
+	void swap(data_container* da)
+	{
+		data* dt = d;
+		this->d = da->d;
+		da->d = dt;
+	};
+	void save(data* da)
+	{
+		if (d)delete d;
+		d = da;
+	};
+	data* get() const
+	{
+		return d;
+	};
+	explicit operator data*() const{
+		return d;
+	};
 private:
-	std::string type;
+	data* d = nullptr;
+	std::string type_;
+	static std::map<std::string, construction_handle> construction_handles;
 };
 
-class string : public _data {
+class database
+{
 public:
-	string(const std::string& v);
-	operator std::string& () {
-		return data;
-	}
-private:
-	std::string data;
-};
-
-class _database {
-public:
-	_database(bool isfile = false, std::string filename = "");
-	virtual ~_database();
+	database();
+	virtual ~database();
 	// Insert a element
-	virtual void insert(const std::string& key, _data* value);
+	virtual void insert(const std::string& key, data_container* value);
 	// Remove a element
-	virtual	void remove(const std::string& key);
+	virtual void remove(const std::string& key);
 	// Access a element
-	virtual _data* get(const std::string& key);
+	virtual data_container* get(const std::string& key);
 	// Access a element
-	virtual _data* operator[](const std::string& key);
-	// Load database from file
-	virtual void loadfromfile();
-	// Write database to file
-	virtual void writetofile();
+	virtual data_container* operator[](const std::string& key)
+	{
+		return get(key);
+	};
 	// Get Whole data map
-	virtual std::map<std::string, _data*> data_();
+	virtual std::map<std::string, data_container*> get_data() {
+		return data;
+	};
 	// Find if a key exists
 	virtual bool contains(const std::string& key);
 
 	static std::vector<std::string> SplitString(const std::string& s, const std::string& c);
 protected:
-	// Convert a element into the string database
-	virtual void str_insert(std::string& str, const std::string& key, _data*);
-	// Create a database string
-	virtual std::string create_database_string();
-	// Convert database to string
-	virtual std::string map_to_str();
-	// Convert string to database
-	virtual void str_to_map(const std::string& str);
 	// Convert string to hex string
 	static std::string str_to_hex(const std::string&, bool upper = false);
 	// Convert hex string to string
 	static std::string hex_to_str(const std::string&);
-	File* fp;
-	std::map<std::string, _data*> data;
-	bool isfile;
+	std::map<std::string, data_container*> data;
 };
 #endif // DATABASE_H

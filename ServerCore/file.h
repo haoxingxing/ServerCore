@@ -1,16 +1,14 @@
 ﻿#ifndef FILE_H
 #define FILE_H
-#include <cstdio>
 #include <string>
 #include <fstream>
-#include <iostream>
-#include "log.h"
-#include "ServerCore.h"
-class File {
+
+class file
+{
 public:
 	// Open File to read and write
-	File(std::string filename);
-	~File();
+	file(std::string filename);
+	~file();
 	// Read the whole file
 	const std::string read();
 	// Overwrite the file

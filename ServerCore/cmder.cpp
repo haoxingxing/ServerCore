@@ -1,6 +1,6 @@
 ﻿#include "cmder.h"
 
-cmder::cmder(const bool& open_file, const std::string& config_name) : ConfigMgr(open_file, config_name)
+cmder::cmder()
 {
 }
 
@@ -12,7 +12,7 @@ void cmder::run()
 		delete convert_var(commands[i]);
 	}
 }
-std::pair<std::string, std::vector<std::string>> cmder::ProcessCmd(std::string str)
+std::pair<std::string, std::vector<std::string>> cmder::ProcessCmd(std::string str) const
 {
 	std::pair<std::string, std::vector<std::string>> buf;
 	if (str.find("(") == std::string::npos)
@@ -25,10 +25,10 @@ std::pair<std::string, std::vector<std::string>> cmder::ProcessCmd(std::string s
 		ERR(TS_ID_15);
 		return buf;
 	}
-	buf.first = _database::SplitString(str, "(")[0];
+	buf.first = database::SplitString(str, "(")[0];
 	str = str.substr(str.find_first_of("("));
 	str = str.erase(str.find_last_of(")"));
-	std::vector<std::string> args = _database::SplitString(str, ","), buf_;
+	std::vector<std::string> args = database::SplitString(str, ","), buf_;
 	for (size_t t = 0; t < args.size(); ++t) {
 		auto x = buf_[(buf_.size() == 0) ? 0 : (buf_.size() - 1)];
 		if (!(std::count(x.begin(), x.end(), (int)'(') == std::count(x.begin(), x.end(), (int)')')))
@@ -45,16 +45,16 @@ std::pair<std::string, std::vector<std::string>> cmder::ProcessCmd(std::string s
 	buf.second = buf_;
 	return buf;
 }
-_data* cmder::convert_var(std::string token)
+data_container* cmder::convert_var(std::string token)
 {
 	//var(string x,string(ha))
 	auto x = ProcessCmd(token);
 	if (x.first.find(" ") != x.first.npos)
 	{
-		if (_database::SplitString(x.first, " ").size() > 1)
+		if (database::SplitString(x.first, " ").size() > 1)
 		{
-			auto ptr = new _data(_database::SplitString(x.first, " ")[1]);
-			insert(_database::SplitString(x.first, " ")[0], ptr);
+			auto ptr = new data_container(database::SplitString(x.first, " ")[1]);
+			insert(database::SplitString(x.first, " ")[0], ptr);
 			return ptr;
 		}
 		else
@@ -64,8 +64,8 @@ _data* cmder::convert_var(std::string token)
 	}
 	else
 	{
-		std::vector<_data*> v;
-		for (size_t i; i < x.second.size(); ++i)
+		std::vector<data_container*> v;
+		for (size_t i = 0; i < x.second.size(); ++i)
 		{
 			v.push_back(convert_var(x.second[i]));
 		}
@@ -76,44 +76,44 @@ _data* cmder::convert_var(std::string token)
 	}
 }
 
-executable::executable(ConfigMgr& m) :mgr(m)
+executable::executable(cmder_conf& m) :mgr(m)
 {
 }
 
-void executable::insert_static_function(const std::string& key, const std::function<_data* (std::vector<_data*>)>& value)
+void executable::insert_static_function(const std::string& key, const std::function<data_container* (std::vector<data_container*>)>& value)
 {
 	DEB(TS_ID_7 " " + key);
 	static_functions.insert(std::make_pair(key, value));
 }
 
-std::function<_data* (std::vector<_data*>)> executable::call(const std::string & key)
+std::function<data_container* (std::vector<data_container*>)> executable::call(const std::string & key)
 {
 	DEB(TS_ID_8 " " + key);
 	return static_functions[key];
 }
 
-//void executable::echo(std::vector<_data*> args)
+//void executable::echo(std::vector<data_container*> args)
 //{
-//	for_each(args.begin(), args.end(), [&](_data * d) {
+//	for_each(args.begin(), args.end(), [&](data_container * d) {
 //		switch (d->what())
 //		{
-//		case _data::Int:
+//		case data_container::Int:
 //			std::cout << d->getInt().second;
 //			break;
-//		case _data::Bool:
+//		case data_container::Bool:
 //			std::cout << ((d->getBool().second) ? "true" : "false");
 //			break;
-//		case _data::String:
+//		case data_container::String:
 //			std::cout << d->getString().second;
 //			break;
-//		case _data::Void:
+//		case data_container::Void:
 //			std::cout << "void";
 //			break;
 //		}
 //		});
 //}
 
-std::map<std::string, std::function<_data* (std::vector<_data*>)>> executable::static_functions({
+std::map<std::string, std::function<data_container* (std::vector<data_container*>)>> executable::static_functions({
 	//CMD_PAIR("echo",&executable::echo),
 	//CMD_PAIR("endl",&executable::endl),
 	//CMD_PAIR("system",&executable::_system),
@@ -123,7 +123,7 @@ std::map<std::string, std::function<_data* (std::vector<_data*>)>> executable::s
 	//CMD_PAIR("var",&executable::var)
 	});
 
-_data * executable::execute(cmder::cmd command)
+data_container * executable::execute(cmder::cmd command) const
 {
 	if (static_functions.find(command.first) == static_functions.end())
 	{
@@ -132,32 +132,32 @@ _data * executable::execute(cmder::cmd command)
 	}
 	return static_functions[command.first](command.second);
 }
-//void executable::endl(std::vector<_data*>)
+//void executable::endl(std::vector<data_container*>)
 //{
 //	std::cout << std::endl;
 //}
-//void executable::_system(std::vector<_data*> args)
+//void executable::_system(std::vector<data_container*> args)
 //{
-//	for_each(args.begin(), args.end(), [&](_data * d) {
+//	for_each(args.begin(), args.end(), [&](data_container * d) {
 //		switch (d->what())
 //		{
-//		case _data::Int:
+//		case data_container::Int:
 //			ERR(TS_ID_19 TS_ID_21);
 //			break;
-//		case _data::Bool:
+//		case data_container::Bool:
 //			ERR(TS_ID_19 TS_ID_22);
 //			break;
-//		case _data::String:
+//		case data_container::String:
 //			system(d->getString().second.c_str());
 //			break;
-//		case _data::Void:
+//		case data_container::Void:
 //			ERR(TS_ID_19 TS_ID_23);
 //			break;
 //		}
 //		});
 //}
 //
-//void executable::cast(std::vector<_data*> args)
+//void executable::cast(std::vector<data_container*> args)
 //{
 //	if (args.size() != 2)
 //	{
@@ -165,16 +165,16 @@ _data * executable::execute(cmder::cmd command)
 //	}
 //	switch (args[0]->what())
 //	{
-//	case _data::String:
+//	case data_container::String:
 //		switch (args[1]->what())
 //		{
-//		case _data::String:
+//		case data_container::String:
 //			args[1]->setValue(args[0]->getString().second);
 //			break;
-//		case _data::Int:
+//		case data_container::Int:
 //			args[1]->setValue(stoi(args[0]->getString().second));
 //			break;
-//		case _data::Bool:
+//		case data_container::Bool:
 //			args[1]->setValue(args[0]->getString().second == "true" ? true : false);
 //			break;
 //		default:
@@ -182,16 +182,16 @@ _data * executable::execute(cmder::cmd command)
 //			break;
 //		};
 //		break;
-//	case _data::Bool:
+//	case data_container::Bool:
 //		switch (args[1]->what())
 //		{
-//		case _data::String:
+//		case data_container::String:
 //			args[1]->setValue(args[0]->getBool().second ? "true" : "false");
 //			break;
-//		case _data::Int:
+//		case data_container::Int:
 //			args[1]->setValue((int)(args[0]->getBool().second));
 //			break;
-//		case _data::Bool:
+//		case data_container::Bool:
 //			args[1]->setValue(args[0]->getBool().second);
 //			break;
 //		default:
@@ -199,16 +199,16 @@ _data * executable::execute(cmder::cmd command)
 //			break;
 //		};
 //		break;
-//	case _data::Int:
+//	case data_container::Int:
 //		switch (args[1]->what())
 //		{
-//		case _data::String:
+//		case data_container::String:
 //			args[1]->setValue(std::to_string(args[0]->getInt().second));
 //			break;
-//		case _data::Int:
+//		case data_container::Int:
 //			args[1]->setValue(args[0]->getInt().second);
 //			break;
-//		case _data::Bool:
+//		case data_container::Bool:
 //			args[1]->setValue(args[0]->getInt().second == 0 ? false : true);
 //			break;
 //		default:
@@ -222,7 +222,7 @@ _data * executable::execute(cmder::cmd command)
 //	}
 //}
 //
-//void executable::log_verbose(std::vector<_data*> args)
+//void executable::log_verbose(std::vector<data_container*> args)
 //{
 //	if (args.size() != 1)
 //	{
@@ -238,12 +238,12 @@ _data * executable::execute(cmder::cmd command)
 //	}
 //}
 //
-//void executable::cin(std::vector<_data*> args)
+//void executable::cin(std::vector<data_container*> args)
 //{
-//	for_each(args.begin(), args.end(), [&](_data * d) {
+//	for_each(args.begin(), args.end(), [&](data_container * d) {
 //		switch (d->what())
 //		{
-//		case _data::String:
+//		case data_container::String:
 //		{
 //			std::string str;
 //			std::cin >> str;
@@ -257,22 +257,22 @@ _data * executable::execute(cmder::cmd command)
 //		});
 //}
 //
-//void executable::var(std::vector<_data*> args)
+//void executable::var(std::vector<data_container*> args)
 //{
 //	if (args.size() == 2)
 //	{
 //		switch (args[1]->what())
 //		{
-//		case _data::String:
+//		case data_container::String:
 //			args[0]->setValue(args[1]->getString().second);
 //			break;
-//		case _data::Int:
+//		case data_container::Int:
 //			args[0]->setValue(args[1]->getInt().second);
 //			break;
-//		case _data::Bool:
+//		case data_container::Bool:
 //			args[0]->setValue(args[1]->getBool().second);
 //			break;
-//		case _data::Void:
+//		case data_container::Void:
 //			args[0]->clearValue();
 //			break;
 //		};

@@ -1,6 +1,7 @@
 ﻿#include "libraryloader.h"
 #include <iostream>
 #include <sys/stat.h>
+#include "translates_CN.h"
 
 using namespace std;
 

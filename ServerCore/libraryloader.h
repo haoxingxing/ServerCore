@@ -19,7 +19,7 @@ private:
 	int _libVersion;
 
 public:
-	typedef int(*handle)(_database*);
+	typedef int(*handle)(database*);
 #ifdef _WIN32
 	HMODULE _module;
 #else

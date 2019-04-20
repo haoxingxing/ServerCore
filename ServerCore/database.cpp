@@ -1,30 +1,23 @@
 ﻿#include "database.h"
-_database::_database(bool _isfile, std::string filename) :isfile(_isfile)
+#include <sstream>
+#include <algorithm>
+#include "file.h"
+#include "ServerCore.h"
+
+database::database()
 {
 	DEB(print_pointer(this));
-	if (isfile)
-	{
-		fp = new File(filename);
-	}
-	else
-	{
-		fp = nullptr;
-	}
 }
 
-_database::~_database()
+database::~database()
 {
-	if (isfile)
-	{
-		delete fp;
-	}
-	std::for_each(data.begin(), data.end(), [&](std::pair<std::string, _data*> d) {
+	std::for_each(data.begin(), data.end(), [&](std::pair<std::string, data_container*> d) {
 		delete d.second;
 		});
 	DEB(print_pointer(this));
 }
 
-void _database::insert(const std::string& key, _data* value)
+void database::insert(const std::string& key, data_container* value)
 {
 	if (data.find(key) != data.end())
 	{
@@ -36,7 +29,7 @@ void _database::insert(const std::string& key, _data* value)
 	SUCC("");
 }
 
-void _database::remove(const std::string & key)
+void database::remove(const std::string & key)
 {
 	DEB(TS_ID_6" [" + key + "]");
 	if (data.find(key) != data.end())
@@ -51,7 +44,7 @@ void _database::remove(const std::string & key)
 	}
 }
 
-_data* _database::get(const std::string & key)
+data_container* database::get(const std::string & key)
 {
 	DEB(TS_ID_8 " [" + key + "]");
 	if (data.find(key) != data.end())
@@ -63,31 +56,13 @@ _data* _database::get(const std::string & key)
 	{
 		ERR(TS_ID_4);
 		WARN(TS_ID_9);
-		this->insert(key, new _data("void"));
+		this->insert(key, new data_container("void"));
 		return get(key);
 	}
 }
 
-_data* _database::operator[](const std::string & key)
-{
-	return this->get(key);
-}
 
-std::string _database::map_to_str()
-{
-	std::string buf = create_database_string();
-	std::for_each(data.begin(), data.end(), [&](std::pair<std::string, _data*> d) {
-		str_insert(buf, d.first, d.second);
-		});
-	return buf;
-}
-
-std::map<std::string, _data*> _database::data_()
-{
-	return data;
-}
-
-bool _database::contains(const std::string & key)
+bool database::contains(const std::string & key)
 {
 	if (data.find(key) != data.end())
 		return true;
@@ -95,7 +70,7 @@ bool _database::contains(const std::string & key)
 		return false;
 }
 
-std::vector<std::string> _database::SplitString(const std::string & s, const std::string & c)
+std::vector<std::string> database::SplitString(const std::string & s, const std::string & c)
 {
 	std::vector<std::string> v;
 	std::string::size_type pos1, pos2;
@@ -113,51 +88,7 @@ std::vector<std::string> _database::SplitString(const std::string & s, const std
 	return v;
 }
 
-void _database::str_to_map(const std::string & str)
-{
-//	if (str.size() > 0)
-//	{
-//		if (str.at(0) != DB_START) {
-//			ERR(TS_ID_1);
-//			return;
-//		}
-//	}
-//	else
-//	{
-//		ERR(TS_ID_1);
-//		return;
-//	}
-//	std::vector<std::string> v = SplitString(str, "|");
-//	for (size_t i = 1; i < v.size(); ++i)
-//	{
-//		if (v[i].find('@') == std::string::npos)
-//		{
-//			WARN(TS_ID_2);
-//			continue;
-//		}
-//		std::vector<std::string> b = SplitString(v[i], "@");
-//		switch (b[1].at(0))
-//		{
-//		case '#':
-//			insert(hex_to_str(b[0]), new _data(std::stoi(b[1].substr(1, b[1].length() - 1))));
-//			break;
-//		case '$':
-//			insert(hex_to_str(b[0]), new _data(std::stoi(b[1].substr(1, b[1].length() - 1)) != 0));
-//			break;
-//		case '%':
-//			insert(hex_to_str(b[0]), new _data(hex_to_str(b[1].substr(1, b[1].length() - 1))));
-//			break;
-//		case '&':
-////			insert(hex_to_str(b[0]), new _data());
-//			break;
-//		default:
-//			WARN(TS_ID_3);
-//			break;
-//		}
-//	}
-}
-
-std::string _database::str_to_hex(const std::string & s, bool upper)
+std::string database::str_to_hex(const std::string & s, bool upper)
 {
 	std::ostringstream ret;
 
@@ -170,7 +101,7 @@ std::string _database::str_to_hex(const std::string & s, bool upper)
 	}
 	return ret.str();
 }
-std::string _database::hex_to_str(const std::string & hex)
+std::string database::hex_to_str(const std::string & hex)
 {
 	size_t len = hex.length();
 	std::string newString;
@@ -183,55 +114,18 @@ std::string _database::hex_to_str(const std::string & hex)
 	return newString;
 }
 
-void _database::loadfromfile()
+bool data_container::register_type(std::string name, construction_handle hd)
 {
-	str_to_map(fp->read());
+	if (construction_handles.find(name) != construction_handles.end())
+	{
+		DEB(TS_ID_28);
+		return false;
+	}
+	else {
+		construction_handles.insert(std::make_pair(name, hd));		
+		return true;
+	}
 }
 
-void _database::writetofile()
-{
-	fp->write(map_to_str());
-}
 
-void _database::str_insert(std::string & str, const std::string & key, _data * d)
-{
-	//if (str.at(0) != DB_START)
-	//{
-	//	ERR(TS_ID_1);
-	//	return;
-	//}
-	//str += '|';
-	//str += str_to_hex(key);
-	//str += '@';
-	//switch (d->what()) {
-	//case _data::Int:
-	//	str += '#';
-	//	str += std::to_string(d->getInt().second);
-	//	break;
-	//case _data::Bool:
-	//	str += '$';
-	//	str += std::to_string(d->getBool().second);
-	//	break;
-	//case _data::String:
-	//	str += '%';
-	//	str += str_to_hex(d->getString().second);
-	//	break;
-	//case _data::Void:
-	//	str += '&';
-	//	break;
-	//};
-}
-
-std::string _database::create_database_string()
-{
-	return std::string() + DB_START;
-}
-
-_data::_data(std::string _type) :type(_type)
-{
-}
-
-string::string(const std::string & v) : _data("string")
-{
-	data = v;
-}
+std::map<std::string, data_container::construction_handle> data_container::construction_handles;

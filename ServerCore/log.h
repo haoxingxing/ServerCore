@@ -1,6 +1,5 @@
 ﻿#ifndef COLOR_PRInt_H
 #define COLOR_PRInt_H
-#include <iostream>
 #include <string>
 
 class log {

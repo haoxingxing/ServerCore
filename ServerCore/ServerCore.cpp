@@ -2,14 +2,14 @@
 #include "log.h"
 #include "file.h"
 #include "database.h"
-#include "configmgr.h"
+#include "cmder_conf.h"
 #include "cmder.h"
 #include <iostream>
 using namespace std;
 
 int main()
 {
-	cmder t(true, "test.conf");
+	cmder t;	
 	t.run();
 	return 0;
 }
