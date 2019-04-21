@@ -40,10 +40,10 @@ std::pair<std::string, std::vector<std::string>> cmder::ProcessCmd(std::string s
 			continue;
 		}
 		auto x = buf_[(buf_.size() - 1)];
-		if (!(std::count(x.begin(), x.end(), '(') == std::count(x.begin(), x.end(), ')')))
+		if (std::count(x.begin(), x.end(), '(') != std::count(x.begin(), x.end(), ')'))
 		{
-			x.append(args[t]);
-			buf_.erase(buf_.end());
+			x.append("," + args[t]);
+			buf_.erase(buf_.end() - 1);
 			buf_.push_back(x);
 		}
 		else
@@ -137,22 +137,29 @@ data_container* executable::execute(cmder::cmd command) const
 
 data_container* executable::echo(std::vector<data_container*> n)
 {
-	for (size_t i=0;i<n.size();++i)
+	for (size_t i = 0; i < n.size(); ++i)
 	{
 		_SWITCH_BEGIN(n[i]->what())
-		_SWITCH_CASE("string"){
+			_SWITCH_CASE("string") {
 			std::cout << n[i]->get()->to<data_string>()->access();
 		}
 		_SWITCH_DEFAULT{
-			std::cout << "NotPrintable";
+			WARN("NotPrintable");
 		}
-		_SWITCH_END
+			_SWITCH_END
 	}
 	return new data_container;
 }
 
 data_container* executable::var(std::vector<data_container*> args)
 {
-	args[0]->swap(args[1]);
+	if (args.size() == 2)
+	{
+		args[0]->swap(args[1]);
+	}
+	else
+	{
+		ERR(TS_ID_24 "2" TS_ID_25 TS_ID_26);
+	}
 	return new data_container;
 }
