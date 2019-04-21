@@ -8,8 +8,8 @@
 using namespace std;
 
 int main()
-{	
-	file f("test.conf");	
+{
+	file f("test.conf");
 	cmder t;
 	t.str_to_map(f.read());
 	t.run();
