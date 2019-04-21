@@ -13,7 +13,11 @@
 #endif
 #include "database.h"
 
-class Library {
+class Library 
+#ifdef UsingMemoryLeakCheck
+	: MemoryLeak_Probe
+#endif
+{
 private:
 	std::string _libPath;
 	int _libVersion;

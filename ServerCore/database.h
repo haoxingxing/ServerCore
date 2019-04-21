@@ -4,10 +4,13 @@
 #include <map>
 #include <vector>
 #include <iomanip>
-#include "file.h"
 #include "ServerCore.h"
-
+#include "log.h"
+#include "file.h"
 class data
+#ifdef UsingMemoryLeakCheck
+	: MemoryLeak_Probe
+#endif
 {
 public:
 	explicit data(const std::string& _type) :type(_type) {
@@ -68,6 +71,9 @@ private:
 };
 
 class database
+#ifdef UsingMemoryLeakCheck
+	: MemoryLeak_Probe
+#endif
 {
 public:
 	database();

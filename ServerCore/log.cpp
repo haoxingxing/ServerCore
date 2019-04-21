@@ -41,3 +41,4 @@ void log::print(log_level t,const std::string& info,bool i)
 
 bool log::iscolored = true;
 log::log_level log::verbose = Debug;
+int MemoryLeak_Probe::count = 0;

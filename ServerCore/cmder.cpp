@@ -1,5 +1,6 @@
 ﻿#include "cmder.h"
 #include <algorithm>
+#include <iostream>
 cmder::cmder()
 {
 }
@@ -56,7 +57,7 @@ std::pair<std::string, std::vector<std::string>> cmder::ProcessCmd(std::string s
 std::pair<bool, data_container*> cmder::convert_var(std::string token)
 {
 	auto x = ProcessCmd(token);
-	if (x.first.find(" ") != std::basic_string<char, std::char_traits<char>, std::allocator<char>>::npos)
+	if (token.find("(") == std::basic_string<char, std::char_traits<char>, std::allocator<char>>::npos)
 	{
 		if (database::SplitString(x.first, " ").size() > 1)
 		{
@@ -120,7 +121,8 @@ std::function<data_container* (std::vector<data_container*>)> executable::call(c
 }
 
 std::map<std::string, std::function<data_container* (std::vector<data_container*>)>> executable::static_functions({
-	CMD_PAIR("var",&executable::var)
+	CMD_PAIR("var",&executable::var),
+	CMD_PAIR("echo",&executable::echo)
 	});
 
 data_container* executable::execute(cmder::cmd command) const
@@ -135,11 +137,22 @@ data_container* executable::execute(cmder::cmd command) const
 
 data_container* executable::echo(std::vector<data_container*> n)
 {
-	return nullptr;
+	for (size_t i=0;i<n.size();++i)
+	{
+		_SWITCH_BEGIN(n[i]->what())
+		_SWITCH_CASE("string"){
+			std::cout << n[i]->get()->to<data_string>()->access();
+		}
+		_SWITCH_DEFAULT{
+			std::cout << "NotPrintable";
+		}
+		_SWITCH_END
+	}
+	return new data_container;
 }
 
 data_container* executable::var(std::vector<data_container*> args)
 {
 	args[0]->swap(args[1]);
-	return nullptr;
+	return new data_container;
 }

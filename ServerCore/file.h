@@ -2,8 +2,11 @@
 #define FILE_H
 #include <string>
 #include <fstream>
-
+#include "log.h"
 class file
+#ifdef UsingMemoryLeakCheck
+	: MemoryLeak_Probe
+#endif
 {
 public:
 	// Open File to read and write
