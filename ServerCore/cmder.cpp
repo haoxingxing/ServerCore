@@ -78,7 +78,7 @@ std::pair<bool, data_container*> cmder::convert_var(std::string token)
 			std::string str;
 			for (const auto& i : x.second)
 			{
-				str += ((str.size() != 0) ? "," : "") + i;
+				str += ((!str.empty()) ? "," : "") + i;
 			}
 			return std::make_pair(true, new data_container("string", new data_string(str)));
 		}

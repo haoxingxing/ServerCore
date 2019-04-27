@@ -20,7 +20,7 @@ public:
 	Warning
 	Error
 	*/
-	static void print(log_level, const std::string &info, bool t = true);
+	static void print(log_level, const std::string& info, bool t = true);
 	static bool iscolored;
 };
 #ifdef UsingMemoryLeakCheck
@@ -36,7 +36,8 @@ public:
 		count--;
 	}
 	static void MemoryLeakCheck() {
-		log::print(log::Info, std::to_string(MemoryLeak_Probe::count));
+		if (MemoryLeak_Probe::count != 0)
+			log::print(log::Error, "Memory Leaked:" + std::to_string(MemoryLeak_Probe::count));
 	}
 	static int count;
 };

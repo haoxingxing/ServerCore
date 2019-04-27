@@ -4,17 +4,30 @@
 #include "database.h"
 #include "cmder_conf.h"
 #include "cmder.h"
+#include "repo_version.h"
 #include <iostream>
 using namespace std;
 
-int main()
+void Run(std::string _file)
 {
+	file f(_file);
+	cmder t;
+	t.str_to_map(f.read());
+	t.run();
+}
+
+int main(int argc, char** argv)
+{
+	if (argc == 1)
 	{
-		file f("test.conf");
-		cmder t;
-		t.str_to_map(f.read());
-		t.run();
+		log::print(log::Info, "ServerCore " REPO_VERSION "+" REPO_HASH);
 	}
+	else if (argc > 1)
+	{
+		Run(string(argv[1]));
+	}
+#ifdef UsingMemoryLeakCheck
 	MemoryLeak_Probe::MemoryLeakCheck();
+#endif
 	return 0;
 }
