@@ -1,0 +1,4 @@
+#!./build/ServerCore*
+# Test File
+var(string str,string(A string:))
+echo(str,string(Hello World))

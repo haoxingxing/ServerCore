@@ -19,8 +19,10 @@ before_build:
 
 build:
   project: ServerCore.sln
-  parallel: true
 
+test_script:
+  - build\Release\ServerCore.win32.exe
+  - build\Release\ServerCore.win32.exe test.starcore
 
 artifacts:
   - path: build\*\*
