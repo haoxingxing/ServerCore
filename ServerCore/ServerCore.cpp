@@ -6,6 +6,7 @@
 #include "cmder.h"
 #include "repo_version.h"
 #include <iostream>
+#include "basic_types.h"
 #ifdef _WIN32
 #include <Windows.h>
 #endif
@@ -14,7 +15,7 @@ using namespace std;
 void Run(std::string _file)
 {
 	file f(_file);
-	cmder t;
+	cmder  t;
 	t.str_to_map(f.read());
 	t.run();
 }
@@ -26,7 +27,7 @@ int main(int argc, char** argv)
 #endif
 	if (argc == 1)
 	{
-		log::print(log::Info, "ServerCore " REPO_VERSION "+" REPO_HASH);
+		log::print(log::Info, "ServerCore " REPO_VERSION);
 	}
 	else if (argc > 1)
 	{

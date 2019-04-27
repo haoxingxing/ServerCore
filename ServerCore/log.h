@@ -1,7 +1,7 @@
 ﻿#ifndef COLOR_PRInt_H
 #define COLOR_PRInt_H
 #include <string>
-#define UsingMemoryLeakCheck
+#include "global.h"
 class log {
 public:
 	static enum log_level
@@ -35,10 +35,7 @@ public:
 	{
 		count--;
 	}
-	static void MemoryLeakCheck() {
-		if (MemoryLeak_Probe::count != 0)
-			log::print(log::Error, "Memory Leaked:" + std::to_string(MemoryLeak_Probe::count));
-	}
+	static void MemoryLeakCheck();
 	static int count;
 };
 

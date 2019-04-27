@@ -8,7 +8,6 @@
 #include <utility>
 #include <map>
 #include "database.h"
-
 #define CMD_PAIR(key,value) std::make_pair(key,std::function<data_container*(std::vector<data_container*>)>(value))
 class cmder :public cmder_conf {
 	friend cmder_conf;

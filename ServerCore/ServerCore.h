@@ -1,7 +1,9 @@
 ﻿#pragma once
+
 /*
  *	This file contains some public defines
  */
+#include "global.h"
 #include "log.h"
 #include "translates_CN.h"
 #define data_file "data"
@@ -48,5 +50,3 @@ if(false);
 #define _SWITCH_END \
 }
 #define _SWITCH_DEFAULT else
-
-

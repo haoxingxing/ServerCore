@@ -3,7 +3,15 @@
 #include <algorithm>
 #include "ServerCore.h"
 #include "file.h"
-
+#include "basic_types.h"
+data_container& data::convert_type(const std::string&)
+{
+	return data_container();
+}
+data_container::data_container(const std::string& type, data* d) : d(d), type_(type)
+{
+	DEB(print_pointer(this));
+}
 database::database()
 {
 	DEB(print_pointer(this));
@@ -60,7 +68,6 @@ data_container* database::get(const std::string & key)
 		return get(key);
 	}
 }
-
 
 std::vector<std::string> database::SplitString(const std::string & s, const std::string & c)
 {

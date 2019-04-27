@@ -21,7 +21,7 @@ build:
 
 test_script:
   - build\Release\ServerCore.win32.exe
-  - build\Release\ServerCore.win32.exe test.starcore
+  - build\Release\ServerCore.win32.exe tests.starcore
 
 artifacts:
   - path: build\*\*

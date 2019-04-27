@@ -1,6 +1,7 @@
 ﻿#include "cmder.h"
 #include <algorithm>
 #include <iostream>
+#include "basic_types.h"
 cmder::cmder()
 {
 }
@@ -77,10 +78,15 @@ std::pair<bool, data_container*> cmder::convert_var(std::string token)
 		{
 			std::string str;
 			for (const auto& i : x.second)
-			{
 				str += ((!str.empty()) ? "," : "") + i;
-			}
 			return std::make_pair(true, new data_container("string", new data_string(str)));
+		}
+		_SWITCH_CASE("int")
+		{
+			std::string str;
+			for (const auto& i : x.second)
+				str += ((!str.empty()) ? "," : "") + i;
+			return std::make_pair(true, new data_container("int", new data_int(std::stoi(str))));
 		}
 		_SWITCH_DEFAULT{
 			cmd c;
@@ -140,18 +146,16 @@ data_container* executable::echo(std::vector<data_container*> n)
 	for (size_t i = 0; i < n.size(); ++i)
 	{
 		_SWITCH_BEGIN(n[i]->what())
-			_SWITCH_CASE("string") {
-			std::cout << n[i]->get()->to<data_string>()->access();
-		}
-		_SWITCH_DEFAULT{
-			WARN("NotPrintable");
-		}
-			_SWITCH_END
+			_SWITCH_CASE("string")
+			std::cout << ((n[i]->get() == nullptr) ? "null" : n[i]->get()->to<data_string>()->access());
+		_SWITCH_DEFAULT
+			std::cout << ((n[i]->get() == nullptr) ? "null" : n[i]->get()->convert_type("string").get()->to<data_string>()->access());
+		_SWITCH_END
 	}
 	return new data_container;
 }
 
-data_container* executable::var(std::vector<data_container*> args)
+data_container * executable::var(std::vector<data_container*> args)
 {
 	if (args.size() == 2)
 	{

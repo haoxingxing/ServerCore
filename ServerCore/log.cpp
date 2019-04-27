@@ -1,5 +1,6 @@
 ﻿#include "log.h"
 #include <iostream>
+#include "ServerCore.h"
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -68,5 +69,21 @@ void log::print(log_level t, const std::string& info, bool i)
 }
 
 bool log::iscolored = true;
-log::log_level log::verbose = Debug;
+log::log_level log::verbose =
+#ifndef DEBUG
+Info;
+#else
+Debug;
+#endif
+#ifdef UsingMemoryLeakCheck
+void MemoryLeak_Probe::MemoryLeakCheck()
+{
+	if (MemoryLeak_Probe::count != 0)
+	{
+		log::print(log::Error, "Memory Leaked:" + std::to_string(MemoryLeak_Probe::count));
+		exit(EXIT_FAILURE);
+	}
+}
+
 int MemoryLeak_Probe::count = 0;
+#endif
