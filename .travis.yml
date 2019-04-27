@@ -2,20 +2,17 @@
 os:
   - linux
   - osx
-script: cmake . && make
+script: 
+  - cmake . && make
+  - build/ServerCore*
+  - build/ServerCore* tests.starcore
 
-jobs:
-  include:
-    - script: build/ServerCore*
-    - script: build/ServerCore* tests.starcore
-    - stage: GitHub Release
-      script: echo "Deploying to GitHub releases ..."
-      deploy:
-        provider: releases
-        api_key: 
-		  secure: $key
-        skip_cleanup: true
-		file_glob: true
-		file: build/*
-        on:
-          tags: true
+deploy:
+  provider: releases
+  api_key: 
+    secure: $key
+  file_glob: true
+  file: build/*
+  skip_cleanup: true
+  on:
+    tags: true

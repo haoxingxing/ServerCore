@@ -6,6 +6,9 @@
 #include "cmder.h"
 #include "repo_version.h"
 #include <iostream>
+#ifdef _WIN32
+#include <Windows.h>
+#endif
 using namespace std;
 
 void Run(std::string _file)
@@ -18,6 +21,9 @@ void Run(std::string _file)
 
 int main(int argc, char** argv)
 {
+#ifdef _WIN32
+	system("chcp 65001");
+#endif
 	if (argc == 1)
 	{
 		log::print(log::Info, "ServerCore " REPO_VERSION "+" REPO_HASH);
