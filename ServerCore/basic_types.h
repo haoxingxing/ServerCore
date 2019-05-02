@@ -1,7 +1,23 @@
+#ifndef BASIC_TYPES_H
+#define BASIC_TYPES_H
 #include "database.h"
 #include "cmder.h"
 #include <string>
 #include <iostream>
+class data_function : public data
+{
+public:
+	data_function(const data* parent = nullptr);
+	data_container* execute(std::vector<data_container*>) override = 0;
+};
+/*
+ * The args are normal with "args"
+ */
+#define DEFINE_FUNCTION_BEGIN(name)\
+class name : public data_function { \
+data_container* execute(std::vector<data_container*> args)
+#define DEFINE_FUNCTION_END }
+
 class data_void : public data
 {
 public:
@@ -29,50 +45,41 @@ public:
 private:
 	std::string d;
 };
-class data_function : public data
-{
-public:
-	data_function(const data* parent = nullptr);
-	virtual data_container* execute(std::vector<data_container*>) override = 0;
-};
 
 class builtin : public data
 {
 public:
 	builtin();
-	class var : public data_function
+	DEFINE_FUNCTION_BEGIN(var)
 	{
-		data_container* execute(std::vector<data_container*> args) override
+		if (args.size() == 2)
 		{
-			if (args.size() == 2)
-			{
-				args[0]->swap(args[1]);
-			}
-			else
-			{
-				ERR(TS_ID_24 "2" TS_ID_25 TS_ID_26);
-			}
-			return new data_container;
+			args[0]->swap(args[1]);
 		}
-	};
-	class echo : public data_function
+		else
+		{
+			ERR(TS_ID_24 "2" TS_ID_25 TS_ID_26);
+		}
+		return new data_container;
+	}
+	DEFINE_FUNCTION_END;
+	DEFINE_FUNCTION_BEGIN(echo)
 	{
-		data_container* execute(std::vector<data_container*> n) override
+		for (auto& arg : args)
 		{
-			for (size_t i = 0; i < n.size(); ++i)
+			_SWITCH_BEGIN(Type(arg->get()))
+				_SWITCH_CASE("null")
 			{
-				_SWITCH_BEGIN(Type(n[i]->get()))
-					_SWITCH_CASE("null")
-				{
-					std::cout << "null";
-				}
-				_SWITCH_CASE("string")
-					std::cout << n[i]->get()->to<data_string>()->access();
-				_SWITCH_DEFAULT
-					std::cout << n[i]->get()->convert_type("string")->get()->to<data_string>()->access();
-				_SWITCH_END
+				std::cout << "null";
 			}
-			return new data_container;
+			_SWITCH_CASE("string")
+				std::cout << arg->get()->to<data_string>()->access();
+			_SWITCH_DEFAULT
+				std::cout << arg->get()->convert_type("string")->get()->to<data_string>()->access();
+			_SWITCH_END
 		}
-	};
+		return new data_container;
+	}
+	DEFINE_FUNCTION_END;
 };
+#endif // BASIC_TYPES_H
