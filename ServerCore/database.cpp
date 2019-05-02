@@ -4,9 +4,9 @@
 #include "ServerCore.h"
 #include "file.h"
 #include "basic_types.h"
-data_container& data::convert_type(const std::string&)
+data_container* data::convert_type(const std::string&)
 {
-	return data_container();
+	return new data_container();
 }
 data_container::data_container(const std::string& type, data* d) : d(d), type_(type)
 {

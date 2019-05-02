@@ -44,7 +44,7 @@
 #define EXIT_ERR(info) ERR(info);exit(EXIT_FAILURE)
 
 #define _SWITCH_BEGIN(str) {\
-std::string SWITCH_KEY=str;\
+const std::string &SWITCH_KEY=str;\
 if(false);
 #define _SWITCH_CASE(str) else if (SWITCH_KEY==str)
 #define _SWITCH_END \

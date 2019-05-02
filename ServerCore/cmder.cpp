@@ -149,7 +149,7 @@ data_container* executable::echo(std::vector<data_container*> n)
 			_SWITCH_CASE("string")
 			std::cout << ((n[i]->get() == nullptr) ? "null" : n[i]->get()->to<data_string>()->access());
 		_SWITCH_DEFAULT
-			std::cout << ((n[i]->get() == nullptr) ? "null" : n[i]->get()->convert_type("string").get()->to<data_string>()->access());
+			std::cout << ((n[i]->get() == nullptr) ? "null" : n[i]->get()->convert_type("string")->get()->to<data_string>()->access());
 		_SWITCH_END
 	}
 	return new data_container;

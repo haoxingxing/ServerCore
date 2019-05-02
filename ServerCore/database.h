@@ -22,7 +22,7 @@ public:
 	};
 	virtual std::string what() { return type; };
 	virtual void delete_this() { delete this; };
-	virtual data_container& convert_type(const std::string&);;
+	virtual data_container* convert_type(const std::string&);;
 	virtual bool is_convertible_to(const std::string&) { return false; };
 	template<typename T>
 	T* to() { return dynamic_cast<T*>(this); };
@@ -31,9 +31,12 @@ private:
 };
 class data_void;
 class data_container
+#ifdef UsingMemoryLeakCheck
+	: MemoryLeak_Probe
+#endif
 {
 public:
-	explicit data_container(const std::string& type = "void", data* d = nullptr);;
+	explicit data_container(const std::string& type = "void", data* d = nullptr);	;
 	~data_container() {
 		DEB(print_pointer(this));
 		if (d != nullptr)
@@ -45,11 +48,11 @@ public:
 	{
 		if (this->type_ != s->type_)
 		{
-			this->swap(&(s->get()->convert_type(type_)));
+			this->swap(s->get()->convert_type(type_));
 		}
 		else
 		{
-			data* dt = d;
+			const auto dt = d;
 			this->d = s->d;
 			s->d = dt;
 		}
