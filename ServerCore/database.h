@@ -8,10 +8,10 @@
 #include "ServerCore.h"
 #include "log.h"
 #include "file.h"
+#define Type(ptr) (ptr==nullptr)?"null":ptr->what()
 class data_container;
 class database;
 class data
-#define Type(ptr) (ptr==nullptr)?"null":ptr->what()
 #ifdef UsingMemoryLeakCheck
 	: MemoryLeak_Probe
 #endif
@@ -19,7 +19,7 @@ class data
 public:
 	explicit data(const std::string & _type = "void");;
 	virtual ~data();;
-	virtual std::string what() { return this == nullptr ? "null" : type; };
+	virtual std::string what() { return type; };
 	virtual data_container* access_member(const std::string& name);
 	virtual void delete_this() { delete this; };
 	virtual std::shared_ptr<data_container> convert_type(const std::string&);;
@@ -37,35 +37,37 @@ class data_container
 #endif
 {
 public:
-	explicit data_container(data * d = nullptr,bool iscopy = false);
+	explicit data_container(data * *d);
+	explicit data_container(data* d = nullptr);
 	~data_container() {
 		DEB(print_pointer(this));
 		if (!iscopy)
 		{
-			if (d != nullptr)
-				d->delete_this();
-			d = nullptr;
+			if ((*d) != nullptr)
+				(*d)->delete_this();
+			*d = nullptr;
+			delete d;
 		}
 	};
 	void swap(data_container * s)
 	{
-		const auto dt = d;
-		this->d = s->d;
-		s->d = dt;
+		const auto dt = *d;
+		*(this->d) = *(s->d);
+		*(s->d) = dt;
 	}
-	void save(data * da)
+	void save(data * da) const
 	{
 		if (d != nullptr) delete d;
-		d = da;
+		(*d) = da;
 	};
 	data_container* copy() const
 	{
-		return new data_container(d,true);
+		return new data_container(d);
 	};
-	data* get() const { return d; };
-	explicit operator data* () const { return d; };
+	data* get() const { return *d; };
+	explicit operator data* () const { return *d; };
 private:
-	data* d = nullptr;
+	data** d = nullptr;
 	bool iscopy;
 };
 

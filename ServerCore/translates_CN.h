@@ -43,3 +43,4 @@
 #define TS_ID_27 "无法转换为数字"
 #define TS_ID_28 "类型已存在"
 #define TS_ID_29 "类型不匹配"
+#define TS_ID_30 "进入函数体"

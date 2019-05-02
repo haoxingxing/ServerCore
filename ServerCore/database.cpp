@@ -22,7 +22,11 @@ std::shared_ptr<data_container> data::convert_type(const std::string&)
 {
 	return std::shared_ptr<data_container>(new data_container());
 }
-data_container::data_container(data* d, bool _iscopy) : d(d), iscopy(_iscopy)
+data_container::data_container(data** d) : d(d), iscopy(true)
+{
+	DEB(print_pointer(this));
+}
+data_container::data_container(data* d) : d(new data* (d)), iscopy(false)
 {
 	DEB(print_pointer(this));
 }

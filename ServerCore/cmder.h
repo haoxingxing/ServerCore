@@ -18,7 +18,7 @@ public:
 	typedef std::pair<std::string, std::vector<data_container*>> cmd;
 private:
 	std::pair<std::string, std::vector<std::string>> ProcessCmd(std::string str) const;
-	std::pair<bool, data_container*> convert_var(std::string token);
+	data_container* convert_var(std::string token);
 };
 class executable
 {
