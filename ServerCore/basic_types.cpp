@@ -15,7 +15,7 @@ std::shared_ptr<data_container> data_void::convert_type(const std::string& t)
 	_SWITCH_BEGIN(t)
 		_SWITCH_CASE("string")
 	{
-		return std::shared_ptr<data_container>(new data_container("string", new data_string("void")));
+		return std::shared_ptr<data_container>(new data_container(new data_string("void")));
 	}
 	_SWITCH_DEFAULT
 		return std::shared_ptr<data_container>(new data_container());
@@ -26,7 +26,7 @@ std::shared_ptr<data_container> data_int::convert_type(const std::string& t)
 	_SWITCH_BEGIN(t)
 		_SWITCH_CASE("string")
 	{
-		return std::shared_ptr<data_container>(new data_container("string", new data_string(std::string(1, char(d)))));
+		return std::shared_ptr<data_container>(new data_container(new data_string(std::string(1, char(d)))));
 	}
 	_SWITCH_DEFAULT
 		return std::shared_ptr<data_container>(new data_container());

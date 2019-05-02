@@ -22,7 +22,7 @@ std::shared_ptr<data_container> data::convert_type(const std::string&)
 {
 	return std::shared_ptr<data_container>(new data_container());
 }
-data_container::data_container(const std::string& type, data* d, bool _iscopy) : d(d), type_(type), iscopy(_iscopy)
+data_container::data_container(data* d, bool _iscopy) : d(d), iscopy(_iscopy)
 {
 	DEB(print_pointer(this));
 }
@@ -75,7 +75,7 @@ data_container* database::get(const std::string & key)
 	{
 		DEB(TS_ID_4" [" + key + "]");
 		DEB(TS_ID_9);
-		this->insert(key, new data_container("void"));
+		this->insert(key, new data_container());
 		return get(key);
 	}
 }

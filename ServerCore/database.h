@@ -11,6 +11,7 @@
 class data_container;
 class database;
 class data
+#define Type(ptr) (ptr==nullptr)?"null":ptr->what()
 #ifdef UsingMemoryLeakCheck
 	: MemoryLeak_Probe
 #endif
@@ -18,7 +19,7 @@ class data
 public:
 	explicit data(const std::string & _type = "void");;
 	virtual ~data();;
-	virtual std::string what() { return type; };
+	virtual std::string what() { return this == nullptr ? "null" : type; };
 	virtual data_container* access_member(const std::string& name);
 	virtual void delete_this() { delete this; };
 	virtual std::shared_ptr<data_container> convert_type(const std::string&);;
@@ -36,7 +37,7 @@ class data_container
 #endif
 {
 public:
-	explicit data_container(const std::string & type = "void", data * d = nullptr,bool iscopy = false);
+	explicit data_container(data * d = nullptr,bool iscopy = false);
 	~data_container() {
 		DEB(print_pointer(this));
 		if (!iscopy)
@@ -46,35 +47,26 @@ public:
 			d = nullptr;
 		}
 	};
-	std::string what() const { return type_; };
 	void swap(data_container * s)
 	{
-		if (this->type_ != s->type_)
-		{
-			this->swap(s->get()->convert_type(type_).operator->());
-		}
-		else
-		{
-			const auto dt = d;
-			this->d = s->d;
-			s->d = dt;
-		}
+		const auto dt = d;
+		this->d = s->d;
+		s->d = dt;
 	}
 	void save(data * da)
 	{
 		if (d != nullptr) delete d;
-		if (da->what() == type_)d = da;
+		d = da;
 	};
-	data_container * copy() const
+	data_container* copy() const
 	{
-		return new data_container(type_, d,true);
+		return new data_container(d,true);
 	};
 	data* get() const { return d; };
 	explicit operator data* () const { return d; };
 private:
 	data* d = nullptr;
 	bool iscopy;
-	std::string type_;
 };
 
 class database
