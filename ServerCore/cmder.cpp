@@ -22,17 +22,24 @@ data_container* cmder::member_access(std::string name)
 	if (name.find("->") != name.npos)
 	{
 		auto s = SplitString(name, "->");
-		if (s.size() != 2)
+		if (s.size() < 2)
 		{
 			ERR(TS_ID_32);
 			return nullptr;
 		}
-		auto p = (*this)[s[0]]->get();
-		if (p == nullptr) {
-			ERR(TS_ID_31 + s[0]);
+		data_container* p = this->get(s[0]);
+		for (size_t i = 1; i < s.size() && p != nullptr; i++)
+		{
+			if (p != nullptr && p->get() != nullptr)
+				p = p->get()->access_member(s[i]);
+			else
+				ERR(TS_ID_31 + name);
+		}
+		if (p == nullptr || p->get() == nullptr) {
+			ERR(TS_ID_31 + name);
 			return nullptr;
 		}
-		return p->access_member(s[1])->copy();
+		return p->copy();
 	}
 	else
 	{
@@ -143,34 +150,3 @@ data_container* cmder::convert_var(std::string token)
 			_SWITCH_END
 	}
 }
-//
-//executable::executable(cmder_conf & m) :mgr(m)
-//{
-//}
-//
-//void executable::insert_static_function(const std::string & key, const std::function<data_container * (std::vector<data_container*>)> & value)
-//{
-//	DEB(TS_ID_7 " " + key);
-//	static_functions.insert(std::make_pair(key, value));
-//}
-//
-//std::function<data_container* (std::vector<data_container*>)> executable::call(const std::string & key)
-//{
-//	DEB(TS_ID_8 " " + key);
-//	return static_functions[key];
-//}
-//
-////std::map<std::string, std::function<data_container* (std::vector<data_container*>)>> executable::static_functions({
-////	CMD_PAIR("var",&executable::var),
-////	CMD_PAIR("echo",&executable::echo)
-////	});
-//
-//data_container* executable::execute(cmder::cmd command) const
-//{
-//	if (static_functions.find(command.first) == static_functions.end())
-//	{
-//		ERR(TS_ID_17 " \"" + command.first + "\"");
-//		return new data_container;
-//	}
-//	return static_functions[command.first](command.second);
-//}

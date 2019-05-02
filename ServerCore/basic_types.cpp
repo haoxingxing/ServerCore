@@ -47,7 +47,7 @@ bool data_int::is_convertible_to(const std::string& t)
 data_function::data_function(const data* parent) : data("function", parent)
 {
 }
-builtin::builtin()
+builtin::builtin() : data("builtin")
 {
 	member->insert("var", new data_container(new var));
 	member->insert("echo", new data_container(new echo));
