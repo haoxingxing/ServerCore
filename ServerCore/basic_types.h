@@ -13,18 +13,26 @@ public:
 /*
  * The args are normal with "args"
  */
-#define DEFINE_FUNCTION_BEGIN(name)\
+#define function_(name)\
 class name : public data_function { \
 data_container* execute(std::vector<data_container*> args)
-#define DEFINE_FUNCTION_END }
-
+#define _function }
+#define reg_function this->member->insert
 class data_void : public data
 {
 public:
 	data_void(const data* parent = nullptr) :data("void", parent) { }
 	std::shared_ptr<data_container> convert_type(const std::string& t);
-	bool is_convertible_to(const std::string& t);
 private:
+};
+class data_bool : public data
+{
+public:
+	data_bool(const bool& a = false, const data* parent = nullptr) :data("bool", parent) { d = a; }
+	bool& access() { return  d; }
+
+private:
+	bool d;
 };
 class data_int : public data
 {
@@ -32,7 +40,6 @@ public:
 	data_int(const int& a = 0, const data* parent = nullptr) :data("int", parent) { d = a; }
 	int& access() { return  d; }
 	std::shared_ptr<data_container> convert_type(const std::string& t);
-	bool is_convertible_to(const std::string& t);
 private:
 	int d;
 };
@@ -50,7 +57,7 @@ class builtin : public data
 {
 public:
 	builtin();
-	DEFINE_FUNCTION_BEGIN(var)
+	function_(var)
 	{
 		if (args.size() == 2)
 		{
@@ -62,8 +69,8 @@ public:
 		}
 		return new data_container;
 	}
-	DEFINE_FUNCTION_END;
-	DEFINE_FUNCTION_BEGIN(echo)
+	_function;
+	function_(echo)
 	{
 		for (auto& arg : args)
 		{
@@ -80,6 +87,6 @@ public:
 		}
 		return new data_container;
 	}
-	DEFINE_FUNCTION_END;
+	_function;
 };
 #endif // BASIC_TYPES_H

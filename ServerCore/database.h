@@ -23,8 +23,7 @@ public:
 	virtual data_container* access_member(const std::string& name);
 	virtual void delete_this() { delete this; };
 	virtual data_container* execute(std::vector<data_container*>) { return nullptr; };
-	virtual std::shared_ptr<data_container> convert_type(const std::string&);;
-	virtual bool is_convertible_to(const std::string&) { return false; };
+	virtual std::shared_ptr<data_container> convert_type(const std::string&);
 	template<typename T>
 	T* to() { return dynamic_cast<T*>(this); };
 	database* member;
