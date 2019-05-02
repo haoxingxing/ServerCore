@@ -23,14 +23,16 @@ void Run(std::string _file)
 int main(int argc, char** argv)
 {
 #ifdef DEBUG
-	log::print(log::Info, "ServerCore " REPO_VERSION);
 #ifdef _WIN32
 	system("chcp 65001");
 #endif
+	log::print(log::Info, "ServerCore " REPO_VERSION);
 #endif
 	if (argc == 1)
 	{
+#ifndef DEBUG
 		log::print(log::Info, "ServerCore " REPO_VERSION);
+#endif
 	}
 	else if (argc > 1)
 	{

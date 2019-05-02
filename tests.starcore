@@ -1,4 +1,9 @@
 #!./build/ServerCore*
 # Test File
 var(cr,int(10))
-echo(cr)
+var(h,string(Hello))
+var(space,string( ))
+var(w,string(World))
+var(tan,string(!))
+echo(h,space,w,tan,cr)
+echo(string(Powered by haoxingxing),cr)
