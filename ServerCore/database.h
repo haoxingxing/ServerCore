@@ -17,17 +17,18 @@ class data
 #endif
 {
 public:
-	explicit data(const std::string & _type = "void");;
+	explicit data(const std::string & _type = "void",const data * parent = nullptr);
 	virtual ~data();;
 	virtual std::string what() { return type; };
 	virtual data_container* access_member(const std::string& name);
 	virtual void delete_this() { delete this; };
+	virtual data_container* execute(std::vector<data_container*>) { return nullptr; };
 	virtual std::shared_ptr<data_container> convert_type(const std::string&);;
 	virtual bool is_convertible_to(const std::string&) { return false; };
 	template<typename T>
 	T* to() { return dynamic_cast<T*>(this); };
-private:
 	database* member;
+private:
 	std::string type;
 };
 class data_void;

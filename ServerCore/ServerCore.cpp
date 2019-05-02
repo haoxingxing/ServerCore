@@ -22,10 +22,10 @@ void Run(std::string _file)
 
 int main(int argc, char** argv)
 {
-#ifdef DEBUG
 #ifdef _WIN32
 	system("chcp 65001");
 #endif
+#ifdef DEBUG
 	log::print(log::Info, "ServerCore " REPO_VERSION);
 #endif
 	if (argc == 1)

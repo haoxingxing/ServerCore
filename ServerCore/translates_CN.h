@@ -44,3 +44,6 @@
 #define TS_ID_28 "类型已存在"
 #define TS_ID_29 "类型不匹配"
 #define TS_ID_30 "进入函数体"
+#define TS_ID_31 "未找到成员"
+#define TS_ID_32 "语法错误"
+#define TS_ID_33 "不可执行"

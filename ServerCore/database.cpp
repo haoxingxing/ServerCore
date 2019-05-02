@@ -4,10 +4,10 @@
 #include "ServerCore.h"
 #include "file.h"
 #include "basic_types.h"
-data::data(const std::string& _type) : type(_type)
+data::data(const std::string& _type, const data* parent) : type(_type)
 {
 	DEB(print_pointer(this));
-	member = new database;
+	member = parent == nullptr ? new database : parent->member;
 }
 data::~data()
 {
