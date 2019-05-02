@@ -1,5 +1,7 @@
 ﻿#include "log.h"
 #include <iostream>
+#include <typeinfo>
+
 #include "ServerCore.h"
 #ifdef _WIN32
 #include <windows.h>
@@ -80,10 +82,15 @@ void MemoryLeak_Probe::MemoryLeakCheck()
 {
 	if (MemoryLeak_Probe::count != 0)
 	{
-		log::print(log::Error, "Memory Leaked:" + std::to_string(MemoryLeak_Probe::count));
+		ERR("Memory Leaked:" + std::to_string(MemoryLeak_Probe::count));
+		for (auto i =list.begin();i!=list.end();++i)
+		{
+			WARN("[" + std::string(typeid(**i).name()) + "] " + print_pointer(*i));
+		}
 		exit(EXIT_FAILURE);
 	}
 }
 
 int MemoryLeak_Probe::count = 0;
+std::list<MemoryLeak_Probe*> MemoryLeak_Probe::list = std::list<MemoryLeak_Probe*>();
 #endif

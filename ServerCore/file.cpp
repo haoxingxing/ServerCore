@@ -29,11 +29,10 @@ const std::string file::read()
 	}
 	std::string str((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
 	in.close();
-	SUCC("");
 	return str;
 }
 
-bool file::write(const std::string& _str)
+bool file::write(const std::string & _str)
 {
 	DEB(filename);
 	out.open(filename, std::ios::out | std::ios::trunc);
@@ -44,6 +43,5 @@ bool file::write(const std::string& _str)
 	}
 	out << _str;
 	out.close();
-	SUCC("");
 	return false;
 }

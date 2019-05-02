@@ -4,29 +4,29 @@
 #include <map>
 #include <vector>
 #include <iomanip>
+#include <memory>
 #include "ServerCore.h"
 #include "log.h"
 #include "file.h"
 class data_container;
+class database;
 class data
 #ifdef UsingMemoryLeakCheck
 	: MemoryLeak_Probe
 #endif
 {
 public:
-	explicit data(const std::string & _type = "void") :type(_type) {
-		DEB(print_pointer(this));
-	};
-	virtual ~data() {
-		DEB(print_pointer(this));
-	};
+	explicit data(const std::string & _type = "void");;
+	virtual ~data();;
 	virtual std::string what() { return type; };
+	virtual data_container* access_member(const std::string& name);
 	virtual void delete_this() { delete this; };
-	virtual data_container* convert_type(const std::string&);;
+	virtual std::shared_ptr<data_container> convert_type(const std::string&);;
 	virtual bool is_convertible_to(const std::string&) { return false; };
 	template<typename T>
 	T* to() { return dynamic_cast<T*>(this); };
 private:
+	database* member;
 	std::string type;
 };
 class data_void;
@@ -36,19 +36,22 @@ class data_container
 #endif
 {
 public:
-	explicit data_container(const std::string& type = "void", data* d = nullptr);	;
+	explicit data_container(const std::string & type = "void", data * d = nullptr,bool iscopy = false);
 	~data_container() {
 		DEB(print_pointer(this));
-		if (d != nullptr)
-			d->delete_this();
-		d = nullptr;
+		if (!iscopy)
+		{
+			if (d != nullptr)
+				d->delete_this();
+			d = nullptr;
+		}
 	};
 	std::string what() const { return type_; };
 	void swap(data_container * s)
 	{
 		if (this->type_ != s->type_)
 		{
-			this->swap(s->get()->convert_type(type_));
+			this->swap(s->get()->convert_type(type_).operator->());
 		}
 		else
 		{
@@ -64,12 +67,13 @@ public:
 	};
 	data_container * copy() const
 	{
-		return new data_container(type_, d);
+		return new data_container(type_, d,true);
 	};
 	data* get() const { return d; };
 	explicit operator data* () const { return d; };
 private:
 	data* d = nullptr;
+	bool iscopy;
 	std::string type_;
 };
 

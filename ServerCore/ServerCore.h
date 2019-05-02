@@ -27,10 +27,7 @@
 	*/
 #define LOG(info) log::print(log::Info,"["+std::string(__FUNCTION__)+"]"+info)
 
-	// success
-#define SUCC(info) log::print(log::Debug,"["+std::string(__FUNCTION__)+"] " TS_ID_18 + info)
-
-// error
+	// error
 #define ERR(info) log::print(log::Error,"["+std::string(__FUNCTION__)+"]"+info)
 
 // warning

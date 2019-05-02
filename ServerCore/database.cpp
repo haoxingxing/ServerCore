@@ -4,11 +4,25 @@
 #include "ServerCore.h"
 #include "file.h"
 #include "basic_types.h"
-data_container* data::convert_type(const std::string&)
+data::data(const std::string& _type) : type(_type)
 {
-	return new data_container();
+	DEB(print_pointer(this));
+	member = new database;
 }
-data_container::data_container(const std::string& type, data* d) : d(d), type_(type)
+data::~data()
+{
+	delete member;
+	DEB(print_pointer(this));
+}
+data_container* data::access_member(const std::string& name)
+{
+	return member->get(name);
+}
+std::shared_ptr<data_container> data::convert_type(const std::string&)
+{
+	return std::shared_ptr<data_container>(new data_container());
+}
+data_container::data_container(const std::string& type, data* d, bool _iscopy) : d(d), type_(type), iscopy(_iscopy)
 {
 	DEB(print_pointer(this));
 }
@@ -29,12 +43,11 @@ void database::insert(const std::string& key, data_container* value)
 {
 	if (_data.find(key) != _data.end())
 	{
-		WARN(TS_ID_5 " [" + key + "]," TS_ID_6);
+		DEB(TS_ID_5 " [" + key + "]," TS_ID_6);
 		this->remove(key);
 	}
 	DEB(TS_ID_7" [" + key + "," + print_pointer(value) + "]");
 	_data.insert(std::make_pair(key, value));
-	SUCC("");
 }
 
 void database::remove(const std::string & key)
@@ -44,11 +57,10 @@ void database::remove(const std::string & key)
 	{
 		delete _data[key];
 		_data.erase(_data.find(key));
-		SUCC("");
 	}
 	else
 	{
-		WARN(TS_ID_4);
+		DEB(TS_ID_4" [" + key + "]");
 	}
 }
 
@@ -57,13 +69,12 @@ data_container* database::get(const std::string & key)
 	DEB(TS_ID_8 " [" + key + "]");
 	if (_data.find(key) != _data.end())
 	{
-		SUCC("");
 		return _data.at(key);
 	}
 	else
 	{
-		ERR(TS_ID_4);
-		WARN(TS_ID_9);
+		DEB(TS_ID_4" [" + key + "]");
+		DEB(TS_ID_9);
 		this->insert(key, new data_container("void"));
 		return get(key);
 	}

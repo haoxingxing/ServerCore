@@ -68,7 +68,7 @@ std::pair<bool, data_container*> cmder::convert_var(std::string token)
 		}
 		else
 		{
-			return std::make_pair(false, (*this)[x.first]->copy());
+			return std::make_pair(true, (*this)[x.first]->copy());
 		}
 	}
 	else
@@ -87,6 +87,10 @@ std::pair<bool, data_container*> cmder::convert_var(std::string token)
 			for (const auto& i : x.second)
 				str += ((!str.empty()) ? "," : "") + i;
 			return std::make_pair(true, new data_container("int", new data_int(std::stoi(str))));
+		}
+		_SWITCH_CASE("void")
+		{
+			return std::make_pair(true, new data_container("void", new data_void()));
 		}
 		_SWITCH_DEFAULT{
 			cmd c;
@@ -136,7 +140,7 @@ data_container* executable::execute(cmder::cmd command) const
 	if (static_functions.find(command.first) == static_functions.end())
 	{
 		ERR(TS_ID_17 " \"" + command.first + "\"");
-		return nullptr;
+		return new data_container;
 	}
 	return static_functions[command.first](command.second);
 }

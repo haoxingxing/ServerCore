@@ -1,5 +1,4 @@
 #!./build/ServerCore*
 # Test File
-var(string str,string(A string:))
 var(string cr,int(10))
-echo(str,string(Hello World),cr)
+echo(string(23333,????),int(10),cr)
