@@ -37,27 +37,48 @@ class data_container
 #endif
 {
 public:
-	explicit data_container(std::shared_ptr<data> d) : d(d)
-	{
-		DEB(print_pointer(this));
-	}
-	explicit data_container(data* d = nullptr) : d(std::shared_ptr<data> (d))
-	{
-		DEB(print_pointer(this));
-	}
+	explicit data_container(data * *d);
+	explicit data_container(data* d = nullptr);
 	~data_container() {
 		DEB(print_pointer(this));
-		d.reset();	
+		if (!iscopy)
+		{
+			if ((*d) != nullptr)
+				(*d)->delete_this();
+			*d = nullptr;
+			delete d;
+		}
 	};
 	void swap(data_container * s)
-	{	
-		d.reset();
-		this->d = s->d;
+	{
+		const auto dt = *d;
+		*(this->d) = *(s->d);
+		*(s->d) = dt;
+		auto b = s->iscopy;
+		this->iscopy = s->iscopy;
+		s->iscopy = iscopy;
 	}
-	data* get() const { return d.get(); };
-	explicit operator data* () const { return d.get(); };
+	void save(data * da) const
+	{
+		delete d;
+		(*d) = da;
+	};
+	void exchange(data_container* s)
+	{
+		this->swap(s);
+		const auto dt = s->iscopy;
+		s->iscopy = iscopy;
+		this->iscopy = dt;
+	}
+	data_container* copy() const
+	{
+		return new data_container(d);
+	};
+	data* get() const { return *d; };
+	explicit operator data* () const { return *d; };
 private:
-	std::shared_ptr<data> d = nullptr;
+	data** d = nullptr;
+	bool iscopy;
 };
 
 class database

@@ -39,11 +39,11 @@ data_container* cmder::member_access(std::string name)
 			ERR(TS_ID_31 + name);
 			return nullptr;
 		}
-		return p;
+		return p->copy();
 	}
 	else
 	{
-		return (*this)[name];
+		return (*this)[name]->copy();
 	}
 }
 std::pair<std::string, std::vector<std::string>> cmder::ProcessCmd(std::string str) const
@@ -155,10 +155,10 @@ data_container* cmder::convert_var(std::string token)
 			{
 				ERR(TS_ID_33 + c.first);
 			}
-			//for (size_t i = 0; i < c.second.size(); ++i)
-			//{
-			//		delete c.second[i];
-			//}
+			for (size_t i = 0; i < c.second.size(); ++i)
+			{
+					delete c.second[i];
+			}
 			return t;
 		}
 			_SWITCH_END
