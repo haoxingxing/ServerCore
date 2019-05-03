@@ -12,7 +12,7 @@
 #endif
 using namespace std;
 
-void Run(std::string _file)
+void Run(const std::string& _file)
 {
 	file f(_file);
 	cmder  t;

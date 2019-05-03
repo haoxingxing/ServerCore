@@ -7,8 +7,7 @@
 #include <memory>
 #include "ServerCore.h"
 #include "log.h"
-#include "file.h"
-#define Type(ptr) (ptr==nullptr)?"null":ptr->what()
+#define TYPE(ptr) (ptr==nullptr)?"null":ptr->what()
 class data_container;
 class database;
 class data
@@ -17,13 +16,13 @@ class data
 #endif
 {
 public:
-	explicit data(const std::string & _type = "void",const data * parent = nullptr);
-	virtual ~data();;
+	explicit data(const std::string & type = "void",const data * parent = nullptr);
+	virtual ~data();
 	virtual std::string what() { return type; };
 	virtual data* make_copy() = 0;
 	virtual data_container* access_member(const std::string& name);
 	virtual void delete_this() { delete this; };
-	virtual data_container* execute(std::vector<data_container*>) { return nullptr; };
+	virtual data_container* execute(const std::vector<data_container*>&) { return nullptr; };
 	virtual std::shared_ptr<data_container> convert_type(const std::string&);
 	template<typename T>
 	T* to() { return dynamic_cast<T*>(this); };
@@ -105,10 +104,6 @@ public:
 
 	static std::vector<std::string> SplitString(const std::string & s, const std::string & c);
 protected:
-	// Convert string to hex string
-	static std::string str_to_hex(const std::string&, bool upper = false);
-	// Convert hex string to string
-	static std::string hex_to_str(const std::string&);
 	std::map<std::string, data_container*> _data;
 };
 

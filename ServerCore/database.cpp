@@ -4,7 +4,7 @@
 #include "ServerCore.h"
 #include "file.h"
 #include "basic_types.h"
-data::data(const std::string& _type, const data* parent) : type(_type)
+data::data(const std::string& type, const data* parent) : type(type)
 {
 	DEB(print_pointer(this));
 	member = parent == nullptr ? new database : parent->member;
@@ -20,7 +20,7 @@ data_container* data::access_member(const std::string& name)
 }
 std::shared_ptr<data_container> data::convert_type(const std::string&)
 {
-	return std::shared_ptr<data_container>(new data_container());
+	return std::make_shared<data_container>();
 }
 database::database()
 {
@@ -92,30 +92,4 @@ std::vector<std::string> database::SplitString(const std::string & s, const std:
 	if (pos1 != s.length())
 		v.push_back(s.substr(pos1));
 	return v;
-}
-
-std::string database::str_to_hex(const std::string & s, bool upper)
-{
-	std::ostringstream ret;
-
-	unsigned int c;
-	for (std::string::size_type i = 0; i < s.length(); ++i)
-	{
-		c = (unsigned int)(unsigned char)s[i];
-		ret << std::hex << std::setfill('0') <<
-			std::setw(2) << (upper ? std::uppercase : std::nouppercase) << c;
-	}
-	return ret.str();
-}
-std::string database::hex_to_str(const std::string & hex)
-{
-	size_t len = hex.length();
-	std::string newString;
-	for (size_t i = 0; i < len; i += 2)
-	{
-		std::string byte = hex.substr(i, 2);
-		char chr = (char)(int)strtol(byte.c_str(), nullptr, 16);
-		newString.push_back(chr);
-	}
-	return newString;
 }

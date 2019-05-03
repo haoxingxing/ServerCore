@@ -10,8 +10,8 @@ class file
 {
 public:
 	// Open File to read and write
-	explicit file(std::string filename);
-	~file();
+	explicit file(const std::string& filename);
+	virtual ~file() noexcept;
 	// Read the whole file
 	const std::string read();
 	// Overwrite the file

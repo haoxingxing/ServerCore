@@ -1,5 +1,4 @@
-#ifndef BASIC_TYPES_H
-#define BASIC_TYPES_H
+#pragma once
 #include "database.h"
 #include "cmder.h"
 #include <string>
@@ -8,7 +7,7 @@ class data_function : public data
 {
 public:
 	data_function(const data* parent = nullptr);
-	data_container* execute(std::vector<data_container*>) override = 0;
+	data_container* execute(const std::vector<data_container*>&) override = 0;
 };
 /*
  * The args are normal with "args"
@@ -19,7 +18,7 @@ data* make_copy() override\
 {\
 	return new name;\
 };\
-data_container* execute(std::vector<data_container*> args) override
+data_container* execute(const std::vector<data_container*>& args) override
 #define _function }
 #define reg_function this->member->insert
 class data_void : public data
@@ -112,7 +111,7 @@ public:
 	{
 		for (auto& arg : args)
 		{
-			_SWITCH_BEGIN(Type(arg->get()))
+			_SWITCH_BEGIN(TYPE(arg->get()))
 				_SWITCH_CASE("null")
 			{
 				std::cout << "null";
@@ -127,4 +126,3 @@ public:
 	}
 	_function;
 };
-#endif // BASIC_TYPES_H

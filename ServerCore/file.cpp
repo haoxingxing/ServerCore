@@ -4,7 +4,7 @@
 #include "ServerCore.h"
 #include <cstdio>
 
-file::file(std::string _filename) : filename(_filename)
+file::file(const std::string& _filename) : filename(_filename)
 {
 	DEB(print_pointer(this));
 }

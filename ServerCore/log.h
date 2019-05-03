@@ -21,7 +21,7 @@ public:
 	Warning
 	Error
 	*/
-	static void print(log_level, const std::string& info, bool t = true);
+	static void print(log_level, const std::string& info, bool i = true);
 	static bool iscolored;
 };
 #ifdef UsingMemoryLeakCheck

@@ -11,7 +11,7 @@ public:
 	cmder();
 	// Run Functions in ConfigMgr
 	void run();
-	data_container* member_access(std::string name);
+	data_container* member_access(const std::string& name);
 	typedef std::pair<std::string, std::vector<data_container*>> cmd;
 private:
 	std::pair<std::string, std::vector<std::string>> ProcessCmd(std::string str) const;

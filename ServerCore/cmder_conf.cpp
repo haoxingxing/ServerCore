@@ -13,9 +13,8 @@ void cmder_conf::str_to_map(const std::string& str)
 		return;
 	}
 	std::vector<std::string> v = SplitString(str, "\n");
-	for (size_t i = 0; i < v.size(); ++i)
+	for (auto m : v)
 	{
-		std::string m = v[i];
 		if (m.find("#") != std::string::npos) {
 			m = SplitString(m, "#")[0];
 		}

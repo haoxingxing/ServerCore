@@ -9,17 +9,15 @@ cmder::cmder()
 
 void cmder::run()
 {
-	for (size_t i = 0; i < commands.size(); ++i)
+	for (const auto& x : commands)
 	{
-		DEB(TS_ID_16 + commands[i]);
-		auto x = convert_var(commands[i]);
-		if (x != nullptr)
-			delete x;
+		DEB(TS_ID_16 + x);
+		delete convert_var(x);
 	}
 }
-data_container* cmder::member_access(std::string name)
+data_container* cmder::member_access(const std::string& name)
 {
-	if (name.find("->") != name.npos)
+	if (name.find("->") != std::string::npos)
 	{
 		auto s = SplitString(name, "->");
 		if (s.size() < 2)
@@ -137,7 +135,7 @@ data_container* cmder::convert_var(std::string token)
 			if (t != nullptr)
 			{
 				if (t->get() != nullptr) {
-					auto n = t;
+					const auto n = t;
 					t = t->get()->execute(c.second);
 					delete n;
 				}
