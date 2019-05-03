@@ -58,6 +58,10 @@ public:
 	};
 	void swap(data_container * s)
 	{	
+
+		if ((*d) != nullptr)
+			(*d)->delete_this();
+		*d = nullptr;
 		*(this->d) = (*(s->d))->make_copy();		
 	}
 	data_container* copy() const
