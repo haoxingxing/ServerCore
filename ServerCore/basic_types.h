@@ -15,7 +15,11 @@ public:
  */
 #define function_(name)\
 class name : public data_function { \
-data_container* execute(std::vector<data_container*> args)
+data* make_copy() override\
+{\
+	return new name;\
+};\
+data_container* execute(std::vector<data_container*> args) override
 #define _function }
 #define reg_function this->member->insert
 class data_void : public data
@@ -23,6 +27,10 @@ class data_void : public data
 public:
 	data_void(const data* parent = nullptr) :data("void", parent) { }
 	std::shared_ptr<data_container> convert_type(const std::string& t) override;
+	data* make_copy() override
+	{
+		return new data_void();
+	};
 private:
 };
 class data_bool : public data
@@ -31,7 +39,10 @@ public:
 	data_bool(const bool& a = false, const data* parent = nullptr) :data("bool", parent) { d = a; }
 	bool& access() { return  d; }
 	auto convert_type(const std::string& t)->std::shared_ptr<data_container> override;
-
+	data* make_copy() override
+	{
+		return new data_bool(d);
+	};
 private:
 	bool d;
 };
@@ -41,7 +52,10 @@ public:
 	data_char(const char& a = 0, const data* parent = nullptr) :data("char", parent) { d = a; }
 	char& access() { return  d; }
 	auto convert_type(const std::string& t)->std::shared_ptr<data_container> override;
-
+	data* make_copy() override
+	{
+		return new data_char(d);
+	};
 private:
 	char d;
 };
@@ -51,6 +65,10 @@ public:
 	data_int(const int& a = 0, const data* parent = nullptr) :data("int", parent) { d = a; }
 	int& access() { return  d; }
 	std::shared_ptr<data_container> convert_type(const std::string& t) override;
+	data* make_copy() override
+	{
+		return new data_int(d);
+	};
 private:
 	int d;
 };
@@ -61,6 +79,10 @@ public:
 	data_string(const std::string& a = "", const data* parent = nullptr) :data("string", parent) { d = a; }
 	std::string& access() { return  d; }
 	std::shared_ptr<data_container> convert_type(const std::string& t) override;
+	data* make_copy() override
+	{
+		return new data_string(d);
+	};
 private:
 	std::string d;
 };
@@ -69,6 +91,10 @@ class builtin : public data
 {
 public:
 	builtin();
+	data* make_copy() override
+	{
+		return new builtin;
+	};
 	function_(var)
 	{
 		if (args.size() == 2)

@@ -20,6 +20,7 @@ public:
 	explicit data(const std::string & _type = "void",const data * parent = nullptr);
 	virtual ~data();;
 	virtual std::string what() { return type; };
+	virtual data* make_copy() = 0;
 	virtual data_container* access_member(const std::string& name);
 	virtual void delete_this() { delete this; };
 	virtual data_container* execute(std::vector<data_container*>) { return nullptr; };
@@ -37,8 +38,14 @@ class data_container
 #endif
 {
 public:
-	explicit data_container(data * *d);
-	explicit data_container(data* d = nullptr);
+	explicit data_container(data * *d) : d(d), iscopy(true)
+	{
+		DEB(print_pointer(this));
+	};
+	explicit data_container(data* d = nullptr) : d(new data* (d)), iscopy(false)
+{
+	DEB(print_pointer(this));
+};
 	~data_container() {
 		DEB(print_pointer(this));
 		if (!iscopy)
@@ -50,25 +57,8 @@ public:
 		}
 	};
 	void swap(data_container * s)
-	{
-		const auto dt = *d;
-		*(this->d) = *(s->d);
-		*(s->d) = dt;
-		auto b = s->iscopy;
-		this->iscopy = s->iscopy;
-		s->iscopy = iscopy;
-	}
-	void save(data * da) const
-	{
-		delete d;
-		(*d) = da;
-	};
-	void exchange(data_container* s)
-	{
-		this->swap(s);
-		const auto dt = s->iscopy;
-		s->iscopy = iscopy;
-		this->iscopy = dt;
+	{	
+		*(this->d) = (*(s->d))->make_copy();		
 	}
 	data_container* copy() const
 	{
