@@ -43,7 +43,7 @@ data_container* cmder::member_access(std::string name)
 	}
 	else
 	{
-		return (*this)["builtin"]->get()->access_member(name)->copy();
+		return (*this)[name]->copy();
 	}
 }
 std::pair<std::string, std::vector<std::string>> cmder::ProcessCmd(std::string str) const
@@ -109,9 +109,23 @@ data_container* cmder::convert_var(std::string token)
 				str += ((!str.empty()) ? "," : "") + i;
 			return new data_container(new data_int(std::stoi(str)));
 		}
+		_SWITCH_CASE("char")
+		{
+			std::string str;
+			for (const auto& i : x.second)
+				str += ((!str.empty()) ? "," : "") + i;
+			return new data_container(new data_char(std::stoi(str)));
+		}
 		_SWITCH_CASE("void")
 		{
 			return new data_container(new data_void());
+		}
+		_SWITCH_CASE("bool")
+		{
+			std::string str;
+			for (const auto& i : x.second)
+				str += ((!str.empty()) ? "," : "") + i;
+			return new data_container(new data_bool(str == "true"));
 		}
 		_SWITCH_DEFAULT{
 			cmd c;

@@ -22,7 +22,7 @@ class data_void : public data
 {
 public:
 	data_void(const data* parent = nullptr) :data("void", parent) { }
-	std::shared_ptr<data_container> convert_type(const std::string& t);
+	std::shared_ptr<data_container> convert_type(const std::string& t) override;
 private:
 };
 class data_bool : public data
@@ -30,16 +30,27 @@ class data_bool : public data
 public:
 	data_bool(const bool& a = false, const data* parent = nullptr) :data("bool", parent) { d = a; }
 	bool& access() { return  d; }
+	auto convert_type(const std::string& t)->std::shared_ptr<data_container> override;
 
 private:
 	bool d;
+};
+class data_char : public data
+{
+public:
+	data_char(const char& a = 0, const data* parent = nullptr) :data("char", parent) { d = a; }
+	char& access() { return  d; }
+	auto convert_type(const std::string& t)->std::shared_ptr<data_container> override;
+
+private:
+	char d;
 };
 class data_int : public data
 {
 public:
 	data_int(const int& a = 0, const data* parent = nullptr) :data("int", parent) { d = a; }
 	int& access() { return  d; }
-	std::shared_ptr<data_container> convert_type(const std::string& t);
+	std::shared_ptr<data_container> convert_type(const std::string& t) override;
 private:
 	int d;
 };
@@ -49,6 +60,7 @@ class data_string : public data
 public:
 	data_string(const std::string& a = "", const data* parent = nullptr) :data("string", parent) { d = a; }
 	std::string& access() { return  d; }
+	std::shared_ptr<data_container> convert_type(const std::string& t) override;
 private:
 	std::string d;
 };

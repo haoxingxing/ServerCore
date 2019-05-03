@@ -54,12 +54,22 @@ public:
 		const auto dt = *d;
 		*(this->d) = *(s->d);
 		*(s->d) = dt;
+		auto b = s->iscopy;
+		this->iscopy = s->iscopy;
+		s->iscopy = iscopy;
 	}
 	void save(data * da) const
 	{
-		if (d != nullptr) delete d;
+		delete d;
 		(*d) = da;
 	};
+	void exchange(data_container* s)
+	{
+		this->swap(s);
+		const auto dt = s->iscopy;
+		s->iscopy = iscopy;
+		this->iscopy = dt;
+	}
 	data_container* copy() const
 	{
 		return new data_container(d);

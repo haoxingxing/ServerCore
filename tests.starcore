@@ -1,10 +1,13 @@
 #!./build/ServerCore*
 # Test File
-var(cr,int(10))
-var(h,string(Hello))
-var(space,string( ))
-var(w,string(World))
-var(tan,string(!))
-echo(h,space,w,tan,cr)
-echo(string(     Powered by haoxingxing))
-
+#builtin->var(cr,char(10))
+#builtin->var(h,string(Hello))
+#builtin->var(space,string( ))
+#builtin->var(w,string(World))
+#builtin->var(tan,string(!))
+#builtin->echo(h,space,w,tan,cr)
+builtin->var(n,builtin->echo)
+#n(string(     Powered by haoxingxing),cr)
+#n(string(Now let's do some tests),cr)
+#builtin->echo(string(Class Member Access))
+#builtin->var(builtin->echo,n)
