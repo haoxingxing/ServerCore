@@ -23,12 +23,12 @@ int main(int argc, char** argv)
 	system("chcp 65001");
 #endif
 #ifdef DEBUG
-	log::print(log::Info, "ServerCore " REPO_VERSION);
+	log::print(log::Info, "StarCore " REPO_VERSION);
 #endif
 	if (argc == 1)
 	{
 #ifndef DEBUG
-		log::print(log::Info, "ServerCore " REPO_VERSION);
+		log::print(log::Info, "StarCore " REPO_VERSION);
 #endif
 	}
 	else if (argc > 1)

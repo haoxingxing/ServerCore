@@ -42,9 +42,9 @@ public:
 		DEB(print_pointer(this));
 	};
 	explicit data_container(data* d = nullptr) : d(new data* (d)), iscopy(false)
-{
-	DEB(print_pointer(this));
-};
+	{
+		DEB(print_pointer(this));
+	};
 	~data_container() {
 		DEB(print_pointer(this));
 		if (!iscopy)
@@ -55,18 +55,8 @@ public:
 			delete d;
 		}
 	};
-	void copy_value(data_container * s) const
-	{	
-
-		if ((*d) != nullptr)
-			(*d)->delete_this();
-		*d = nullptr;
-		*(this->d) = (*(s->d))->make_copy();		
-	}
-	data_container* copy() const
-	{
-		return new data_container(d);
-	};
+	void copy_value(data_container * s) const{if ((*d) != nullptr)(*d)->delete_this();*d = nullptr;*(this->d) = (*(s->d))->make_copy();}
+	data_container* copy() const { return new data_container(d);};
 	data* get() const { return *d; };
 	explicit operator data* () const { return *d; };
 private:

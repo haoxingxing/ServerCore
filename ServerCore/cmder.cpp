@@ -126,37 +126,32 @@ data_container* cmder::convert_var(std::string token)
 			return new data_container(new data_bool(str == "true"));
 		}
 		_SWITCH_DEFAULT{
-			cmd c;
+			std::vector<data_container*> c;
 			for (size_t i = 0; i < x.second.size(); ++i)
-				c.second.push_back(convert_var(x.second[i]));
-			c.first = x.first;
-			DEB(TS_ID_30 + c.first);
-			auto t = member_access(c.first);
+				c.push_back(convert_var(x.second[i]));			 
+			DEB(TS_ID_30 + x.first;);
+			auto t = member_access(x.first);
 			if (t != nullptr)
 			{
 				if (t->get() != nullptr) {
 					const auto n = t;
-					t = t->get()->execute(c.second);
+					t = t->get()->execute(c);
 					delete n;
-				}
-				else {
-					ERR(TS_ID_31 + c.first);
+				} else {
+					ERR(TS_ID_31 + x.first);
 					delete t;
 					t = nullptr;
 				}
 			}
 			else
 			{
-				ERR(TS_ID_31 + c.first);
+				ERR(TS_ID_31 + x.first);
 			}
-			if (t == nullptr)
-			{
-				ERR(TS_ID_33 + c.first);
+			if (t == nullptr){
+				ERR(TS_ID_33 + x.first);
 			}
-			for (size_t i = 0; i < c.second.size(); ++i)
-			{
-					delete c.second[i];
-			}
+			for (const auto& m : c)		
+				delete m;			
 			return t;
 		}
 			_SWITCH_END
