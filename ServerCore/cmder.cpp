@@ -129,7 +129,7 @@ data_container* cmder::convert_var(std::string token)
 			std::vector<data_container*> c;
 			for (size_t i = 0; i < x.second.size(); ++i)
 				c.push_back(convert_var(x.second[i]));			 
-			DEB(TS_ID_30 + x.first;);
+			DEB(TS_ID_30 + x.first);
 			auto t = member_access(x.first);
 			if (t != nullptr)
 			{
