@@ -137,6 +137,9 @@ data_container* cmder::convert_var(std::string token)
 					const auto n = t;
 					t = t->get()->execute(c);
 					delete n;
+					if (t == nullptr) {
+						ERR(TS_ID_33 + x.first);
+					}
 				} else {
 					ERR(TS_ID_31 + x.first);
 					delete t;
@@ -146,9 +149,6 @@ data_container* cmder::convert_var(std::string token)
 			else
 			{
 				ERR(TS_ID_31 + x.first);
-			}
-			if (t == nullptr){
-				ERR(TS_ID_33 + x.first);
 			}
 			for (const auto& m : c)		
 				delete m;			

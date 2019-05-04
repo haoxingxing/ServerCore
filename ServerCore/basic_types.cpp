@@ -82,4 +82,5 @@ builtin::builtin() : data("builtin")
 {
 	reg_function("var", new data_container(new var));
 	reg_function("echo", new data_container(new echo));
+	reg_function("input", new data_container(new input));
 }

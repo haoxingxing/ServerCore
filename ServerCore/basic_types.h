@@ -125,4 +125,17 @@ public:
 		return new data_container;
 	}
 	_function;
+	function_(input)
+	{
+		std::string in;
+		std::cin >> in;
+		auto x = new data_container(new data_string(in));
+		for (auto& arg : args)
+		{
+			arg->copy_value(x);
+		}
+		delete x;
+		return new data_container;
+	}
+	_function;
 };
