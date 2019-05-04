@@ -1,12 +1,9 @@
 ﻿#include "ServerCore.h"
 #include "log.h"
 #include "file.h"
-#include "database.h"
 #include "cmder_conf.h"
 #include "cmder.h"
 #include "repo_version.h"
-#include <iostream>
-#include "basic_types.h"
 #ifdef _WIN32
 #include <Windows.h>
 #endif

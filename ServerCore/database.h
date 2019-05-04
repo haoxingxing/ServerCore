@@ -55,7 +55,7 @@ public:
 			delete d;
 		}
 	};
-	void swap(data_container * s)
+	void copy_value(data_container * s) const
 	{	
 
 		if ((*d) != nullptr)

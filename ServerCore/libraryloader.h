@@ -1,5 +1,5 @@
-﻿//#ifndef LIBRARY_H_
-//#define LIBRARY_H_
+﻿#ifndef LIBRARY_H_
+#define LIBRARY_H_
 //
 //#include <cstdlib>
 //
@@ -51,4 +51,4 @@
 //	void releaseLibrary();
 //};
 //
-//#endif /* LIBRARY_H_ */
+#endif /* LIBRARY_H_ */

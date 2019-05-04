@@ -11,14 +11,20 @@ file::file(const std::string& _filename) : filename(_filename)
 
 file::~file()
 {
-	if (!in)
-		in.close();
-	if (!out)
-		out.close();
+	try {
+		if (!in)
+			in.close();
+		if (!out)
+			out.close();
+	}
+	catch(...)
+	{
+		
+	}
 	DEB(print_pointer(this));
 }
 
-const std::string file::read()
+std::string file::read()
 {
 	DEB(filename);
 	in.open(filename, std::ios::in);

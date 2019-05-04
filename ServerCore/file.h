@@ -11,9 +11,9 @@ class file
 public:
 	// Open File to read and write
 	explicit file(const std::string& filename);
-	virtual ~file() noexcept;
+	virtual ~file();
 	// Read the whole file
-	const std::string read();
+	std::string read();
 	// Overwrite the file
 	bool write(const std::string& _str);
 private:

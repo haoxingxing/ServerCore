@@ -98,7 +98,7 @@ public:
 	{
 		if (args.size() == 2)
 		{
-			args[0]->swap(args[1]);
+			args[0]->copy_value(args[1]);
 		}
 		else
 		{
