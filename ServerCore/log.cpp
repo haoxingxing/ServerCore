@@ -86,7 +86,7 @@ void MemoryLeak_Probe::MemoryLeakCheck()
 		for (auto& i : list)
 		{
 			auto &n = *i;
-			WARN("[" + std::string(typeid(n).name()) + "] " + print_pointer(i));
+			WARN("[" + std::string(typeid(n).name()) + "] " + PRINT_POINTER(i));
 		}
 		exit(EXIT_FAILURE);
 	}

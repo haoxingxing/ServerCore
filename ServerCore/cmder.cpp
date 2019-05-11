@@ -4,7 +4,7 @@
 #include "basic_types.h"
 cmder::cmder()
 {
-	this->insert("builtin", new data_container(new builtin));
+	this->database::insert("builtin", new data_container(new builtin));
 }
 
 void cmder::run()
@@ -17,9 +17,9 @@ void cmder::run()
 }
 data_container* cmder::member_access(const std::string& name)
 {
-	if (name.find("->") != std::string::npos)
+	if (name.find('.') != std::string::npos)
 	{
-		auto s = SplitString(name, "->");
+		auto s = SplitString(name, ".");
 		if (s.size() < 2)
 		{
 			ERR(TS_ID_32);
@@ -47,7 +47,7 @@ data_container* cmder::member_access(const std::string& name)
 std::pair<std::string, std::vector<std::string>> cmder::ProcessCmd(std::string str) const
 {
 	std::pair<std::string, std::vector<std::string>> buf;
-	if (str.find("(") == std::string::npos)
+	if (str.find('(') == std::string::npos)
 	{
 		//DEB(TS_ID_15 "(");
 		buf.first.append(str);
@@ -62,70 +62,71 @@ std::pair<std::string, std::vector<std::string>> cmder::ProcessCmd(std::string s
 	str = str.substr(str.find_first_of('(') + 1);
 	str = str.erase(str.find_last_of(')'));
 	std::vector<std::string> args = database::SplitString(str, ","), buf_;
-	for (size_t t = 0; t < args.size(); ++t) {
-		if (buf_.size() == 0)
+	for (const auto& arg : args)
+	{
+		if (buf_.empty())
 		{
-			buf_.push_back(args[t]);
+			buf_.push_back(arg);
 			continue;
 		}
 		auto x = buf_[(buf_.size() - 1)];
 		if (std::count(x.begin(), x.end(), '(') != std::count(x.begin(), x.end(), ')'))
 		{
-			x.append("," + args[t]);
+			x.append("," + arg);
 			buf_.erase(buf_.end() - 1);
 			buf_.push_back(x);
 		}
 		else
 		{
-			buf_.push_back(args[t]);
+			buf_.push_back(arg);
 		}
 	}
 	buf.second = buf_;
 	return buf;
 }
-data_container* cmder::convert_var(std::string token)
+data_container* cmder::convert_var(const std::string& token)
 {
 	auto x = ProcessCmd(token);
-	if (token.find("(") == std::basic_string<char, std::char_traits<char>, std::allocator<char>>::npos)
+	if (token.find('(') == std::basic_string<char, std::char_traits<char>, std::allocator<char>>::npos)
 	{
 		return member_access(x.first);
 	}
 	else
 	{
-		_SWITCH_BEGIN(x.first)
-			_SWITCH_CASE("string")
+		SWITCH_BEGIN(x.first)
+			SWITCH_CASE("string")
 		{
 			std::string str;
 			for (const auto& i : x.second)
 				str += ((!str.empty()) ? "," : "") + i;
 			return new data_container(new data_string(str));
 		}
-		_SWITCH_CASE("int")
+		SWITCH_CASE("int")
 		{
 			std::string str;
 			for (const auto& i : x.second)
 				str += ((!str.empty()) ? "," : "") + i;
 			return new data_container(new data_int(std::stoi(str)));
 		}
-		_SWITCH_CASE("char")
+		SWITCH_CASE("char")
 		{
 			std::string str;
 			for (const auto& i : x.second)
 				str += ((!str.empty()) ? "," : "") + i;
-			return new data_container(new data_char(std::stoi(str)));
+			return new data_container(new data_char(static_cast<char>(std::stoi(str))));
 		}
-		_SWITCH_CASE("void")
+		SWITCH_CASE("void")
 		{
 			return new data_container(new data_void());
 		}
-		_SWITCH_CASE("bool")
+		SWITCH_CASE("bool")
 		{
 			std::string str;
 			for (const auto& i : x.second)
 				str += ((!str.empty()) ? "," : "") + i;
 			return new data_container(new data_bool(str == "true"));
 		}
-		_SWITCH_DEFAULT{
+		SWITCH_DEFAULT{
 			std::vector<data_container*> c;
 			for (size_t i = 0; i < x.second.size(); ++i)
 				c.push_back(convert_var(x.second[i]));			 
@@ -154,6 +155,6 @@ data_container* cmder::convert_var(std::string token)
 				delete m;			
 			return t;
 		}
-			_SWITCH_END
+			SWITCH_END
 	}
 }

@@ -5,7 +5,6 @@ project ("ServerCore")
 include_directories(${PROJECT_BINARY_DIR})
 find_package(Git)
 MESSAGE(STATUS "###################################")
-
 execute_process(COMMAND ${GIT_EXECUTABLE} describe --abbrev=6 --dirty --always --tags WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} OUTPUT_VARIABLE  GIT_REPO_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE      )
 execute_process(COMMAND ${GIT_EXECUTABLE} log -1 --format=%cd --date=short WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} OUTPUT_VARIABLE  GIT_REPO_DATE OUTPUT_STRIP_TRAILING_WHITESPACE                    )
 execute_process(COMMAND ${GIT_EXECUTABLE} log -1 --format=%H WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} OUTPUT_VARIABLE  GIT_REPO_HASH_L OUTPUT_STRIP_TRAILING_WHITESPACE                                )

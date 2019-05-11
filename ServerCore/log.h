@@ -1,7 +1,7 @@
 ﻿#ifndef COLOR_PRInt_H
 #define COLOR_PRInt_H
 #include <string>
-#include "global.h"
+#include "../global.h"
 #include <list>
 class log {
 public:

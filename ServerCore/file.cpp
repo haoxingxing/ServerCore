@@ -3,8 +3,9 @@
 #include "log.h"
 #include "ServerCore.h"
 #include <cstdio>
+#include <utility>
 
-file::file(const std::string& _filename) : filename(_filename)
+file::file(std::string _filename) : filename(std::move(_filename))
 {
 	DEB(print_pointer(this));
 }

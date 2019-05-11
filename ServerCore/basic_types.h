@@ -30,7 +30,6 @@ public:
 	{
 		return new data_void();
 	};
-private:
 };
 class data_bool : public data
 {
@@ -111,16 +110,16 @@ public:
 	{
 		for (auto& arg : args)
 		{
-			_SWITCH_BEGIN(TYPE(arg->get()))
-				_SWITCH_CASE("null")
+			SWITCH_BEGIN(TYPE(arg->get()))
+				SWITCH_CASE("null")
 			{
 				std::cout << "null";
 			}
-			_SWITCH_CASE("string")
+			SWITCH_CASE("string")
 				std::cout << arg->get()->to<data_string>()->access();
-			_SWITCH_DEFAULT
+			SWITCH_DEFAULT
 				std::cout << arg->get()->convert_type("string")->get()->to<data_string>()->access();
-			_SWITCH_END
+			SWITCH_END
 		}
 		return new data_container;
 	}
@@ -129,7 +128,7 @@ public:
 	{
 		std::string in;
 		std::cin >> in;
-		auto x = new data_container(new data_string(in));
+		const auto x = new data_container(new data_string(in));
 		for (auto& arg : args)
 		{
 			arg->copy_value(x);

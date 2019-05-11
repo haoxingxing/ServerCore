@@ -13,7 +13,7 @@ public:
 	void run();
 	data_container* member_access(const std::string& name);
 private:
-	std::pair<std::string, std::vector<std::string>> ProcessCmd(std::string str) const;
-	data_container* convert_var(std::string token);
+	[[nodiscard]] std::pair<std::string, std::vector<std::string>> ProcessCmd(std::string str) const;
+	data_container* convert_var(const std::string& token);
 };
 #endif

@@ -7,7 +7,7 @@
 #include <memory>
 #include "ServerCore.h"
 #include "log.h"
-#define TYPE(ptr) (ptr==nullptr)?"null":ptr->what()
+#define TYPE(ptr) ((ptr)==nullptr)?"null":(ptr)->what()
 class data_container;
 class database;
 class data
@@ -16,7 +16,7 @@ class data
 #endif
 {
 public:
-	explicit data(const std::string & type = "void",const data * parent = nullptr);
+	explicit data(std::string type = "void",const data * parent = nullptr);
 	virtual ~data();
 	virtual std::string what() { return type; };
 	virtual data* make_copy() = 0;
@@ -28,6 +28,7 @@ public:
 	T* to() { return dynamic_cast<T*>(this); };
 	database* member;
 private:
+	bool is_member_own;
 	std::string type;
 };
 class data_void;
@@ -56,8 +57,8 @@ public:
 		}
 	};
 	void copy_value(data_container * s) const{if ((*d) != nullptr)(*d)->delete_this();*d = nullptr;*(this->d) = (*(s->d))->make_copy();}
-	data_container* copy() const { return new data_container(d);};
-	data* get() const { return *d; };
+	[[nodiscard]] data_container* copy() const { return new data_container(d);};
+	[[nodiscard]] data* get() const { return *d; };
 	explicit operator data* () const { return *d; };
 private:
 	data** d = nullptr;

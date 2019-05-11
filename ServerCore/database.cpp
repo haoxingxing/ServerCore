@@ -1,17 +1,18 @@
 ﻿#include "database.h"
 #include <sstream>
 #include <algorithm>
+#include <utility>
 #include "ServerCore.h"
-#include "file.h"
 #include "basic_types.h"
-data::data(const std::string& type, const data* parent) : type(type)
+data::data(std::string type, const data* parent) : type(std::move(type))
 {
 	DEB(print_pointer(this));
-	member = parent == nullptr ? new database : parent->member;
+	member = parent == nullptr ? [&](){is_member_own=true;return new database;}() : [&](){is_member_own=false;return parent->member;}();
 }
 data::~data()
 {
-	delete member;
+	if (is_member_own)
+		delete member;
 	DEB(print_pointer(this));
 }
 data_container* data::access_member(const std::string& name)
@@ -29,7 +30,7 @@ database::database()
 
 database::~database()
 {
-	std::for_each(_data.begin(), _data.end(), [&](std::pair<std::string, data_container*> d) {
+	std::for_each(_data.begin(), _data.end(), [&](const std::pair<std::string, data_container*>& d) {
 		delete d.second;
 		});
 	DEB(print_pointer(this));
@@ -79,9 +80,8 @@ data_container* database::get(const std::string & key)
 std::vector<std::string> database::SplitString(const std::string & s, const std::string & c)
 {
 	std::vector<std::string> v;
-	std::string::size_type pos1, pos2;
-	pos2 = s.find(c);
-	pos1 = 0;
+	std::string::size_type pos2 = s.find(c);
+	std::string::size_type pos1 = 0;
 	while (std::string::npos != pos2)
 	{
 		v.push_back(s.substr(pos1, pos2 - pos1));

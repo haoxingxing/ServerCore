@@ -6,8 +6,7 @@ class cmder_conf : public database {
 public:
 	cmder_conf();
 	std::vector<std::string> commands;
-	void str_to_map(const std::string& str);
-protected:	
+	void str_to_map(const std::string& str);	
 };
 
 #endif // CONFIG_MGR_H

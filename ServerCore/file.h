@@ -10,7 +10,7 @@ class file
 {
 public:
 	// Open File to read and write
-	explicit file(const std::string& filename);
+	explicit file(std::string filename);
 	virtual ~file();
 	// Read the whole file
 	std::string read();
