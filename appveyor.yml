@@ -32,7 +32,7 @@ deploy:
   description: 'Auto Build'
   provider: GitHub
   auth_token:
-    secure: zzjxrxxBJUyzPt1vJ+2gwDyLIFw7jX6+5XhKEe3/gCQAmDQGdNE+cvrhnzZR9hPh
+    secure: RUp57xGP/E19r+wEr4rbMD2nmqVX78jrU0vyvfSAKkWJx4cZR+Yv/eGR++jaA8gT
   artifacts: win32
   draft: false
   force_update: true
