@@ -140,15 +140,5 @@ public:
 		delete x;
 		return new data_container;
 	}
-	_function;
-	function_(_if)
-	{
-		if (args.size()!=3)
-		{
-			ERR(TS_ID_24 "3" TS_ID_25 TS_ID_26);
-		}
-
-		
-	}
-	_function;
+	_function;	
 };

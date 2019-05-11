@@ -6,19 +6,7 @@
 |Travis    | [![Build Status](https://travis-ci.org/haoxingxing/StarCore.svg?branch=master)](https://travis-ci.org/haoxingxing/StarCore)                  |
 |Appveyor  | [![Build status](https://ci.appveyor.com/api/projects/status/rul0wxmnqgs6p5vs?svg=true)](https://ci.appveyor.com/project/haoxingxing/starcore) | 
 |Codacy    | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5f3044dcf6b84ec8b1399a43162a4119)](https://www.codacy.com/app/haoxingxing/StarCore?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=haoxingxing/StarCore&amp;utm_campaign=Badge_Grade)|
-
-## Standard
-|    *Entry*      |        *Standard*       |
-|   :--------:    |        :--------:       |
-| Encoding        |      UTF-8 with BOM     |
-| Line Ending     |        Unix LF          |
-| Language        |         C++17           |
-
-## Todo
-- [x] Basic Varrible *基础变量*
-- [x] Basic Standard IO *基本输入输出*
-- [x] Member Access *成员访问*
-- [ ] Process control *流程控制*
-- [ ] Analysis AST *语法树分析*
-- [ ] User-defined Function *用户定义的函数*
-- [ ] User-defined Class *用户定义的类*
+## TODO
+[Click to go to the TODO](todo.md) 
+## Document
+[Click to go to the Document](doc/README.md)
