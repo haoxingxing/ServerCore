@@ -1,4 +1,4 @@
-﻿#!./build/ServerCore*
+﻿#!./build/StarCore*
 # Test File
 builtin.var(cr,char(10))
 builtin.var(h,string(Hello/你好))

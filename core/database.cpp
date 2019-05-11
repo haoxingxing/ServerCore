@@ -2,12 +2,12 @@
 #include <sstream>
 #include <algorithm>
 #include <utility>
-#include "ServerCore.h"
+#include "core.h"
 #include "basic_types.h"
 data::data(std::string type, const data* parent) : type(std::move(type))
 {
 	DEB(print_pointer(this));
-	member = parent == nullptr ? [&](){is_member_own=true;return new database;}() : [&](){is_member_own=false;return parent->member;}();
+	member = parent == nullptr ? [&]() {is_member_own = true; return new database; }() : [&]() {is_member_own = false; return parent->member; }();
 }
 data::~data()
 {
@@ -30,7 +30,7 @@ database::database()
 
 database::~database()
 {
-	std::for_each(_data.begin(), _data.end(), [&](const std::pair<std::string, data_container*>& d) {
+	std::for_each(_data.begin(), _data.end(), [&](const std::pair<std::string, data_container*> & d) {
 		delete d.second;
 		});
 	DEB(print_pointer(this));

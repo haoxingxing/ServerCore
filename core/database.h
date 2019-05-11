@@ -5,7 +5,7 @@
 #include <vector>
 #include <iomanip>
 #include <memory>
-#include "ServerCore.h"
+#include "core.h"
 #include "log.h"
 #define TYPE(ptr) ((ptr)==nullptr)?"null":(ptr)->what()
 class data_container;
@@ -56,8 +56,8 @@ public:
 			delete d;
 		}
 	};
-	void copy_value(data_container * s) const{if ((*d) != nullptr)(*d)->delete_this();*d = nullptr;*(this->d) = (*(s->d))->make_copy();}
-	[[nodiscard]] data_container* copy() const { return new data_container(d);};
+	void copy_value(data_container * s) const { if ((*d) != nullptr)(*d)->delete_this(); *d = nullptr; *(this->d) = (*(s->d))->make_copy(); }
+	[[nodiscard]] data_container* copy() const { return new data_container(d); };
 	[[nodiscard]] data* get() const { return *d; };
 	explicit operator data* () const { return *d; };
 private:

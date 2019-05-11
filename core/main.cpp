@@ -1,5 +1,4 @@
-﻿#include "ServerCore.h"
-#include "log.h"
+﻿#include "log.h"
 #include "file.h"
 #include "cmder_conf.h"
 #include "cmder.h"

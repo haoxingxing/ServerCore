@@ -4,8 +4,8 @@ os:
   - osx
 script: 
   - cmake . && make
-  - build/ServerCore*
-  - build/ServerCore* tests.starcore
+  - build/StarCore*
+  - build/StarCore* tests.starcore
 
 deploy:
   provider: releases

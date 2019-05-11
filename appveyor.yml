@@ -17,11 +17,11 @@ before_build:
 - cmake .
 
 build:
-  project: ServerCore.sln
+  project: StarCore.sln
 
 test_script:
-  - build\Release\ServerCore.win32.exe
-  - build\Release\ServerCore.win32.exe tests.starcore
+  - build\Release\StarCore.win32.exe
+  - build\Release\StarCore.win32.exe tests.starcore
 
 artifacts:
   - path: build\*\*

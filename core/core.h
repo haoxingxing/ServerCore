@@ -20,7 +20,7 @@
 #ifdef DEBUG
 #define DEB(info) log::print(log::Debug,"["+std::string(__FUNCTION__)+"]"+info)
 #else
-#define DEB(info) 
+#define DEB(info)
 #endif
    /*
 	* Print Notice Information
@@ -41,11 +41,3 @@
  * 2. exit
  */
 #define EXIT_ERR(info) ERR(info);exit(EXIT_FAILURE)
-
-#define SWITCH_BEGIN(str) {\
-const std::string &SWITCH_KEY=str;\
-if(false);
-#define SWITCH_CASE(str) else if (SWITCH_KEY==str)
-#define SWITCH_END \
-}
-#define SWITCH_DEFAULT else

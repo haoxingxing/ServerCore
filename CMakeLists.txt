@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 
-project ("ServerCore")
+project ("StarCore")
 
 include_directories(${PROJECT_BINARY_DIR})
 find_package(Git)
@@ -45,4 +45,4 @@ message( STATUS "out:     [ ${OUTDIR} ]")
 message( STATUS "git:     [ ${GIT_REPO_HASH} ]")
 MESSAGE( STATUS "platform:[ ${PLAT} ]")
 MESSAGE(STATUS "###################################")
-add_subdirectory ("ServerCore")
+add_subdirectory ("core")

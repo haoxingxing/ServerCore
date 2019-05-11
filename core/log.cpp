@@ -2,7 +2,7 @@
 #include <iostream>
 #include <typeinfo>
 
-#include "ServerCore.h"
+#include "core.h"
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -85,7 +85,7 @@ void MemoryLeak_Probe::MemoryLeakCheck()
 		ERR("Memory Leaked:" + std::to_string(MemoryLeak_Probe::count));
 		for (auto& i : list)
 		{
-			auto &n = *i;
+			auto& n = *i;
 			WARN("[" + std::string(typeid(n).name()) + "] " + PRINT_POINTER(i));
 		}
 		exit(EXIT_FAILURE);

@@ -1,7 +1,7 @@
 ﻿#include "file.h"
 #include <iostream>
 #include "log.h"
-#include "ServerCore.h"
+#include "core.h"
 #include <cstdio>
 #include <utility>
 
@@ -18,9 +18,8 @@ file::~file()
 		if (!out)
 			out.close();
 	}
-	catch(...)
+	catch (...)
 	{
-		
 	}
 	DEB(print_pointer(this));
 }
