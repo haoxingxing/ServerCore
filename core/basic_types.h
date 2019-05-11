@@ -21,6 +21,19 @@ data* make_copy() override\
 data_container* execute(const std::vector<data_container*>& args) override
 #define _function }
 #define reg_function this->member->insert
+
+/*
+ * Using the macro to get the ptr with the type
+ * Example:
+ * std::cout << GETTYPEOF("string",data_string,arg)->access();
+ * Obj:
+ *	The dest type's dynamic type (string)
+ * Dst:
+ *	The dest type
+ * Ptr:
+ *	 The source ptr
+ */
+#define GETTYPEOF(Obj,Dst,Ptr) (((Ptr)->get()->what() == ((Obj)))?((Ptr)->get()->to<Dst>()) : ((Ptr)->get()->convert_type(Obj)->get()->to<Dst>()))
 class data_void : public data
 {
 public:
@@ -110,16 +123,7 @@ public:
 	{
 		for (auto& arg : args)
 		{
-			SWITCH_BEGIN(TYPE(arg->get()))
-				SWITCH_CASE("null")
-			{
-				std::cout << "null";
-			}
-			SWITCH_CASE("string")
-				std::cout << arg->get()->to<data_string>()->access();
-			SWITCH_DEFAULT
-				std::cout << arg->get()->convert_type("string")->get()->to<data_string>()->access();
-			SWITCH_END
+			std::cout << GETTYPEOF("string",data_string,arg)->access();
 		}
 		return new data_container;
 	}
@@ -135,6 +139,16 @@ public:
 		}
 		delete x;
 		return new data_container;
+	}
+	_function;
+	function_(_if)
+	{
+		if (args.size()!=3)
+		{
+			ERR(TS_ID_24 "3" TS_ID_25 TS_ID_26);
+		}
+
+		
 	}
 	_function;
 };

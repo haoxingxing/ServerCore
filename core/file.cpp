@@ -7,7 +7,7 @@
 
 file::file(std::string _filename) : filename(std::move(_filename))
 {
-	DEB(print_pointer(this));
+	DEB(PRINT_POINTER(this));
 }
 
 file::~file()
@@ -21,7 +21,7 @@ file::~file()
 	catch (...)
 	{
 	}
-	DEB(print_pointer(this));
+	DEB(PRINT_POINTER(this));
 }
 
 std::string file::read()

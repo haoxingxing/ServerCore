@@ -7,7 +7,6 @@
 #include <memory>
 #include "core.h"
 #include "log.h"
-#define TYPE(ptr) ((ptr)==nullptr)?"null":(ptr)->what()
 class data_container;
 class database;
 class data
@@ -40,14 +39,11 @@ class data_container
 public:
 	explicit data_container(data * *d) : d(d), iscopy(true)
 	{
-		DEB(print_pointer(this));
+		DEB(PRINT_POINTER(this));
 	};
-	explicit data_container(data* d = nullptr) : d(new data* (d)), iscopy(false)
-	{
-		DEB(print_pointer(this));
-	};
+	explicit data_container(data* d = nullptr);;
 	~data_container() {
-		DEB(print_pointer(this));
+		DEB(PRINT_POINTER(this));
 		if (!iscopy)
 		{
 			if ((*d) != nullptr)

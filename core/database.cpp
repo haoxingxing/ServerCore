@@ -6,14 +6,14 @@
 #include "basic_types.h"
 data::data(std::string type, const data* parent) : type(std::move(type))
 {
-	DEB(print_pointer(this));
+	DEB(PRINT_POINTER(this));
 	member = parent == nullptr ? [&]() {is_member_own = true; return new database; }() : [&]() {is_member_own = false; return parent->member; }();
 }
 data::~data()
 {
 	if (is_member_own)
 		delete member;
-	DEB(print_pointer(this));
+	DEB(PRINT_POINTER(this));
 }
 data_container* data::access_member(const std::string& name)
 {
@@ -23,9 +23,18 @@ std::shared_ptr<data_container> data::convert_type(const std::string&)
 {
 	return std::make_shared<data_container>();
 }
+data_container::data_container(data* d): iscopy(false)
+{
+	if (d == nullptr)
+	{
+		d = new data_void;
+	}
+	this->d=new data*(d);
+	DEB(PRINT_POINTER(this));
+}
 database::database()
 {
-	DEB(print_pointer(this));
+	DEB(PRINT_POINTER(this));
 }
 
 database::~database()
@@ -33,7 +42,7 @@ database::~database()
 	std::for_each(_data.begin(), _data.end(), [&](const std::pair<std::string, data_container*> & d) {
 		delete d.second;
 		});
-	DEB(print_pointer(this));
+	DEB(PRINT_POINTER(this));
 }
 
 void database::insert(const std::string& key, data_container* value)
@@ -43,7 +52,7 @@ void database::insert(const std::string& key, data_container* value)
 		DEB(TS_ID_5 " [" + key + "]," TS_ID_6);
 		this->remove(key);
 	}
-	DEB(TS_ID_7" [" + key + "," + print_pointer(value) + "]");
+	DEB(TS_ID_7" [" + key + "," + PRINT_POINTER(value) + "]");
 	_data.insert(std::make_pair(key, value));
 }
 

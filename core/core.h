@@ -18,7 +18,7 @@
    * With __FUNCTION__
    */
 #ifdef DEBUG
-#define DEB(info) log::print(log::Debug,"["+std::string(__FUNCTION__)+"]"+info)
+#define DEB(info) log::print(log::Debug,"["+std::string(__FUNCTION__)+"]"+(info))
 #else
 #define DEB(info)
 #endif
