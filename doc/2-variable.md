@@ -1,4 +1,0 @@
-﻿# Variable
-
-
-*[Back](README.md)*
