@@ -1,11 +1,8 @@
 ﻿# Document
 - *0 ->* [**介绍**](introduce.md)  
-- *1 ->* [**原理**](principle.md)  
-- *2 ->* [**标准**](standard.md)  
-- *3 ->* [**语法**](grammar.md)  
-- *4 ->* [**变量**](variable.md)  
-
-- [ ] 将文档分成原理+教程
+- *1 ->* [**标准**](standard.md)  
+- *2 ->* [**原理**](principle/README.md)  
+- *3 ->* [**教程**](tutorial/README.md)  
 
 
 *[Back](../README.md)*

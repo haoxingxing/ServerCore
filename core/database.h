@@ -15,14 +15,17 @@ class data
 #endif
 {
 public:
-	explicit data(std::string type = "void",const data * parent = nullptr);
+	explicit data(std::string type,const data * parent = nullptr);
 	virtual ~data();
-	virtual std::string what() { return type; };
-	virtual data* make_copy() = 0;
-	virtual data_container* access_member(const std::string& name);
+	//Interface
+	virtual data* new_this() { return this;};
 	virtual void delete_this() { delete this; };
-	virtual data_container* execute(const std::vector<data_container*>&) { return nullptr; };
+	virtual data* make_copy() = 0;
 	virtual std::shared_ptr<data_container> convert_type(const std::string&);
+
+	virtual std::string what() { return type; };
+	virtual data_container* access_member(const std::string& name);
+	virtual data_container* execute(const std::vector<data_container*>&) { return nullptr; };
 	template<typename T>
 	T* to() { return dynamic_cast<T*>(this); };
 	database* member;

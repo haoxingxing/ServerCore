@@ -99,32 +99,32 @@ data_container* cmder::convert_var(const std::string& token)
 			std::string str;
 			for (const auto& i : x.second)
 				str += ((!str.empty()) ? "," : "") + i;
-			return new data_container(new data_string(str));
+			return new data_container((new data_string(str))->new_this());
 		}
 		SWITCH_CASE("int")
 		{
 			std::string str;
 			for (const auto& i : x.second)
 				str += ((!str.empty()) ? "," : "") + i;
-			return new data_container(new data_int(std::stoi(str)));
+			return new data_container((new data_int(std::stoi(str)))->new_this());
 		}
 		SWITCH_CASE("char")
 		{
 			std::string str;
 			for (const auto& i : x.second)
 				str += ((!str.empty()) ? "," : "") + i;
-			return new data_container(new data_char(static_cast<char>(std::stoi(str))));
+			return new data_container((new data_char(static_cast<char>(std::stoi(str))))->new_this());
 		}
 		SWITCH_CASE("void")
 		{
-			return new data_container(new data_void());
+			return new data_container((new data_void())->new_this());
 		}
 		SWITCH_CASE("bool")
 		{
 			std::string str;
 			for (const auto& i : x.second)
 				str += ((!str.empty()) ? "," : "") + i;
-			return new data_container(new data_bool(str == "true"));
+			return new data_container((new data_bool(str == "true"))->new_this());
 		}
 		SWITCH_DEFAULT{
 			std::vector<data_container*> c;
