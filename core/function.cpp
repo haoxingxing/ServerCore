@@ -3,9 +3,13 @@
 #include <iostream>
 #include "basic_types.h"
 #include "core.h"
-function::function()
+function::function(const root* parent) : root("function", parent)
 {
-	this->domain::insert("builtin", new variable(new builtin));
+}
+root* function::new_this()
+{
+	dm.insert("builtin", new variable((new builtin)->new_this()));
+	return this;
 }
 
 void function::run()
@@ -16,7 +20,13 @@ void function::run()
 		delete convert_var(x);
 	}
 }
-variable* function::member_access(const std::string& name)
+root* function::make_copy()
+{
+	auto x = new function(this->parent);
+	x->commands = this->commands;
+	return x;
+}
+variable* function::member_access(const std::string & name)
 {
 	if (name.find('.') != std::string::npos)
 	{
@@ -26,7 +36,7 @@ variable* function::member_access(const std::string& name)
 			ERR(TS_ID_32);
 			return nullptr;
 		}
-		variable* p = this->get(s[0]);
+		variable* p = dm.get(s[0]);
 		for (size_t i = 1; i < s.size() && p != nullptr; i++)
 		{
 			if (p != nullptr && p->get() != nullptr)
@@ -42,7 +52,7 @@ variable* function::member_access(const std::string& name)
 	}
 	else
 	{
-		return (*this)[name]->copy();
+		return dm[name]->copy();
 	}
 }
 std::pair<std::string, std::vector<std::string>> function::ProcessCmd(std::string str) const
@@ -62,7 +72,7 @@ std::pair<std::string, std::vector<std::string>> function::ProcessCmd(std::strin
 	buf.first = domain::SplitString(str, "(")[0];
 	str = str.substr(str.find_first_of('(') + 1);
 	str = str.erase(str.find_last_of(')'));
-	std::vector<std::string> args = SplitString(str, ","), buf_;
+	std::vector<std::string> args = domain::SplitString(str, ","), buf_;
 	for (const auto& arg : args)
 	{
 		if (buf_.empty())
@@ -85,7 +95,7 @@ std::pair<std::string, std::vector<std::string>> function::ProcessCmd(std::strin
 	buf.second = buf_;
 	return buf;
 }
-variable* function::convert_var(const std::string& token)
+variable* function::convert_var(const std::string & token)
 {
 	auto x = ProcessCmd(token);
 	if (token.find('(') == std::basic_string<char, std::char_traits<char>, std::allocator<char>>::npos)
@@ -130,7 +140,7 @@ variable* function::convert_var(const std::string& token)
 		SWITCH_DEFAULT{
 			std::vector<variable*> c;
 			for (size_t i = 0; i < x.second.size(); ++i)
-				c.push_back(convert_var(x.second[i]));			 
+				c.push_back(convert_var(x.second[i]));
 			DEB(TS_ID_30 + x.first);
 			auto t = member_access(x.first);
 			if (t != nullptr)
@@ -142,35 +152,36 @@ variable* function::convert_var(const std::string& token)
 					if (t == nullptr) {
 						ERR(TS_ID_33 + x.first);
 					}
-				} else {
-					ERR(TS_ID_31 + x.first);
-					delete t;
-					t = nullptr;
 				}
-			}
-			else
-			{
-				ERR(TS_ID_31 + x.first);
-			}
-			for (const auto& m : c)		
-				delete m;			
-			return t;
+ else {
+  ERR(TS_ID_31 + x.first);
+  delete t;
+  t = nullptr;
+}
+}
+else
+{
+	ERR(TS_ID_31 + x.first);
+}
+for (const auto& m : c)
+	delete m;
+return t;
 		}
 			SWITCH_END
 	}
 }
-void function::ProcessDefine(const std::string& str)
+void function::ProcessDefine(const std::string & str)
 {
 	if (str.empty())
 	{
 		ERR(TS_ID_1);
 		return;
 	}
-	std::vector<std::string> v = SplitString(str, "\n");
+	std::vector<std::string> v = domain::SplitString(str, "\n");
 	for (auto m : v)
 	{
 		if (m.find('#') != std::string::npos) {
-			m = SplitString(m, "#")[0];
+			m = domain::SplitString(m, "#")[0];
 		}
 		if (m.length() == 0)
 		{

@@ -105,6 +105,7 @@ class builtin : public root
 {
 public:
 	builtin();
+	root* new_this() override;
 	root* make_copy() override
 	{
 		return new builtin;

@@ -24,7 +24,9 @@ public:
 	virtual variable* execute(const std::vector<variable*>&) { return nullptr; };
 	template<typename T>
 	T* to() { return dynamic_cast<T*>(this); };
+protected:
 	domain* member = nullptr;
+	const root* parent = nullptr;
 private:
 	bool is_member_own = true;
 	std::string type;

@@ -11,6 +11,7 @@ void Run(const std::string& _file)
 {
 	file f(_file);
 	function t;
+	t.new_this();
 	t.ProcessDefine(f.read());
 	t.run();
 }
