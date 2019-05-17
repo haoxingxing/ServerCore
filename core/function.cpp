@@ -1,8 +1,16 @@
 ﻿#include "function.h"
 #include <algorithm>
 #include <iostream>
-#include "basic_types.h"
 #include "core.h"
+#include "builtin/builtin.h"
+#include "builtin/_string.h"
+#include "builtin/int.h"
+#include "builtin/char.h"
+#include "builtin/void.h"
+#include "builtin/bool.h"
+root_function::root_function(const root* parent) : root("function", parent)
+{
+}
 function::function(const root* parent) : root("function", parent)
 {
 }

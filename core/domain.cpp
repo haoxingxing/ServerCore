@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <utility>
 #include "core.h"
-#include "basic_types.h"
 #include "domain.h"
 
 domain::domain()
