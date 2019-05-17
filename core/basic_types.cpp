@@ -18,6 +18,7 @@ std::shared_ptr<data_container> data_void::convert_type(const std::string& t)
 		return std::make_shared<data_container>();
 	SWITCH_END
 }
+
 auto data_bool::convert_type(const std::string& t)->std::shared_ptr<data_container>
 {
 	SWITCH_BEGIN(t)
@@ -80,7 +81,38 @@ data_function::data_function(const data * parent) : data("function", parent)
 }
 builtin::builtin() : data("builtin")
 {
-	reg_function("var", new data_container(new var));
-	reg_function("echo", new data_container(new echo));
-	reg_function("input", new data_container(new input));
+	REG_FUNCTION("var", new data_container(new var));
+	REG_FUNCTION("echo", new data_container(new echo));
+	REG_FUNCTION("input", new data_container(new input));
+}
+
+
+FUNCTION_DEFINITION(builtin::var){
+		if (args.size() == 2)
+		{
+			args[0]->copy_value(args[1]);
+		}
+		else
+		{
+			ERR(TS_ID_24 "2" TS_ID_25 TS_ID_26);
+		}
+		return new data_container;
+}
+FUNCTION_DEFINITION(builtin::echo){
+		for (auto& arg : args)
+		{
+			std::cout << GETTYPEOF("string",data_string,arg)->access();
+		}
+		return new data_container;
+}
+FUNCTION_DEFINITION(builtin::input){
+	std::string in;
+	std::cin >> in;
+	const auto x = new data_container(new data_string(in));
+	for (auto& arg : args)
+	{
+		arg->copy_value(x);		
+	}
+	delete x;
+	return new data_container;
 }

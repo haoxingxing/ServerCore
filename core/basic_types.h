@@ -12,15 +12,17 @@ public:
 /*
  * The args are normal with "args"
  */
-#define function_(name)\
+#define FUNCTION_DECLARATION(name)\
 class name : public data_function { \
 data* make_copy() override\
 {\
 	return new name;\
 };\
-data_container* execute(const std::vector<data_container*>& args) override
-#define _function }
-#define reg_function this->member->insert
+data_container* execute(const std::vector<data_container*>& args) override;\
+}
+#define FUNCTION_DEFINITION(name) \
+data_container* name::execute(const std::vector<data_container*>& args)
+#define REG_FUNCTION this->member->insert
 
 /*
  * Using the macro to get the ptr with the type
@@ -106,39 +108,7 @@ public:
 	{
 		return new builtin;
 	};
-	function_(var)
-	{
-		if (args.size() == 2)
-		{
-			args[0]->copy_value(args[1]);
-		}
-		else
-		{
-			ERR(TS_ID_24 "2" TS_ID_25 TS_ID_26);
-		}
-		return new data_container;
-	}
-	_function;
-	function_(echo)
-	{
-		for (auto& arg : args)
-		{
-			std::cout << GETTYPEOF("string",data_string,arg)->access();
-		}
-		return new data_container;
-	}
-	_function;
-	function_(input)
-	{
-		std::string in;
-		std::cin >> in;
-		const auto x = new data_container(new data_string(in));
-		for (auto& arg : args)
-		{
-			arg->copy_value(x);
-		}
-		delete x;
-		return new data_container;
-	}
-	_function;	
+	FUNCTION_DECLARATION(var);
+	FUNCTION_DECLARATION(echo);
+	FUNCTION_DECLARATION(input);
 };
