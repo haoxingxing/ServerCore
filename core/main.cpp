@@ -1,7 +1,6 @@
 ﻿#include "log.h"
 #include "file.h"
-#include "cmder_conf.h"
-#include "cmder.h"
+#include "function.h"
 #include "repo_version.h"
 #ifdef _WIN32
 #include <Windows.h>
@@ -11,8 +10,8 @@ using namespace std;
 void Run(const std::string& _file)
 {
 	file f(_file);
-	cmder  t;
-	t.str_to_map(f.read());
+	function t;
+	t.ProcessDefine(f.read());
 	t.run();
 }
 

@@ -1,110 +1,111 @@
-#pragma once
-#include "database.h"
-#include "cmder.h"
+#ifndef BASIC_TYPES_H
+#define BASIC_TYPES_H
+#include "domain.h"
+#include "function.h"
 #include <string>
 #include <iostream>
-class data_function : public data
+class root_function : public root
 {
 public:
-	data_function(const data* parent = nullptr);
-	data_container* execute(const std::vector<data_container*>&) override = 0;
+	root_function(const root* parent = nullptr);
+	variable* execute(const std::vector<variable*>&) override = 0;
 };
 /*
  * The args are normal with "args"
  */
 #define FUNCTION_DECLARATION(name)\
-class name : public data_function { \
-data* make_copy() override\
+class name : public root_function { \
+root* make_copy() override\
 {\
 	return new name;\
 };\
-data_container* execute(const std::vector<data_container*>& args) override;\
+variable* execute(const std::vector<variable*>& args) override;\
 }
 #define FUNCTION_DEFINITION(name) \
-data_container* name::execute(const std::vector<data_container*>& args)
+variable* name::execute(const std::vector<variable*>& args)
 #define REG_FUNCTION this->member->insert
 
-/*
- * Using the macro to get the ptr with the type
- * Example:
- * std::cout << GETTYPEOF("string",data_string,arg)->access();
- * Obj:
- *	The dest type's dynamic type (string)
- * Dst:
- *	The dest type
- * Ptr:
- *	 The source ptr
- */
+ /*
+  * Using the macro to get the ptr with the type
+  * Example:
+  * std::cout << GETTYPEOF("string",root_string,arg)->access();
+  * Obj:
+  *	The dest type's dynamic type (string)
+  * Dst:
+  *	The dest type
+  * Ptr:
+  *	 The source ptr
+  */
 #define GETTYPEOF(Obj,Dst,Ptr) (((Ptr)->get()->what() == ((Obj)))?((Ptr)->get()->to<Dst>()) : ((Ptr)->get()->convert_type(Obj)->get()->to<Dst>()))
-class data_void : public data
+class root_void : public root
 {
 public:
-	data_void(const data* parent = nullptr) :data("void", parent) { }
-	std::shared_ptr<data_container> convert_type(const std::string& t) override;
-	data* make_copy() override
+	root_void(const root* parent = nullptr) :root("void", parent) { }
+	std::shared_ptr<variable> convert_type(const std::string& t) override;
+	root* make_copy() override
 	{
-		return new data_void();
+		return new root_void();
 	};
 };
-class data_bool : public data
+class root_bool : public root
 {
 public:
-	data_bool(const bool& a = false, const data* parent = nullptr) :data("bool", parent) { d = a; }
+	root_bool(const bool& a = false, const root* parent = nullptr) :root("bool", parent) { d = a; }
 	bool& access() { return  d; }
-	auto convert_type(const std::string& t)->std::shared_ptr<data_container> override;
-	data* make_copy() override
+	auto convert_type(const std::string& t)->std::shared_ptr<variable> override;
+	root* make_copy() override
 	{
-		return new data_bool(d);
+		return new root_bool(d);
 	};
 private:
 	bool d;
 };
-class data_char : public data
+class root_char : public root
 {
 public:
-	data_char(const char& a = 0, const data* parent = nullptr) :data("char", parent) { d = a; }
+	root_char(const char& a = 0, const root* parent = nullptr) :root("char", parent) { d = a; }
 	char& access() { return  d; }
-	auto convert_type(const std::string& t)->std::shared_ptr<data_container> override;
-	data* make_copy() override
+	auto convert_type(const std::string& t)->std::shared_ptr<variable> override;
+	root* make_copy() override
 	{
-		return new data_char(d);
+		return new root_char(d);
 	};
 private:
 	char d;
 };
-class data_int : public data
+class root_int : public root
 {
 public:
-	data_int(const int& a = 0, const data* parent = nullptr) :data("int", parent) { d = a; }
+	root_int(const int& a = 0, const root* parent = nullptr) :root("int", parent) { d = a; }
 	int& access() { return  d; }
-	std::shared_ptr<data_container> convert_type(const std::string& t) override;
-	data* make_copy() override
+	std::shared_ptr<variable> convert_type(const std::string& t) override;
+	root* make_copy() override
 	{
-		return new data_int(d);
+		return new root_int(d);
 	};
 private:
 	int d;
 };
 
-class data_string : public data
+class root_string : public root
 {
 public:
-	data_string(const std::string& a = "", const data* parent = nullptr) :data("string", parent) { d = a; }
+	root_string(const std::string& a = "", const root* parent = nullptr) :root("string", parent) { d = a; }
 	std::string& access() { return  d; }
-	std::shared_ptr<data_container> convert_type(const std::string& t) override;
-	data* make_copy() override
+	std::shared_ptr<variable> convert_type(const std::string& t) override;
+	root* make_copy() override
 	{
-		return new data_string(d);
+		return new root_string(d);
 	};
 private:
 	std::string d;
 };
 
-class builtin : public data
+class builtin : public root
 {
 public:
 	builtin();
-	data* make_copy() override
+	root* make_copy() override
 	{
 		return new builtin;
 	};
@@ -112,3 +113,4 @@ public:
 	FUNCTION_DECLARATION(echo);
 	FUNCTION_DECLARATION(input);
 };
+#endif // BASIC_TYPES_H

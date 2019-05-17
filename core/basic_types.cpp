@@ -1,89 +1,90 @@
 #include "basic_types.h"
-std::shared_ptr<data_container> data_void::convert_type(const std::string& t)
+#include "core.h"
+std::shared_ptr<variable> root_void::convert_type(const std::string& t)
 {
 	SWITCH_BEGIN(t)
 		SWITCH_CASE("string")
 	{
-		return std::make_shared<data_container>(new data_string("void"));
+		return std::make_shared<variable>(new root_string("void"));
 	}
 	SWITCH_CASE("bool")
 	{
-		return std::make_shared<data_container>(new data_bool(false));
+		return std::make_shared<variable>(new root_bool(false));
 	}
 	SWITCH_CASE("int")
 	{
-		return std::make_shared<data_container>(new data_int(0));
+		return std::make_shared<variable>(new root_int(0));
 	}
 	SWITCH_DEFAULT
-		return std::make_shared<data_container>();
+		return std::make_shared<variable>();
 	SWITCH_END
 }
 
-auto data_bool::convert_type(const std::string& t)->std::shared_ptr<data_container>
+auto root_bool::convert_type(const std::string& t)->std::shared_ptr<variable>
 {
 	SWITCH_BEGIN(t)
 		SWITCH_CASE("string")
 	{
-		return std::make_shared<data_container>(new data_string(d ? "true" : "false"));
+		return std::make_shared<variable>(new root_string(d ? "true" : "false"));
 	}
 	SWITCH_CASE("int")
 	{
-		return std::make_shared<data_container>(new data_int(d));
+		return std::make_shared<variable>(new root_int(d));
 	}
 	SWITCH_DEFAULT
-		return std::make_shared<data_container>();
+		return std::make_shared<variable>();
 	SWITCH_END
 }
-std::shared_ptr<data_container> data_int::convert_type(const std::string & t)
+std::shared_ptr<variable> root_int::convert_type(const std::string & t)
 {
 	SWITCH_BEGIN(t)
 		SWITCH_CASE("string")
 	{
-		return std::make_shared<data_container>(new data_string(std::to_string(d)));
+		return std::make_shared<variable>(new root_string(std::to_string(d)));
 	}
 	SWITCH_CASE("bool")
 	{
-		return std::make_shared<data_container>(new data_bool(d));
+		return std::make_shared<variable>(new root_bool(d));
 	}
 	SWITCH_CASE("char")
 	{
-		return std::make_shared<data_container>(new data_char(char(d)));
+		return std::make_shared<variable>(new root_char(char(d)));
 	}
 	SWITCH_DEFAULT
-		return std::make_shared<data_container>();
+		return std::make_shared<variable>();
 	SWITCH_END
 }
-std::shared_ptr<data_container> data_char::convert_type(const std::string & t)
+std::shared_ptr<variable> root_char::convert_type(const std::string & t)
 {
 	SWITCH_BEGIN(t)
 		SWITCH_CASE("string")
 	{
-		return std::make_shared<data_container>(new data_string(std::string(1, d)));
+		return std::make_shared<variable>(new root_string(std::string(1, d)));
 	}
 	SWITCH_CASE("bool")
 	{
-		return std::make_shared<data_container>(new data_bool(d));
+		return std::make_shared<variable>(new root_bool(d));
 	}
 	SWITCH_DEFAULT
-		return std::make_shared<data_container>();
+		return std::make_shared<variable>();
 	SWITCH_END
 }
-std::shared_ptr<data_container> data_string::convert_type(const std::string & t)
+std::shared_ptr<variable> root_string::convert_type(const std::string & t)
 {
 	SWITCH_BEGIN(t)
 		SWITCH_DEFAULT
-		return std::make_shared<data_container>();
+		return std::make_shared<variable>();
 	SWITCH_END
 }
 
-data_function::data_function(const data * parent) : data("function", parent)
+root_function::root_function(const root * parent) : root("function", parent)
 {
 }
-builtin::builtin() : data("builtin")
+builtin::builtin() : root("builtin")
 {
-	REG_FUNCTION("var", new data_container(new var));
-	REG_FUNCTION("echo", new data_container(new echo));
-	REG_FUNCTION("input", new data_container(new input));
+	REG_FUNCTION("var", new variable(new var));
+	REG_FUNCTION("echo", new variable(new echo));
+	REG_FUNCTION("input", new variable(new input));
 }
 
 
@@ -96,23 +97,23 @@ FUNCTION_DEFINITION(builtin::var){
 		{
 			ERR(TS_ID_24 "2" TS_ID_25 TS_ID_26);
 		}
-		return new data_container;
+		return new variable;
 }
 FUNCTION_DEFINITION(builtin::echo){
 		for (auto& arg : args)
 		{
-			std::cout << GETTYPEOF("string",data_string,arg)->access();
+			std::cout << GETTYPEOF("string",root_string,arg)->access();
 		}
-		return new data_container;
+		return new variable;
 }
 FUNCTION_DEFINITION(builtin::input){
 	std::string in;
 	std::cin >> in;
-	const auto x = new data_container(new data_string(in));
+	const auto x = new variable(new root_string(in));
 	for (auto& arg : args)
 	{
 		arg->copy_value(x);		
 	}
 	delete x;
-	return new data_container;
+	return new variable;
 }

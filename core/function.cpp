@@ -1,13 +1,14 @@
-﻿#include "cmder.h"
+﻿#include "function.h"
 #include <algorithm>
 #include <iostream>
 #include "basic_types.h"
-cmder::cmder()
+#include "core.h"
+function::function()
 {
-	this->database::insert("builtin", new data_container(new builtin));
+	this->domain::insert("builtin", new variable(new builtin));
 }
 
-void cmder::run()
+void function::run()
 {
 	for (const auto& x : commands)
 	{
@@ -15,17 +16,17 @@ void cmder::run()
 		delete convert_var(x);
 	}
 }
-data_container* cmder::member_access(const std::string& name)
+variable* function::member_access(const std::string& name)
 {
 	if (name.find('.') != std::string::npos)
 	{
-		auto s = SplitString(name, ".");
+		auto s = domain::SplitString(name, ".");
 		if (s.size() < 2)
 		{
 			ERR(TS_ID_32);
 			return nullptr;
 		}
-		data_container* p = this->get(s[0]);
+		variable* p = this->get(s[0]);
 		for (size_t i = 1; i < s.size() && p != nullptr; i++)
 		{
 			if (p != nullptr && p->get() != nullptr)
@@ -44,7 +45,7 @@ data_container* cmder::member_access(const std::string& name)
 		return (*this)[name]->copy();
 	}
 }
-std::pair<std::string, std::vector<std::string>> cmder::ProcessCmd(std::string str) const
+std::pair<std::string, std::vector<std::string>> function::ProcessCmd(std::string str) const
 {
 	std::pair<std::string, std::vector<std::string>> buf;
 	if (str.find('(') == std::string::npos)
@@ -58,10 +59,10 @@ std::pair<std::string, std::vector<std::string>> cmder::ProcessCmd(std::string s
 		ERR(TS_ID_15);
 		return buf;
 	}
-	buf.first = database::SplitString(str, "(")[0];
+	buf.first = domain::SplitString(str, "(")[0];
 	str = str.substr(str.find_first_of('(') + 1);
 	str = str.erase(str.find_last_of(')'));
-	std::vector<std::string> args = database::SplitString(str, ","), buf_;
+	std::vector<std::string> args = SplitString(str, ","), buf_;
 	for (const auto& arg : args)
 	{
 		if (buf_.empty())
@@ -84,7 +85,7 @@ std::pair<std::string, std::vector<std::string>> cmder::ProcessCmd(std::string s
 	buf.second = buf_;
 	return buf;
 }
-data_container* cmder::convert_var(const std::string& token)
+variable* function::convert_var(const std::string& token)
 {
 	auto x = ProcessCmd(token);
 	if (token.find('(') == std::basic_string<char, std::char_traits<char>, std::allocator<char>>::npos)
@@ -99,35 +100,35 @@ data_container* cmder::convert_var(const std::string& token)
 			std::string str;
 			for (const auto& i : x.second)
 				str += ((!str.empty()) ? "," : "") + i;
-			return new data_container((new data_string(str))->new_this());
+			return new variable((new root_string(str))->new_this());
 		}
 		SWITCH_CASE("int")
 		{
 			std::string str;
 			for (const auto& i : x.second)
 				str += ((!str.empty()) ? "," : "") + i;
-			return new data_container((new data_int(std::stoi(str)))->new_this());
+			return new variable((new root_int(std::stoi(str)))->new_this());
 		}
 		SWITCH_CASE("char")
 		{
 			std::string str;
 			for (const auto& i : x.second)
 				str += ((!str.empty()) ? "," : "") + i;
-			return new data_container((new data_char(static_cast<char>(std::stoi(str))))->new_this());
+			return new variable((new root_char(static_cast<char>(std::stoi(str))))->new_this());
 		}
 		SWITCH_CASE("void")
 		{
-			return new data_container((new data_void())->new_this());
+			return new variable((new root_void())->new_this());
 		}
 		SWITCH_CASE("bool")
 		{
 			std::string str;
 			for (const auto& i : x.second)
 				str += ((!str.empty()) ? "," : "") + i;
-			return new data_container((new data_bool(str == "true"))->new_this());
+			return new variable((new root_bool(str == "true"))->new_this());
 		}
 		SWITCH_DEFAULT{
-			std::vector<data_container*> c;
+			std::vector<variable*> c;
 			for (size_t i = 0; i < x.second.size(); ++i)
 				c.push_back(convert_var(x.second[i]));			 
 			DEB(TS_ID_30 + x.first);
@@ -156,5 +157,26 @@ data_container* cmder::convert_var(const std::string& token)
 			return t;
 		}
 			SWITCH_END
+	}
+}
+void function::ProcessDefine(const std::string& str)
+{
+	if (str.empty())
+	{
+		ERR(TS_ID_1);
+		return;
+	}
+	std::vector<std::string> v = SplitString(str, "\n");
+	for (auto m : v)
+	{
+		if (m.find('#') != std::string::npos) {
+			m = SplitString(m, "#")[0];
+		}
+		if (m.length() == 0)
+		{
+			continue;
+		}
+		commands.push_back(m);
+		DEB("cmd " + m);
 	}
 }

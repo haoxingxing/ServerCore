@@ -46,7 +46,7 @@
 //		std::cout << TS_ID_14 << std::endl;
 //	}
 //#ifdef _WIN32
-//	_module = LoadLibrary(libFilePath.data());
+//	_module = LoadLibrary(libFilePath.root());
 //	if (_module == nullptr)
 //	{
 //		std::cout << GetLastError() << std::endl;

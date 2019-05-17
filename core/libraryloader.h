@@ -11,7 +11,7 @@
 //#include <dlfcn.h>
 //#include <errno.h>
 //#endif
-//#include "database.h"
+//#include "domain.h"
 //
 //class Library 
 //#ifdef UsingMemoryLeakCheck
@@ -23,7 +23,7 @@
 //	int lib_version_;
 //
 //public:
-//	typedef int(*handle)(database*);
+//	typedef int(*handle)(domain*);
 //#ifdef _WIN32
 //	HMODULE _module;
 //#else
