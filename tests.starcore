@@ -1,13 +1,25 @@
-ï»¿#!./build/StarCore*
+#!./build/StarCore*
 # Test File
-builtin.var(cr,char(10))
-builtin.var(h,string(Hello/ä½ å¥½))
-builtin.var(space,string( ))
-builtin.var(w,string(World/ä¸–ç•Œ))
-builtin.var(tan,string(!))
-builtin.echo(h,space,w,tan,cr)
-builtin.var(n,builtin.echo)
-n(string(     Powered by haoxingxing),cr)
-#n(string(Now let's do some tests),cr,string(Input someting:))
-#builtin.input(i)
-#builtin.echo(string(Your input:),i)
+#builtin.var(cr,char(10));
+#builtin.var(h,"Hello,ÄãºÃ");
+#builtin.var(space,string( ));
+#builtin.var(w,string(World/ÊÀ½ç));
+#builtin.var(tan,string(!));
+#builtin.echo(h,space,w,tan,cr);
+#builtin.var(n,builtin.echo);
+#n(string(     Powered by haoxingxing),cr);
+#n(string(Now let's do some tests),cr,string(Input someting:));
+#builtin.input(i);
+#builtin.echo(string(Your input:),i);
+
+var(x,"");
+var(first,x.at(1));
+if(first.equals(23));
+echo("Equals");
+else;
+echo("Not Equals");
+end;
+while(first.less(128));
+echo(first);
+var(first,first.minus(1));
+end;

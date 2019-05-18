@@ -3,7 +3,7 @@
 #include "log.h"
 #include "core.h"
 #include <utility>
-
+#include <string>
 file::file(std::string _filename) : filename(std::move(_filename))
 {
 	DEB(PRINT_POINTER(this));

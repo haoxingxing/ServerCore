@@ -3,15 +3,26 @@
 #include "function.h"
 #include "repo_version.h"
 #include "ast.h"
+#include <iostream>
 #ifdef _WIN32
 #include <Windows.h>
 #endif
 using namespace std;
-
+void Dump(ast::tree t)
+{
+	std::cout << "\"" << t.data << "\" : {\n";
+	for (auto x : t.args)
+	{
+		Dump(x);
+	}
+	std::cout << "},\n";
+}
 void Run(const std::string& _file)
 {
 	file f(_file);
-	auto x=ast::split(f.read());
+	auto x = ast::split(f.read());
+	auto n = ast::analysis(x);
+	Dump(n);
 	//function t;
 	//t.new_this();
 	//t.ProcessDefine(f.read());
