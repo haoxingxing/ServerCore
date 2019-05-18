@@ -2,24 +2,26 @@
 #include "_string.h"
 #include "bool.h"
 #include "char.h"
+#include "void.h"
 #include "../variable.h"
+#include "../exception.h"
 
-std::shared_ptr<variable> root_int::convert_type(const std::string& t)
+std::unique_ptr<root> root_int::convert_type(const std::string& t)
 {
 	SWITCH_BEGIN(t)
 		SWITCH_CASE("string")
 	{
-		return std::make_shared<variable>(new root_string(std::to_string(d)));
+		return std::make_unique<root_string>(std::to_string(d));
 	}
 	SWITCH_CASE("bool")
 	{
-		return std::make_shared<variable>(new root_bool(d));
+		return std::make_unique<root_bool>(d);
 	}
 	SWITCH_CASE("char")
 	{
-		return std::make_shared<variable>(new root_char(char(d)));
+		return std::make_unique<root_char>(char(d));
 	}
 	SWITCH_DEFAULT
-		return std::make_shared<variable>();
+		return std::unique_ptr<root_void>();
 	SWITCH_END
 }

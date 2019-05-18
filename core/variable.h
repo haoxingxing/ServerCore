@@ -39,17 +39,5 @@ variable* execute(const std::vector<variable*>& args) override;\
 variable* name::execute(const std::vector<variable*>& args)
 #define REG_FUNCTION this->member->insert
 
- /*
-  * Using the macro to get the ptr with the type
-  * Example:
-  * std::cout << GETTYPEOF("string",root_string,arg)->access();
-  * Obj:
-  *	The dest type's dynamic type (string)
-  * Dst:
-  *	The dest type
-  * Ptr:
-  *	 The source ptr
-  */
-#define GETTYPEOF(Obj,Dst,Ptr) (((Ptr)->get()->what() == ((Obj)))?((Ptr)->get()->to<Dst>()) : ((Ptr)->get()->convert_type(Obj)->get()->to<Dst>()))
 
 #endif // VARIABLE_H

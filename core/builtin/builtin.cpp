@@ -1,8 +1,9 @@
 #include "builtin.h"
 #include "../core.h"
-#include <iostream>
 #include "_string.h"
 #include "../domain.h"
+#include <iostream>
+
 builtin::builtin() : root("builtin")
 {
 }
@@ -25,10 +26,10 @@ FUNCTION_DEFINITION(builtin::var) {
 	}
 	return new variable;
 }
-FUNCTION_DEFINITION(builtin::echo) {
+FUNCTION_DEFINITION(builtin::echo) {	
 	for (auto& arg : args)
 	{
-		std::cout << GETTYPEOF("string", root_string, arg)->access();
+		std::cout << GET_TYPE("string", root_string, (arg->get()))->access();
 	}
 	return new variable;
 }

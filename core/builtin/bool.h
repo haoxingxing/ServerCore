@@ -1,12 +1,14 @@
 #ifndef BOOL_H
 #define BOOL_H
 #include "../root.h"
+#include "../variable.h"
+
 class root_bool : public root
 {
 public:
 	root_bool(const bool& a = false, const root* parent = nullptr) :root("bool", parent) { d = a; }
 	bool& access() { return  d; }
-	auto convert_type(const std::string& t)->std::shared_ptr<variable> override;
+	std::unique_ptr<root> convert_type(const std::string& t) override;
 	root* make_copy() override
 	{
 		return new root_bool(d);

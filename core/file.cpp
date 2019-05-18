@@ -2,7 +2,6 @@
 #include <iostream>
 #include "log.h"
 #include "core.h"
-#include <cstdio>
 #include <utility>
 
 file::file(std::string _filename) : filename(std::move(_filename))

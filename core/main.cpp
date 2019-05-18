@@ -2,6 +2,7 @@
 #include "file.h"
 #include "function.h"
 #include "repo_version.h"
+#include "ast.h"
 #ifdef _WIN32
 #include <Windows.h>
 #endif
@@ -10,10 +11,11 @@ using namespace std;
 void Run(const std::string& _file)
 {
 	file f(_file);
-	function t;
-	t.new_this();
-	t.ProcessDefine(f.read());
-	t.run();
+	auto x=ast::split(f.read());
+	//function t;
+	//t.new_this();
+	//t.ProcessDefine(f.read());
+	//t.run();
 }
 
 int main(int argc, char** argv)

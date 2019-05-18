@@ -1,8 +1,9 @@
 #include "root.h"
 #include "core.h"
 #include "domain.h"
+#include "builtin/void.h"
 
-root::root(std::string type, const root* parent) : type(std::move(type)), parent(parent)
+root::root(std::string type, const root* parent) : parent(parent), type(std::move(type))
 {
 	DEB(PRINT_POINTER(this));
 	member = parent == nullptr ? [&]() {
@@ -23,7 +24,7 @@ root::~root()
 		delete member;
 	DEB(PRINT_POINTER(this));
 }
-std::shared_ptr<variable> root::convert_type(const std::string&)
+std::unique_ptr<root> root::convert_type(const std::string&)
 {
-	return std::make_shared<variable>();
+	return std::make_unique<root_void>();
 }
