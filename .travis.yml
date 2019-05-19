@@ -1,14 +1,29 @@
 ﻿language: cpp
-os:
-  - linux
-  - osx
+#os:
+#  - linux
+#  - osx
+
+matrix:
+  include:
+    # works on Precise and Trusty
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+	- os: osx
+      osx_image: xcode8
+      env:
+        - MATRIX_EVAL="brew install gcc && CC=gcc-7 && CXX=g++-7"
+
 script: 
-  - sudo apt update
-  - sudo apt install g++-7 -y
   - cmake . && make
   - build/StarCore*
   - build/StarCore* tests.starcore
-
 deploy:
   provider: releases
   api_key: 
