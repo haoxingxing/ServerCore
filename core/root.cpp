@@ -26,5 +26,5 @@ root::~root()
 }
 std::unique_ptr<root> root::convert_type(const std::string&)
 {
-	return std::make_unique<root_void>();
+	return _make_unique<root_void>();
 }

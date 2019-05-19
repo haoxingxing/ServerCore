@@ -8,13 +8,13 @@ std::unique_ptr<root> root_char::convert_type(const std::string& t)
 	SWITCH_BEGIN(t)
 		SWITCH_CASE("string")
 	{
-		return std::make_unique<root_string>(std::string(1, d));
+		return _make_unique<root_string>(std::string(1, d));
 	}
 	SWITCH_CASE("bool")
 	{
-		return std::make_unique<root_bool>(d);
+		return _make_unique<root_bool>(d);
 	}
 	SWITCH_DEFAULT
-		return std::make_unique<root_void>();
+		return _make_unique<root_void>();
 	SWITCH_END
 }
