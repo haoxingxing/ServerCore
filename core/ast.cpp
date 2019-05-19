@@ -1,7 +1,7 @@
 ﻿#include "ast.h"
 #include "domain.h"
 #include "exception.h"
-
+#include <algorithm>
 std::vector<std::string> ast::split(const std::string& raw /*取新鲜活虾一篮*/)
 {
 	std::vector<std::string> r; //准备好盘子
