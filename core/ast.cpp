@@ -57,6 +57,14 @@ std::vector<std::string> ast::merge(const std::vector<std::string> & args, const
 	}
 	return buf_;
 }
+bool ast::find_start_key(const std::string& s)
+{
+	return s=="if"||s=="while";
+}
+bool ast::find_end_key(const std::string& s)
+{
+	return s=="end";
+}
 ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净的虾 */)
 {
 	tree t; /*准备好锅*/
@@ -87,22 +95,40 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 				t.args[last].args[0].data = "condition";
 #endif
 				std::vector<std::string> sli;
-				size_t find;
+				size_t find,start_counter = 0,end_counter = 0;
 				for (find = i + 1; find < raw.size(); find++)
 				{
-					if (raw[find] == "end")
-						break;
+					auto key=clean_str(raw[find].substr(0, raw[find].find_first_of('('))); //看怎么煮
+					if (find_start_key(key))
+					{
+						start_counter+=1;
+					}
+					if (find_end_key(key))
+					{
+						if (end_counter == start_counter)
+							break;
+						end_counter++;
+					}
 					sli.push_back(raw[find]);
 				}
 				std::vector<std::string> if_true, if_false;
 				bool has_else_appeared = false;
+				start_counter = 0,end_counter = 0;
 				for (const auto& c : sli)
 				{
-					if (c == "else")
+					auto key=clean_str(c.substr(0, c.find_first_of('('))); //看怎么煮
+					if (key=="while"|| key=="if")
+						start_counter+=1;
+					if (key=="end")
+						end_counter+=1;
+					if (key == "else")
 					{
-						has_else_appeared = true;
-						continue;
+						if (start_counter==end_counter){
+							has_else_appeared = true;
+							continue;
+						}
 					}
+
 					(has_else_appeared ? if_false : if_true).push_back(c);
 				}
 
@@ -122,17 +148,26 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 				t.args[last].args[0].data = "condition";
 #endif
 				std::vector<std::string> sli;
-				size_t find;
+				size_t find,start_counter = 0,end_counter = 0;
 				for (find = i + 1; find < raw.size(); find++)
 				{
-					if (raw[find] == "end")
-						break;
-					if (raw[find] == "else")
-						throw NEW_EXCEPT("syntax err: Else doesn't match a if");
+					auto key=clean_str(raw[find].substr(0, raw[find].find_first_of('('))); //看怎么煮
+					if (key == "if" || key == "while")
+					{
+						start_counter+=1;
+					}
+					if (key == "end")
+					{
+						if (end_counter == start_counter)
+							break;
+						end_counter++;
+					}
 					sli.push_back(raw[find]);
 				}
 				t.args[last].args.push_back(analysis(sli));
+#ifdef DEBUG
 				t.args[last].args[1].data = "statement";
+#endif
 				i = find + 1;
 			}
 			SWITCH_DEFAULT{
