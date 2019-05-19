@@ -3,6 +3,8 @@ os:
   - linux
   - osx
 script: 
+  - sudo apt update
+  - sudo apt install g++-7 -y
   - cmake . && make
   - build/StarCore*
   - build/StarCore* tests.starcore
