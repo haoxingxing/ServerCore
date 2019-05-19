@@ -11,7 +11,26 @@ using namespace std;
 void Dump(ast::tree t)
 {
 	std::cout << "\"" << t.data << "\" : {\n";
-	for (auto x : t.args)
+	std::string ts;
+	switch (t.type)
+	{
+	case ast::tree::var:
+		ts = "\"var\"";
+		break;
+	case ast::tree::_if:
+		ts = "\"if\"";
+		break;
+	case ast::tree::exec:
+		ts = "\"exec\"";
+		break;
+	case ast::tree::_while:
+		ts = "\"while\"";
+		break;
+	default:;
+		ts = "\"body\"";
+	}
+	std::cout << "\"" << "type\":" << ts << ",\n";
+	for (const auto& x : t.args)
 	{
 		Dump(x);
 	}
@@ -42,7 +61,7 @@ int main(int argc, char** argv)
 #ifndef DEBUG
 		log::print(log::Info, "StarCore " REPO_VERSION);
 #endif
-	}
+}
 	else if (argc > 1)
 	{
 		Run(string(argv[1]));
