@@ -1,7 +1,6 @@
 #ifndef BOOL_H
 #define BOOL_H
 #include "../root.h"
-#include "../variable.h"
 
 class root_bool : public root
 {

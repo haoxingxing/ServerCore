@@ -1,7 +1,6 @@
 #ifndef CHAR_H
 #define CHAR_H
 #include "../root.h"
-#include "../variable.h"
 
 class root_char : public root
 {

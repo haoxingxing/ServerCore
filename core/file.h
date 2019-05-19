@@ -2,6 +2,7 @@
 #define FILE_H
 #include <string>
 #include <fstream>
+#include <iostream>
 #include "log.h"
 class file
 #ifdef UsingMemoryLeakCheck

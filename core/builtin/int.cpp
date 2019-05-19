@@ -3,8 +3,6 @@
 #include "bool.h"
 #include "char.h"
 #include "void.h"
-#include "../variable.h"
-#include "../exception.h"
 
 std::unique_ptr<root> root_int::convert_type(const std::string& t)
 {
