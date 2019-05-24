@@ -7,9 +7,9 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: 'build'
-      ArtifactName: '$(Agent.OS)'
+      ArtifactName: '$(Agent.OS).$(Agent.OSArchitecture)'
       publishLocation: 'Container'
-    
+  
 - job: macOS
   pool:
     vmImage: 'macOS-10.14'
@@ -18,7 +18,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: 'build'
-      ArtifactName: '$(Agent.OS)'
+      ArtifactName: '$(Agent.OS).$(Agent.OSArchitecture)'
       publishLocation: 'Container'
     
 
@@ -27,12 +27,30 @@ jobs:
     vmImage: 'windows-2019'
   steps:
   - script: 'cmake .'
-  - task: VSBuild@1
+  - task: MSBuild@1
     inputs:
-      solution: '**\*.sln'
+      solution: '**/*.sln'
+      configuration: 'Debug'
+      maximumCpuCount: true
+  - task: MSBuild@1
+    inputs:
+      solution: '**/*.sln'
+      configuration: 'Release'
+      maximumCpuCount: true
+  - task: MSBuild@1
+    inputs:
+      solution: '**/*.sln'
+      configuration: 'Release'
+      msbuildArchitecture: 'x64'
+  - task: MSBuild@1
+    inputs:
+      solution: '**/*.sln'
+      configuration: 'Debug'
+      maximumCpuCount: true
+      msbuildArchitecture: 'x64'
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: 'build'
-      ArtifactName: '$(Agent.OS)'
+      ArtifactName: '$(Agent.OS).$(Agent.OSArchitecture)'
       publishLocation: 'Container'
     
