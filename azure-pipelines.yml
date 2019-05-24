@@ -7,7 +7,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: 'build'
-      ArtifactName: '$(Agent.OS)'
+      ArtifactName: 'build'
       publishLocation: 'Container'
     
 - job: macOS
@@ -18,7 +18,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: 'build'
-      ArtifactName: '$(Agent.OS)'
+      ArtifactName: 'build'
       publishLocation: 'Container'
     
 
@@ -56,10 +56,10 @@ jobs:
       cmakeArgs: 
   - task: VSBuild@1
     inputs:
-      solution: '**\*.sln'
+      solution: '*.sln'
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: 'build'
-      ArtifactName: '$(Agent.OS)'
+      ArtifactName: 'build'
       publishLocation: 'Container'
     
