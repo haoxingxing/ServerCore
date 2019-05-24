@@ -42,10 +42,3 @@ jobs:
       PathtoPublish: 'build'
       ArtifactName: '$(Agent.OS).$(Agent.OSArchitecture)'
       publishLocation: 'Container'
-  - task: GitHubRelease@0
-    inputs:
-      gitHubConnection: "haoxingxing"
-      repositoryName: '$(Build.Repository.Name)'
-      target: '$(Build.SourceVersion)'
-      tagSource: 'auto'
-    
