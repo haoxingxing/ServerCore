@@ -5,9 +5,7 @@ os:
 compiler:
 - clang
 script: 
-  - cmake . && make
-  - build/StarCore*
-  - build/StarCore* tests.starcore
+  - bash ./build.sh
 
 deploy:
   provider: releases
