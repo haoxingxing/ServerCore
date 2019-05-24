@@ -37,20 +37,15 @@ jobs:
       solution: '**/*.sln'
       configuration: 'Release'
       maximumCpuCount: true
-  - task: MSBuild@1
-    inputs:
-      solution: '**/*.sln'
-      configuration: 'Release'
-      msbuildArchitecture: 'x64'
-  - task: MSBuild@1
-    inputs:
-      solution: '**/*.sln'
-      configuration: 'Debug'
-      maximumCpuCount: true
-      msbuildArchitecture: 'x64'
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: 'build'
       ArtifactName: '$(Agent.OS).$(Agent.OSArchitecture)'
       publishLocation: 'Container'
+  - task: GitHubRelease@0
+    inputs:
+      gitHubConnection: "haoxingxing"
+      repositoryName: '$(Build.Repository.Name)'
+      target: '$(Build.SourceVersion)'
+      tagSource: 'auto'
     
