@@ -29,7 +29,7 @@ jobs:
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: '$VstsPAT = "$(VstsPAT)"
+      script: '$VstsPAT = "haoxingxing"
         
         # VSTS projects can have multiple repositories
         # I use one project to hold all my mirrored github repositories
