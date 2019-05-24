@@ -4,13 +4,62 @@ jobs:
     vmImage: 'ubuntu-latest'
   steps:
   - script: bash build.sh
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: 'build'
+      ArtifactName: '$(Agent.OS)'
+      publishLocation: 'Container'
+    
 - job: macOS
   pool:
     vmImage: 'macOS-10.14'
   steps:
   - script: bash build.sh
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: 'build'
+      ArtifactName: '$(Agent.OS)'
+      publishLocation: 'Container'
+    
+
 - job: Windows
   pool:
     vmImage: 'windows-2019'
   steps:
-  - script: echo hello from Windows
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: '$VstsPAT = "$(VstsPAT)"
+        
+        # VSTS projects can have multiple repositories
+        # I use one project to hold all my mirrored github repositories
+        $vstsProject = "StarCore"
+        
+        git branch -r | findstr /v "\->" |  ForEach-Object {$br=$_.TrimStart(); git branch --track $br.Substring("origin/".Length) $br}
+        # When usig Github repositories the name is set to "Github/RepoName", we only care for the repo name
+        $repoName = "$env:BUILD_REPOSITORY_NAME".split(''/'')[1]
+        # remove "https://" because we need to insert the PAT
+        $vstsRepoUri = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI".Substring(8) + "$vstsProject/_git/$repoName"
+        
+        # push all branches to vsts project
+        git remote add vsts "https://$VstsPAT@$vstsRepoUri"
+        git branch -r | findstr /v "\->" | ForEach-Object {
+            $br=$_.TrimStart().Substring("origin/".Length)
+            Write-Host "Pushing $br to VSTS"
+            git push -u vsts $br
+        }
+        # don''t forget the tags
+        git push vsts --tags'
+  - task: CMake@1
+    inputs:
+      workingDirectory: '.'
+      cmakeArgs: 
+  - task: VSBuild@1
+    inputs:
+      solution: '**\*.sln'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: 'build'
+      ArtifactName: '$(Agent.OS)'
+      publishLocation: 'Container'
+    
