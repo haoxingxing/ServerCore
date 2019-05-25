@@ -57,27 +57,27 @@ std::vector<std::string> ast::merge(const std::vector<std::string> & args, const
 	}
 	return buf_;
 }
-bool ast::find_start_key(const std::string& s)
+bool ast::find_start_key(const std::string & s)
 {
-	return s=="if"||s=="while";
+	return s == "if" || s == "while";
 }
-bool ast::find_end_key(const std::string& s)
+bool ast::find_end_key(const std::string & s)
 {
-	return s=="end";
+	return s == "end";
 }
 ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净的虾 */)
 {
 	tree t; /*准备好锅*/
-	t.data = "body";
+	t.data = "function";
 	for (size_t i = 0; i < raw.size();)
 	{
 		auto branch = clean_str(raw[i]);
 		std::string cleaned = branch;
-		while (cleaned.find('"')!=std::string::npos)
+		while (cleaned.find('"') != std::string::npos)
 		{
-			auto tmp=cleaned.substr(0,cleaned.find_first_of('"'));
-			auto tmp2=cleaned.substr(cleaned.substr(cleaned.find_first_of('"')+1).find_first_of('"')+cleaned.find_first_of('"')+2);
-			cleaned =tmp+tmp2;
+			auto tmp = cleaned.substr(0, cleaned.find_first_of('"'));
+			auto tmp2 = cleaned.substr(cleaned.substr(cleaned.find_first_of('"') + 1).find_first_of('"') + cleaned.find_first_of('"') + 2);
+			cleaned = tmp + tmp2;
 		}
 		t.args.emplace_back();
 		const auto last = t.args.size() - 1;
@@ -95,13 +95,13 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 				t.args[last].args.push_back(analysis(merge(domain::SplitString(s, ","), ",")));
 				t.args[last].args[0].data = "condition";
 				std::vector<std::string> sli;
-				size_t find,start_counter = 0,end_counter = 0;
+				size_t find, start_counter = 0, end_counter = 0;
 				for (find = i + 1; find < raw.size(); find++)
 				{
-					auto key=clean_str(raw[find].substr(0, raw[find].find_first_of('('))); //看怎么煮
+					auto key = clean_str(raw[find].substr(0, raw[find].find_first_of('('))); //看怎么煮
 					if (find_start_key(key))
 					{
-						start_counter+=1;
+						start_counter += 1;
 					}
 					if (find_end_key(key))
 					{
@@ -113,17 +113,17 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 				}
 				std::vector<std::string> if_true, if_false;
 				bool has_else_appeared = false;
-				start_counter = 0,end_counter = 0;
+				start_counter = 0, end_counter = 0;
 				for (const auto& c : sli)
 				{
-					auto key=clean_str(c.substr(0, c.find_first_of('('))); //看怎么煮
-					if (key=="while"|| key=="if")
-						start_counter+=1;
-					if (key=="end")
-						end_counter+=1;
+					auto key = clean_str(c.substr(0, c.find_first_of('('))); //看怎么煮
+					if (key == "while" || key == "if")
+						start_counter += 1;
+					if (key == "end")
+						end_counter += 1;
 					if (key == "else")
 					{
-						if (start_counter==end_counter){
+						if (start_counter == end_counter) {
 							has_else_appeared = true;
 							continue;
 						}
@@ -145,13 +145,13 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 				t.args[last].args[0].data = "condition";
 #endif
 				std::vector<std::string> sli;
-				size_t find,start_counter = 0,end_counter = 0;
+				size_t find, start_counter = 0, end_counter = 0;
 				for (find = i + 1; find < raw.size(); find++)
 				{
-					auto key=clean_str(raw[find].substr(0, raw[find].find_first_of('('))); //看怎么煮
+					auto key = clean_str(raw[find].substr(0, raw[find].find_first_of('('))); //看怎么煮
 					if (key == "if" || key == "while")
 					{
-						start_counter+=1;
+						start_counter += 1;
 					}
 					if (key == "end")
 					{

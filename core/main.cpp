@@ -22,11 +22,9 @@ void Run(const std::string& _file)
 	file f(_file);
 	auto x = ast::split(f.read());
 	auto n = ast::analysis(x);
-	Dump(n);
-	//function t;
-	//t.new_this();
-	//t.ProcessDefine(f.read());
-	//t.run();
+	function t;
+	t.new_this();
+	t.run(n);
 }
 
 int main(int argc, char** argv)
@@ -42,7 +40,7 @@ int main(int argc, char** argv)
 #ifndef DEBUG
 		log::print(log::Info, "StarCore " REPO_VERSION);
 #endif
-}
+	}
 	else if (argc > 1)
 	{
 		Run(string(argv[1]));
@@ -51,4 +49,4 @@ int main(int argc, char** argv)
 	MemoryLeak_Probe::MemoryLeakCheck();
 #endif
 	return 0;
-}
+	}

@@ -20,21 +20,17 @@ root* function::new_this()
 	return this;
 }
 
-void function::run()
+void function::run(const ast::tree& t)
 {
-	for (const auto& x : commands)
-	{
-		DEB(TS_ID_16 + x);
-		delete convert_var(x);
-	}
+	delete this->Process(t);
 }
 root* function::make_copy()
 {
 	auto x = new function(this->parent);
-	x->commands = this->commands;
+	x->Tree = this->Tree;
 	return x;
 }
-variable* function::member_access(const std::string & name)
+variable* function::member_access(const std::string& name)
 {
 	if (name.find('.') != std::string::npos)
 	{
@@ -58,144 +54,50 @@ variable* function::member_access(const std::string & name)
 		}
 		return p->copy();
 	}
-	else
-	{
-		return dm[name]->copy();
-	}
+	if (name.empty())
+		return  new variable((new root_void())->new_this());
+	if (std::find_if(name.begin(), name.end(), [](char c) { return !std::isdigit(c); }) == name.end())
+		return new variable((new root_int(std::stoi(name)))->new_this());
+	if (name.find('"') != std::string::npos)
+		return new variable((new root_string(name.substr(1).substr(0, name.size() - 2)))->new_this());
+	if (name == "true" || name == "false")
+		return  new variable((new root_bool(name == "true"))->new_this());
+	if (name.find('\'') != std::string::npos)
+		return new variable((new root_char(name.substr(1).substr(0, name.size() - 2).at(0)))->new_this());
+	return dm[name]->copy();
 }
-std::pair<std::string, std::vector<std::string>> function::ProcessCmd(std::string str) const
+variable * function::Process(const ast::tree & T)
 {
-	std::pair<std::string, std::vector<std::string>> buf;
-	if (str.find('(') == std::string::npos)
+	if (T.args.empty())
 	{
-		//DEB(TS_ID_15 "(");
-		buf.first.append(str);
-		return buf;
+		return member_access(T.data);
 	}
-	if (std::count(str.begin(), str.end(), '(') != std::count(str.begin(), str.end(), ')'))
+	std::vector<variable*> c;
+	for (const auto& arg : T.args)
+		c.push_back(Process(arg));
+	DEB(TS_ID_30 + T.data);
+	auto t = member_access(T.data);
+	if (t != nullptr)
 	{
-		ERR(TS_ID_15);
-		return buf;
-	}
-	buf.first = domain::SplitString(str, "(")[0];
-	str = str.substr(str.find_first_of('(') + 1);
-	str = str.erase(str.find_last_of(')'));
-	std::vector<std::string> args = domain::SplitString(str, ","), buf_;
-	for (const auto& arg : args)
-	{
-		if (buf_.empty())
-		{
-			buf_.push_back(arg);
-			continue;
+		if (t->get() != nullptr) {
+			const auto n = t;
+			t = t->get()->execute(c);
+			delete n;
+			if (t == nullptr) {
+				ERR(TS_ID_33 + T.data);
+			}
 		}
-		auto x = buf_[(buf_.size() - 1)];
-		if (std::count(x.begin(), x.end(), '(') != std::count(x.begin(), x.end(), ')'))
-		{
-			x.append("," + arg);
-			buf_.erase(buf_.end() - 1);
-			buf_.push_back(x);
+		else {
+			ERR(TS_ID_31 + T.data);
+			delete t;
+			t = nullptr;
 		}
-		else
-		{
-			buf_.push_back(arg);
-		}
-	}
-	buf.second = buf_;
-	return buf;
-}
-variable* function::convert_var(const std::string & token)
-{
-	auto x = ProcessCmd(token);
-	if (token.find('(') == std::basic_string<char, std::char_traits<char>, std::allocator<char>>::npos)
-	{
-		return member_access(x.first);
 	}
 	else
 	{
-		SWITCH_BEGIN(x.first)
-			SWITCH_CASE("string")
-		{
-			std::string str;
-			for (const auto& i : x.second)
-				str += ((!str.empty()) ? "," : "") + i;
-			return new variable((new root_string(str))->new_this());
-		}
-		SWITCH_CASE("int")
-		{
-			std::string str;
-			for (const auto& i : x.second)
-				str += ((!str.empty()) ? "," : "") + i;
-			return new variable((new root_int(std::stoi(str)))->new_this());
-		}
-		SWITCH_CASE("char")
-		{
-			std::string str;
-			for (const auto& i : x.second)
-				str += ((!str.empty()) ? "," : "") + i;
-			return new variable((new root_char(static_cast<char>(std::stoi(str))))->new_this());
-		}
-		SWITCH_CASE("void")
-		{
-			return new variable((new root_void())->new_this());
-		}
-		SWITCH_CASE("bool")
-		{
-			std::string str;
-			for (const auto& i : x.second)
-				str += ((!str.empty()) ? "," : "") + i;
-			return new variable((new root_bool(str == "true"))->new_this());
-		}
-		SWITCH_DEFAULT{
-			std::vector<variable*> c;
-			for (size_t i = 0; i < x.second.size(); ++i)
-				c.push_back(convert_var(x.second[i]));
-			DEB(TS_ID_30 + x.first);
-			auto t = member_access(x.first);
-			if (t != nullptr)
-			{
-				if (t->get() != nullptr) {
-					const auto n = t;
-					t = t->get()->execute(c);
-					delete n;
-					if (t == nullptr) {
-						ERR(TS_ID_33 + x.first);
-					}
-				}
- else {
-  ERR(TS_ID_31 + x.first);
-  delete t;
-  t = nullptr;
-}
-}
-else
-{
-	ERR(TS_ID_31 + x.first);
-}
-for (const auto& m : c)
-	delete m;
-return t;
-		}
-			SWITCH_END
+		ERR(TS_ID_31 + T.data);
 	}
-}
-void function::ProcessDefine(const std::string & str)
-{
-	if (str.empty())
-	{
-		ERR(TS_ID_1);
-		return;
-	}
-	std::vector<std::string> v = domain::SplitString(str, "\n");
-	for (auto m : v)
-	{
-		if (m.find('#') != std::string::npos) {
-			m = domain::SplitString(m, "#")[0];
-		}
-		if (m.length() == 0)
-		{
-			continue;
-		}
-		commands.push_back(m);
-		DEB("cmd " + m);
-	}
+	for (const auto& m : c)
+		delete m;
+	return t;
 }

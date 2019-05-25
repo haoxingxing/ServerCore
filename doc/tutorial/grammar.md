@@ -5,7 +5,7 @@
 
 #### 语句换行符
 - 使用 '\n'    
-- [x] [是否实现](../../core/cmder_conf.cpp) Func str_to_map
+- [x] [实现](../../core/cmder_conf.cpp) Func str_to_map
 
 例如
 ```
@@ -15,7 +15,7 @@
 
 #### 访问成员函数
 - 使用 '.'
-- [x] [是否实现](../../core/cmder.cpp) Func member_access
+- [x] [实现](../../core/cmder.cpp) Func member_access
 
 例如
 ```
@@ -25,7 +25,7 @@
 #### 执行函数
 - 使用 '(' 和 ')'
 - 中间包含变量
-- [ ] [是否实现](../../core/ast.cpp) class ast
+- [ ] [实现](../../core/ast.cpp) class ast
 
 
 例如
@@ -37,7 +37,7 @@
 流程控制是语言的中枢
 #### 如果
 - 使用 if [not] else
-- [ ] [是否实现]()
+- [ ] [实现]()
 
 
 例如
@@ -54,7 +54,7 @@
 ```
 #### 循环
 - 使用 while [not]
-- [ ] [是否实现]()
+- [ ] [实现]()
 
 例如
 ```
