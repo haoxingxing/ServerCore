@@ -44,7 +44,14 @@ std::vector<std::string> ast::merge(const std::vector<std::string> & args, const
 			continue;
 		}
 		auto x = buf_[(buf_.size() - 1)];
-		if ((std::count(x.begin(), x.end(), '(') != std::count(x.begin(), x.end(), ')')) || std::count(x.begin(), x.end(), '"') % 2 != 0)
+		std::string cleaned = arg;
+		while (cleaned.find('"') != std::string::npos)
+		{
+			auto tmp = cleaned.substr(0, cleaned.find_first_of('"'));
+			auto tmp2 = cleaned.substr(cleaned.substr(cleaned.find_first_of('"') + 1).find_first_of('"') + cleaned.find_first_of('"') + 2);
+			cleaned = tmp + tmp2;
+		}
+		if ((std::count(cleaned.begin(), cleaned.end(), '(') != std::count(cleaned.begin(), cleaned.end(), ')')) || std::count(x.begin(), x.end(), '"') % 2 != 0)
 		{
 			x.append(de + arg);
 			buf_.erase(buf_.end() - 1);
@@ -93,7 +100,7 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 				SWITCH_CASE("if")
 			{
 				t.args[last].args.push_back(analysis(merge(domain::SplitString(s, ","), ",")));
-				t.args[last].args[0].data = "condition";
+				t.args[last].args[0].data = "function";
 				std::vector<std::string> sli;
 				size_t find, start_counter = 0, end_counter = 0;
 				for (find = i + 1; find < raw.size(); find++)
@@ -134,16 +141,14 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 
 				t.args[last].args.push_back(analysis(if_true));
 				t.args[last].args.push_back(analysis(if_false));
-				t.args[last].args[1].data = "true";
-				t.args[last].args[2].data = "false";
+				t.args[last].args[1].data = "function";
+				t.args[last].args[2].data = "function";
 				i = find + 1;
 			}
 			SWITCH_CASE("while")
 			{
 				t.args[last].args.push_back(analysis(merge(domain::SplitString(s, ","), ",")));
-#ifdef DEBUG
-				t.args[last].args[0].data = "condition";
-#endif
+				t.args[last].args[0].data = "function";
 				std::vector<std::string> sli;
 				size_t find, start_counter = 0, end_counter = 0;
 				for (find = i + 1; find < raw.size(); find++)
@@ -162,9 +167,7 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 					sli.push_back(raw[find]);
 				}
 				t.args[last].args.push_back(analysis(sli));
-#ifdef DEBUG
-				t.args[last].args[1].data = "statement";
-#endif
+				t.args[last].args[1].data = "function";
 				i = find + 1;
 			}
 			SWITCH_DEFAULT{

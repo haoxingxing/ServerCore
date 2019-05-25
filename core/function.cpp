@@ -63,7 +63,7 @@ variable* function::member_access(const std::string& name)
 	if (name == "true" || name == "false")
 		return  new variable((new root_bool(name == "true"))->new_this());
 	if (name.find('\'') != std::string::npos)
-		return new variable((new root_char(name.substr(1).substr(0, name.size() - 2).at(0)))->new_this());
+		return new variable((new root_char(name.length() < 3 ? char(0) : (name.substr(1).substr(0, name.size() - 2).at(0))))->new_this());
 	return dm[name]->copy();
 }
 variable * function::Process(const ast::tree & T)
@@ -72,32 +72,81 @@ variable * function::Process(const ast::tree & T)
 	{
 		return member_access(T.data);
 	}
-	std::vector<variable*> c;
-	for (const auto& arg : T.args)
-		c.push_back(Process(arg));
-	DEB(TS_ID_30 + T.data);
-	auto t = member_access(T.data);
-	if (t != nullptr)
+	SWITCH_BEGIN(T.data)
+		SWITCH_CASE("function")
 	{
-		if (t->get() != nullptr) {
-			const auto n = t;
-			t = t->get()->execute(c);
-			delete n;
-			if (t == nullptr) {
-				ERR(TS_ID_33 + T.data);
+		variable* last = nullptr;
+		for (const auto& arg : T.args)
+		{
+			if (arg.data != "return")
+			{
+				delete last;
+				last = Process(arg);
+			}
+			else
+			{
+				return Process(arg);
+			};
+		}
+		return last;
+	}
+	SWITCH_CASE("if")
+	{
+		const auto x = Process(T.args[0]);
+		if (x != nullptr)
+			if (GET_TYPE("bool", root_bool, x->get())->access()) {
+				delete x;
+				return Process(T.args[1]);
+			}
+		delete x;
+		return Process(T.args[2]);
+	}
+	SWITCH_CASE("while")
+	{
+		variable* n = Process(T.args[0]);
+		while (n != nullptr) {
+			n = Process(T.args[0]);
+			if (GET_TYPE("bool", root_bool, n->get())->access())
+			{
+				delete n;
+				const auto x = Process(T.args[1]);
+				if (x != nullptr) {
+					return x;
+				}
 			}
 		}
-		else {
-			ERR(TS_ID_31 + T.data);
-			delete t;
-			t = nullptr;
-		}
+		return nullptr;
 	}
-	else
+	SWITCH_DEFAULT
 	{
-		ERR(TS_ID_31 + T.data);
+		std::vector<variable*> c;
+		for (const auto& arg : T.args[0].args)
+			c.push_back(Process(arg));
+		DEB(TS_ID_30 + T.data);
+		auto t = member_access(T.data);
+		if (t != nullptr)
+		{
+			if (t->get() != nullptr) {
+				const auto n = t;
+				t = t->get()->execute(c);
+				delete n;
+				if (t == nullptr) {
+					ERR(TS_ID_33 + T.data);
+				}
+			}
+			else {
+				ERR(TS_ID_31 + T.data);
+				delete t;
+				t = nullptr;
+			}
+		}
+		else
+		{
+			ERR(TS_ID_31 + T.data);
+		}
+		for (const auto& m : c)
+			delete m;
+		return t;
 	}
-	for (const auto& m : c)
-		delete m;
-	return t;
+		SWITCH_END
 }

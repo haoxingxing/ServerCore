@@ -2,7 +2,7 @@
 /*
  * Output very very verbose log information
  */
- //#define DEBUG
+#define DEBUG
  /*
   * Use Memory Leak Check
   * Causes Performance loss

@@ -5,8 +5,8 @@
 #include <vector>
 #include "log.h"
 template<typename T, typename... Args>
-std::unique_ptr<T> _make_unique(Args&&... args) {
-    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+std::unique_ptr<T> _make_unique(Args&& ... args) {
+	return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 class variable;
 class domain;
@@ -36,20 +36,20 @@ private:
 	std::string type;
 };
 
- /*
-  * Using the macro to get the ptr with the type
-  * Example:
-  * std::cout << GET_TYPE("string",root_string,arg)->access();
-  * Obj:
-  *	The dest type's dynamic type (string)
-  * Dst:
-  *	The dest type
-  * Ptr:
-  *	 The source ptr
-  */
-#define GET_TYPE(Obj,Dst,Ptr) (((Ptr)->what() == ((Obj)))?((Ptr)->to<Dst>()) : ((Ptr)->convert_type(Obj)->to<Dst>()))
 /*
- * Use the macro to check if the type is correct
+ * Using the macro to get the ptr with the type
+ * Example:
+ * std::cout << GET_TYPE("string",root_string,arg)->access();
+ * Obj:
+ *	The dest type's dynamic type (string)
+ * Dst:
+ *	The dest type
+ * Ptr:
+ *	 The source ptr
  */
+#define GET_TYPE(Obj,Dst,Ptr) (((Ptr)->what() == ((Obj)))?((Ptr)->to<Dst>()) : ((Ptr)->convert_type(Obj)->to<Dst>()))
+ /*
+  * Use the macro to check if the type is correct
+  */
 #define CHECK_TYPE(Obj,Ptr) ((Ptr)->what() == ((Obj)))
 #endif // ROOT_H
