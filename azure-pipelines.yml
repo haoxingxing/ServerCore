@@ -6,20 +6,20 @@ jobs:
   - task: PowerShell@2
     inputs:
       targetType: 'inline'
-      script: '$vstsProject = "StarCore"
+      script: '$vstsProject = "StarCore";
         git branch -r | findstr /v "\->" |  ForEach-Object {
             $br=$_.TrimStart();
              git branch --track $br.Substring("origin/".Length) $br
-            }
-        $repoName = "$env:BUILD_REPOSITORY_NAME".split(''/'')[1]
-        $vstsRepoUri = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI".Substring(8) + "$vstsProject/_git/$repoName"
-        git remote add vsts "https://$env:SYSTEM_ACCESSTOKEN@$vstsRepoUri"
+            };
+        $repoName = "$env:BUILD_REPOSITORY_NAME".split(''/'')[1];
+        $vstsRepoUri = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI".Substring(8) + "$vstsProject/_git/$repoName";
+        git remote add vsts "https://$env:SYSTEM_ACCESSTOKEN@$vstsRepoUri";
         git branch -r | findstr /v "\->" | ForEach-Object {
-            $br=$_.TrimStart().Substring("origin/".Length)
-            Write-Host "Pushing $br to VSTS"
-            git push -u vsts $br
-        }
-        git push vsts --tags'
+            $br=$_.TrimStart().Substring("origin/".Length);
+            Write-Host "Pushing $br to VSTS";
+            git push -u vsts $br;
+        };
+        git push vsts --tags;'
 - job: Linux
   pool:
     vmImage: 'ubuntu-latest'
