@@ -1,5 +1,7 @@
 jobs:
 - job: SyncRepo
+  variables:
+  - group: sync pat
   pool:
     vmImage: 'windows-latest'
   steps:
@@ -13,7 +15,7 @@ jobs:
             };
         $repoName = "$env:BUILD_REPOSITORY_NAME".split(''/'')[1];
         $vstsRepoUri = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI".Substring(8) + "$vstsProject/_git/$repoName";
-        git remote add vsts "https://$env:SYSTEM_ACCESSTOKEN@$vstsRepoUri";
+        git remote add vsts "https://$(vstspat)@$vstsRepoUri";
         git branch -r | findstr /v "\->" | ForEach-Object {
             $br=$_.TrimStart().Substring("origin/".Length);
             Write-Host "Pushing $br to VSTS";
