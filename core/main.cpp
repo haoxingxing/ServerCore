@@ -11,25 +11,6 @@ using namespace std;
 void Dump(ast::tree t)
 {
 	std::cout << "\"" << t.data << "\" : {\n";
-	std::string ts;
-	switch (t.type)
-	{
-	case ast::tree::var:
-		ts = "\"var\"";
-		break;
-	case ast::tree::_if:
-		ts = "\"if\"";
-		break;
-	case ast::tree::exec:
-		ts = "\"exec\"";
-		break;
-	case ast::tree::_while:
-		ts = "\"while\"";
-		break;
-	default:;
-		ts = "\"body\"";
-	}
-	std::cout << "\"" << "type\":" << ts << ",\n";
 	for (const auto& x : t.args)
 	{
 		Dump(x);

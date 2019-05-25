@@ -12,6 +12,9 @@
 #builtin.input(i);
 #builtin.echo(string(Your input:),i);
 if(t);
+var("function(string)");
+var("function(string)",dawd);
+var("function(stringdwadawdwad"awddw")",awdw);
 if(b);
 if_t_b();
 else;
@@ -23,6 +26,7 @@ if(n);
 if_not_t_n();
 else;
 if_not_t_not_n();
+"dwadwad";
 end;
 end;
 end;

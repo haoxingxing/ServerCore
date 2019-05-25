@@ -68,18 +68,21 @@ bool ast::find_end_key(const std::string& s)
 ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净的虾 */)
 {
 	tree t; /*准备好锅*/
-#ifdef DEBUG
 	t.data = "body";
-	t.type = tree::exec;
-#endif
 	for (size_t i = 0; i < raw.size();)
 	{
 		auto branch = clean_str(raw[i]);
+		std::string cleaned = branch;
+		while (cleaned.find('"')!=std::string::npos)
+		{
+			auto tmp=cleaned.substr(0,cleaned.find_first_of('"'));
+			auto tmp2=cleaned.substr(cleaned.substr(cleaned.find_first_of('"')+1).find_first_of('"')+cleaned.find_first_of('"')+2);
+			cleaned =tmp+tmp2;
+		}
 		t.args.emplace_back();
 		const auto last = t.args.size() - 1;
-		//TODO: "var(test)"
-		const auto n_of_brackets = std::count(branch.begin(), branch.end(), '(');
-		if ((n_of_brackets != std::count(branch.begin(), branch.end(), ')')) || std::count(branch.begin(), branch.end(), '"') % 2 != 0)  //看看有没有坏
+		const auto n_of_brackets = std::count(cleaned.begin(), cleaned.end(), '(');
+		if ((n_of_brackets != std::count(cleaned.begin(), cleaned.end(), ')')) || std::count(branch.begin(), branch.end(), '"') % 2 != 0)  //看看有没有坏
 			throw NEW_EXCEPT("syntax err: Broken \" or ()");
 		if (n_of_brackets != 0) //看看是不是活的
 		{
@@ -89,11 +92,8 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 			SWITCH_BEGIN(t.args[last].data)
 				SWITCH_CASE("if")
 			{
-				t.args[last].type = tree::_if;
 				t.args[last].args.push_back(analysis(merge(domain::SplitString(s, ","), ",")));
-#ifdef DEBUG
 				t.args[last].args[0].data = "condition";
-#endif
 				std::vector<std::string> sli;
 				size_t find,start_counter = 0,end_counter = 0;
 				for (find = i + 1; find < raw.size(); find++)
@@ -134,15 +134,12 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 
 				t.args[last].args.push_back(analysis(if_true));
 				t.args[last].args.push_back(analysis(if_false));
-#ifdef DEBUG
 				t.args[last].args[1].data = "true";
 				t.args[last].args[2].data = "false";
-#endif
 				i = find + 1;
 			}
 			SWITCH_CASE("while")
 			{
-				t.args[last].type = tree::_while;
 				t.args[last].args.push_back(analysis(merge(domain::SplitString(s, ","), ",")));
 #ifdef DEBUG
 				t.args[last].args[0].data = "condition";
@@ -171,7 +168,6 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 				i = find + 1;
 			}
 			SWITCH_DEFAULT{
-			t.args[last].type = tree::exec;
 			if (s == "end")
 					throw NEW_EXCEPT("syntax err: end doesn't match a if or while");
 			if (s == "else")
@@ -183,7 +179,6 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 		}
 		else
 		{
-			t.args[last].type = tree::var;
 			t.args[last].data = branch;
 			i++;
 		}
