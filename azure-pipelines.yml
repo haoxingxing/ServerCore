@@ -1,4 +1,27 @@
 jobs:
+- job: SyncRepo
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+  - task: PowerShell@2
+    inputs:
+      targetType: 'inline'
+      script: '$vstsProject = "StarCore"
+        
+        git branch -r | findstr /v "\->" |  ForEach-Object {$br=$_.TrimStart(); git branch --track $br.Substring("origin/".Length) $br}
+        # When usig Github repositories the name is set to "Github/RepoName", we only care for the repo name
+        $repoName = "$env:BUILD_REPOSITORY_NAME".split(''/'')[1]
+        # remove "https://" because we need to insert the PAT
+        $vstsRepoUri = "$env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI".Substring(8) + "$vstsProject/_git/$repoName"
+        
+        # push all branches to vsts project
+        git remote add vsts "https://$env:SYSTEM_ACCESSTOKEN@$vstsRepoUri"
+        git branch -r | findstr /v "\->" | ForEach-Object {
+            $br=$_.TrimStart().Substring("origin/".Length)
+            Write-Host "Pushing $br to VSTS"
+            git push -u vsts $br
+        }
+        git push vsts --tags'
 - job: Linux
   pool:
     vmImage: 'ubuntu-latest'
