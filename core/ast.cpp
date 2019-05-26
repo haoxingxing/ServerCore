@@ -86,7 +86,7 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 			cleaned = tmp + tmp2;
 		}
 		t.args.emplace_back();
-		t.data = "function";
+		t.data = "args_list";
 		const auto last = t.args.size() - 1;
 		const auto n_of_brackets = std::count(cleaned.begin(), cleaned.end(), '(');
 		if ((n_of_brackets != std::count(cleaned.begin(), cleaned.end(), ')')) || std::count(branch.begin(), branch.end(), '"') % 2 != 0)  //看看有没有坏
@@ -100,7 +100,7 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 				SWITCH_CASE("if")
 			{
 				t.args[last].args.push_back(analysis(merge(domain::SplitString(s, ","), ",")));
-				t.args[last].args[0].data = "function";
+				t.args[last].args[0].data = "args_list";
 				std::vector<std::string> sli;
 				size_t find, start_counter = 0, end_counter = 0;
 				for (find = i + 1; find < raw.size(); find++)
@@ -141,6 +141,9 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 
 				t.args[last].args.push_back(analysis(if_true));
 				t.args[last].args.push_back(analysis(if_false));
+				t.args[last].args[1].data = "function";
+				t.args[last].args[2].data = "function";
+
 				i = find + 1;
 			}
 			SWITCH_CASE("while")
@@ -164,6 +167,8 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 					sli.push_back(raw[find]);
 				}
 				t.args[last].args.push_back(analysis(sli));
+				t.args[last].args[1].data = "function";
+
 				i = find + 1;
 			}
 			SWITCH_DEFAULT{
@@ -184,6 +189,7 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 			//	t.args.clear();
 			//}
 			//else
+
 			t.args[last].data = branch;
 			i++;
 		}

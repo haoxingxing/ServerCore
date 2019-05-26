@@ -89,6 +89,23 @@ variable * function::Process(const ast::tree & T)
 		}
 		return nullptr;
 	}
+	SWITCH_CASE("args_list")
+	{
+		variable* last = nullptr;
+		for (const auto& arg : T.args)
+		{
+			if (arg.data != "return")
+			{
+				delete last;
+				last = Process(arg);
+			}
+			else
+			{
+				return Process(arg);
+			};
+		}
+		return last;
+	}
 	SWITCH_CASE("if")
 	{
 		const auto x = Process(T.args[0]);
