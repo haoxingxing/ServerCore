@@ -1,7 +1,7 @@
 #ifndef BOOL_H
 #define BOOL_H
 #include "../root.h"
-
+#include "../variable.h"
 class root_bool : public root
 {
 public:
@@ -12,6 +12,10 @@ public:
 	{
 		return new root_bool(d);
 	};
+	root* new_this() override;
+	FUNCTION_DECLARATION(negate);
+	FUNCTION_DECLARATION(and);
+	FUNCTION_DECLARATION(or );
 private:
 	bool d;
 };

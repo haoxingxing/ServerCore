@@ -15,9 +15,9 @@ public:
 	variable* copy() const;;
 	root* get() const { return *d; };
 	explicit operator root* () const { return *d; };
+	bool iscopy;
 private:
 	root** d = nullptr;
-	bool iscopy;
 };
 class root_function : public root
 {

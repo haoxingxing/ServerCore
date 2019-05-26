@@ -74,6 +74,7 @@ bool ast::find_end_key(const std::string & s)
 }
 ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净的虾 */)
 {
+	//TODO:num.minus(10).equals(10)
 	tree t; /*准备好锅*/
 	for (size_t i = 0; i < raw.size();)
 	{

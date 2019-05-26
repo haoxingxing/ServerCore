@@ -12,8 +12,8 @@ public:
 	root* make_copy() override;
 	variable* member_access(const std::string& name);
 private:
+	static std::string ReplaceAll(std::string str, const std::string& from, const std::string& to);
 	variable* Process(const ast::tree& T);
 	ast::tree Tree;
-	domain dm;
 };
 #endif

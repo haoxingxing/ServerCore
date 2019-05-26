@@ -5,11 +5,11 @@
 class builtin : public root
 {
 public:
-	builtin();
+	builtin(root* parent);
 	root* new_this() override;
 	root* make_copy() override
 	{
-		return new builtin;
+		return new builtin(parent);
 	};
 	FUNCTION_DECLARATION(var);
 	FUNCTION_DECLARATION(echo);

@@ -10,8 +10,11 @@ public:
 	int& access() { return  d; }
 	std::unique_ptr<root> convert_type(const std::string& t) override;
 	root* make_copy() override { return new root_int(d); };
-
+	root* new_this() override;
 	FUNCTION_DECLARATION(plus);
+	FUNCTION_DECLARATION(less);
+	FUNCTION_DECLARATION(more);
+	FUNCTION_DECLARATION(equals);
 	FUNCTION_DECLARATION(multiply);
 	FUNCTION_DECLARATION(division);
 	FUNCTION_DECLARATION(minus);

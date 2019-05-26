@@ -4,7 +4,7 @@
 #include "../domain.h"
 #include <iostream>
 
-builtin::builtin() : root("builtin")
+builtin::builtin(root* parent) : root("builtin", parent)
 {
 }
 root* builtin::new_this()
