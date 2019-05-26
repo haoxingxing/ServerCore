@@ -64,6 +64,7 @@ variable* _function::member_access(const std::string& name)
 	if (name.find('"') != std::string::npos) {
 		auto x = name.substr(1).substr(0, name.size() - 2);
 		x = ReplaceAll(x, "\\n", "\n");
+		x = ReplaceAll(x, "\\r", "\r");
 		return new variable((new root_string(x))->new_this());
 	}
 	if (name == "true" || name == "false")
