@@ -16,7 +16,7 @@ class root
 #endif
 {
 public:
-	explicit root(std::string type,const root * parent = nullptr);
+	explicit root(std::string type,root * parent = nullptr);
 	virtual ~root();
 	//Interface
 	virtual root * new_this() { return this; };
@@ -30,7 +30,7 @@ public:
 	T* to() { return dynamic_cast<T*>(this); };
 protected:
 	domain* member = nullptr;
-	const root* parent = nullptr;
+	root* parent = nullptr;
 private:
 	bool is_member_own = true;
 	std::string type;

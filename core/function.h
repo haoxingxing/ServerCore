@@ -6,7 +6,7 @@
 #define CMD_PAIR(key,value) std::make_pair(key,std::function<variable*(std::vector<variable*>)>(value))
 class function :public root {
 public:
-	explicit function(const root* parent = nullptr);
+	explicit function(root* parent = nullptr);
 	root* new_this() override;
 	void run(const ast::tree&);
 	root* make_copy() override;

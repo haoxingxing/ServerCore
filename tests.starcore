@@ -1,32 +1,10 @@
 #!./build/StarCore*
 # Test File
-builtin.var(cr,'');
-builtin.var(h,"Hello,ÄãºÃ");
-builtin.var(space," ");
-builtin.var(w,"World/ÊÀ½ç");
-builtin.var(tan,"!");
-builtin.echo(h,space,w,tan,cr);
-builtin.var(n,builtin.echo);
-n("     Powered by haoxingxing",cr);
-n("Now let's do some tests",cr,"Input someting:");
-builtin.input(i);
-builtin.echo("Your input:",i);
-if(t);
-var("function(string)");
-var("function(string)",dawd);
-var("function(stringdwadawdwad"awddw")",awdw);
-if(b);
-if_t_b();
-else;
-if_t_not_b();
-end;
-else;
-#while(x);
-#if(n);
-#if_not_t_n();
+while(true);
+#builtin.input(str);
+#if(str.equals("root"));
+#builtin.echo("Hello Root");
 #else;
-#if_not_t_not_n();
-#"dwadwad";
-#end;
+builtin.echo("Hello World",10);
 #end;
 end;

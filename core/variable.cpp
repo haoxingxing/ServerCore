@@ -29,7 +29,7 @@ void variable::copy_value(variable * s) const
 {
 	if ((*d) != nullptr)(*d)->delete_this();
 	*d = nullptr;
-	*(this->d) = (*(s->d))->make_copy();
+	*(this->d) = (*(s->d))->make_copy()->new_this();
 }
 variable* variable::copy() const
 {

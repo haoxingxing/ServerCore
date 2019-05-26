@@ -10,7 +10,7 @@
 using namespace std;
 void Dump(ast::tree t)
 {
-	std::cout << "\"" << t.data << "\" : {\n";
+	std::cout << "\"" << t.data << "\" : {\n";//"type:" << t.type << ",\n";
 	for (const auto& x : t.args)
 	{
 		Dump(x);
@@ -22,6 +22,7 @@ void Run(const std::string& _file)
 	file f(_file);
 	auto x = ast::split(f.read());
 	auto n = ast::analysis(x);
+	Dump(n);
 	function t;
 	t.new_this();
 	t.run(n);
@@ -49,4 +50,4 @@ int main(int argc, char** argv)
 	MemoryLeak_Probe::MemoryLeakCheck();
 #endif
 	return 0;
-	}
+}

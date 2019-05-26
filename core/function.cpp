@@ -8,10 +8,10 @@
 #include "builtin/char.h"
 #include "builtin/void.h"
 #include "builtin/bool.h"
-root_function::root_function(const root* parent) : root("function", parent)
+root_function::root_function(root* parent) : root("function", parent)
 {
 }
-function::function(const root* parent) : root("function", parent)
+function::function(root* parent) : root("function", parent)
 {
 }
 root* function::new_this()
@@ -75,20 +75,19 @@ variable * function::Process(const ast::tree & T)
 	SWITCH_BEGIN(T.data)
 		SWITCH_CASE("function")
 	{
-		variable* last = nullptr;
+		//variable* last = nullptr;
 		for (const auto& arg : T.args)
 		{
 			if (arg.data != "return")
 			{
-				delete last;
-				last = Process(arg);
+				delete Process(arg);
 			}
 			else
 			{
 				return Process(arg);
 			};
 		}
-		return last;
+		return nullptr;
 	}
 	SWITCH_CASE("if")
 	{
@@ -102,17 +101,19 @@ variable * function::Process(const ast::tree & T)
 		return Process(T.args[2]);
 	}
 	SWITCH_CASE("while")
-	{
-		variable* n = Process(T.args[0]);
+	{//TODO:在循环中的return
+		variable* n = nullptr;
+		n = Process(T.args[0]);
 		while (n != nullptr) {
+			delete n;
 			n = Process(T.args[0]);
 			if (GET_TYPE("bool", root_bool, n->get())->access())
 			{
-				delete n;
 				const auto x = Process(T.args[1]);
-				if (x != nullptr) {
-					return x;
-				}
+			}
+			else {
+				delete n;
+				break;
 			}
 		}
 		return nullptr;

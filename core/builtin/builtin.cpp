@@ -22,11 +22,11 @@ FUNCTION_DEFINITION(builtin::var) {
 	}
 	else
 	{
-		ERR(TS_ID_24 "2" TS_ID_25 TS_ID_26);
+		ERR_ARG_LEN(2);
 	}
 	return new variable;
 }
-FUNCTION_DEFINITION(builtin::echo) {	
+FUNCTION_DEFINITION(builtin::echo) {
 	for (auto& arg : args)
 	{
 		std::cout << GET_TYPE("string", root_string, (arg->get()))->access();

@@ -3,7 +3,7 @@
 #include "domain.h"
 #include "builtin/void.h"
 
-root::root(std::string type, const root* parent) : parent(parent), type(std::move(type))
+root::root(std::string type, root* parent) : parent(parent), type(std::move(type))
 {
 	DEB(PRINT_POINTER(this));
 	member = parent == nullptr ? [&]() {
