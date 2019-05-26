@@ -3,10 +3,10 @@
 #include <utility>
 #include "domain.h"
 #include "ast.h"
-#define CMD_PAIR(key,value) std::make_pair(key,std::function<variable*(std::vector<variable*>)>(value))
-class function :public root {
+#define CMD_PAIR(key,value) std::make_pair(key,std::_function<variable*(std::vector<variable*>)>(value))
+class _function :public root {
 public:
-	explicit function(root* parent = nullptr);
+	explicit _function(root* parent = nullptr);
 	root* new_this() override;
 	void run(const ast::tree&);
 	root* make_copy() override;

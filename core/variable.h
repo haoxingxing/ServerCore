@@ -31,7 +31,7 @@ public:
 #define FUNCTION_DECLARATION(name)\
 class name : public root_function { \
 public:\
-name##(root* parent = nullptr):root_function(parent){}\
+name(root* parent = nullptr):root_function(parent){}\
 root* make_copy() override\
 {\
 	return new name;\

@@ -8,29 +8,29 @@
 #include "builtin/char.h"
 #include "builtin/void.h"
 #include "builtin/bool.h"
-root_function::root_function(root* parent) : root("function", parent)
+root_function::root_function(root* parent) : root("_function", parent)
 {
 }
-function::function(root* parent) : root("function", parent)
+_function::_function(root* parent) : root("_function", parent)
 {
 }
-root* function::new_this()
+root* _function::new_this()
 {
 	member->insert("builtin", new variable((new builtin(this))->new_this()));
 	return this;
 }
 
-void function::run(const ast::tree& t)
+void _function::run(const ast::tree& t)
 {
 	delete this->Process(t);
 }
-root* function::make_copy()
+root* _function::make_copy()
 {
-	auto x = new function(this->parent);
+	auto x = new _function(this->parent);
 	x->Tree = this->Tree;
 	return x;
 }
-variable* function::member_access(const std::string& name)
+variable* _function::member_access(const std::string& name)
 {
 	if (name.find('.') != std::string::npos)
 	{
@@ -71,7 +71,7 @@ variable* function::member_access(const std::string& name)
 		return new variable((new root_char(name.length() < 3 ? char(0) : (name.substr(1).substr(0, name.size() - 2).at(0))))->new_this());
 	return (*member)[name]->copy();
 }
-std::string function::ReplaceAll(std::string str, const std::string & from, const std::string & to)
+std::string _function::ReplaceAll(std::string str, const std::string & from, const std::string & to)
 {
 	size_t start_pos = 0;
 	while ((start_pos = str.find(from, start_pos)) != std::string::npos)
@@ -81,7 +81,7 @@ std::string function::ReplaceAll(std::string str, const std::string & from, cons
 	}
 	return str;
 }
-variable* function::Process(const ast::tree & T)
+variable* _function::Process(const ast::tree & T)
 {
 	if (T.args.empty())
 	{

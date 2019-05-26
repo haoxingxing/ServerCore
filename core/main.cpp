@@ -23,7 +23,7 @@ void Run(const std::string& _file)
 	auto x = ast::split(f.read());
 	auto n = ast::analysis(x);
 	//Dump(n);
-	function t;
+	_function t;
 	t.new_this();
 	t.run(n);
 }
