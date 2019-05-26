@@ -1,0 +1,12 @@
+# EXAM.IF
+echo("Input-1:");
+input(value-1);
+echo("Input-2:");
+input(value-2);
+if(value-1.equals(value-2));
+echo("THE SAME");
+else;
+echo("NOT SAME");
+end;
+
+
