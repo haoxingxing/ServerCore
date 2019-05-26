@@ -8,6 +8,7 @@
 #include "builtin/char.h"
 #include "builtin/void.h"
 #include "builtin/bool.h"
+#include  <cctype>
 root_function::root_function(root* parent) : root("_function", parent)
 {
 }
