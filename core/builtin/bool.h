@@ -14,8 +14,8 @@ public:
 	};
 	root* new_this() override;
 	FUNCTION_DECLARATION(negate);
-	FUNCTION_DECLARATION(and);
-	FUNCTION_DECLARATION(or );
+	FUNCTION_DECLARATION(_and);
+	FUNCTION_DECLARATION(_or);
 private:
 	bool d;
 };
