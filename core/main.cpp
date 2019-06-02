@@ -4,6 +4,7 @@
 #include "repo_version.h"
 #include "ast.h"
 #include <iostream>
+#include <ctime>
 #ifdef _WIN32
 #include <Windows.h>
 #endif
@@ -19,13 +20,18 @@ void Dump(ast::tree t)
 }
 void Run(const std::string& _file)
 {
+	srand(time(nullptr));
+	auto time =clock();
 	file f(_file);
 	auto x = ast::split(f.read());
 	auto n = ast::analysis(x);
-	//Dump(n);
+	cout << "File " << _file<<" Parsed in " << 1000.0 * (clock()-time) / CLOCKS_PER_SEC << " ms" << endl ;
+	time =clock();
 	_function t;
 	t.new_this();
 	t.run(n);
+	cout << "File " << _file<<" Finished in " << 1.000 *(clock()-time) / CLOCKS_PER_SEC << " s" << endl ;
+
 }
 
 int main(int argc, char** argv)
