@@ -72,6 +72,21 @@ bool ast::find_end_key(const std::string & s)
 {
 	return s == "end";
 }
+std::string ast::dig(std::string & data, const char& start, const char& end)
+{
+	std::string tmp;
+	for (size_t i = 0; i < data.size(); i++)
+	{
+		if (data[i] == start)
+		{
+			size_t s = i;
+			for (; data[++i] != end; tmp.push_back(data[i]));
+			data.erase(s, i - s + 1);
+			break;
+		}
+	}
+	return tmp;
+}
 ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净的虾 */)
 {
 	//TODO:num.minus(10).equals(10)
@@ -184,13 +199,6 @@ ast::tree ast::analysis(const std::vector<std::string> & raw  /* 送来的干净
 		}
 		else
 		{
-			//if (raw.size() == 1)
-			//{
-			//	t.data = branch;
-			//	t.args.clear();
-			//}
-			//else
-
 			t.args[last].data = branch;
 			i++;
 		}
