@@ -28,20 +28,9 @@ public:
 /*
  * The args are normal with "args"
  */
-#define FUNCTION_DECLARATION(name)\
-class name : public root_function { \
-public:\
-name(root* parent = nullptr):root_function(parent){}\
-root* make_copy() override\
-{\
-	return new name;\
-}; \
-variable* execute(const std::vector<variable*>& args) override; \
-}
+#define FUNCTION_DECLARATION(name) class name : public root_function { public: name(root* parent = nullptr):root_function(parent){}root* make_copy() override{return new name;}; variable* execute(const std::vector<variable*>& args) override; }  // NOLINT(bugprone-macro-parentheses)
 #define FUNCTION_DEFINITION(name) \
 variable* name::execute(const std::vector<variable*>& args)
-#define REG_FUNCTION this->member->insert
-
 #define ERR_ARG_LEN(num) ERR(TS_ID_24 #num TS_ID_25 TS_ID_26);
 
 #endif // VARIABLE_H

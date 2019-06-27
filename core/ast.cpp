@@ -79,8 +79,8 @@ std::string ast::dig(std::string & data, const char& start, const char& end)
 	{
 		if (data[i] == start)
 		{
-			size_t s = i;
-			for (; data[++i] != end; tmp.push_back(data[i]));
+			const size_t s = i;
+			for (; data[++i] != end; )tmp.push_back(data[i]);
 			data.erase(s, i - s + 1);
 			break;
 		}

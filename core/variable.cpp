@@ -1,7 +1,7 @@
 #include "variable.h"
 #include "core.h"
 #include "builtin/void.h"
-variable::variable(root** d) : d(d), iscopy(true)
+variable::variable(root** d) : iscopy(true), d(d)
 {
 	DEB(PRINT_POINTER(this));
 }

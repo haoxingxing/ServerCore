@@ -3,16 +3,22 @@
 #include "_string.h"
 #include "../domain.h"
 #include <iostream>
+#include "s_iostream.h"
 
 builtin::builtin(root* parent) : root("builtin", parent)
 {
 }
 root* builtin::new_this()
 {
-	REG_FUNCTION("var", new variable(new var));
-	REG_FUNCTION("echo", new variable(new echo));
-	REG_FUNCTION("input", new variable(new input));
+	member->insert("var", new variable(new var));
+	//member->insert("import", new variable(new _import));
+	hd= new s_iostream(this);
+	hd->new_this();
 	return this;
+}
+builtin::~builtin()
+{
+	delete hd;
 }
 
 FUNCTION_DEFINITION(builtin::var) {
@@ -26,21 +32,16 @@ FUNCTION_DEFINITION(builtin::var) {
 	}
 	return new variable;
 }
-FUNCTION_DEFINITION(builtin::echo) {
-	for (auto& arg : args)
-	{
-		std::cout << GET_TYPE("string", root_string, (arg->get()))->access();
-	}
-	return new variable;
-}
-FUNCTION_DEFINITION(builtin::input) {
-	std::string in;
-	std::cin >> in;
-	const auto x = new variable(new root_string(in));
-	for (auto& arg : args)
-	{
-		arg->copy_value(x);
-	}
-	delete x;
-	return new variable;
-}
+//FUNCTION_DEFINITION(builtin::_import)
+//{
+//	for (auto& arg : args)
+//	{
+//		SWITCH_BEGIN(GET_TYPE("string", root_string, (arg->get()))->access())
+//		SWITCH_CASE("iostream")
+//		{
+//			this->member->insert("iostream",new variable(new s_iostream(this)));
+//		}
+//		SWITCH_END
+//	}
+//	return new variable;
+//}

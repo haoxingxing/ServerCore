@@ -1,26 +1,27 @@
 #!./build/StarCore*
 # Test File
-echo("[TEST]Hello World!\n");
+import("iostream");
+cout("[TEST]Hello World!\n");
 if(true);
-echo("[TEST]True PASS\n");
+cout("[TEST]True PASS\n");
 end;
 if(false);
 else;
-echo("[TEST]Else PASS\n");
+cout("[TEST]Else PASS\n");
 end;
 var(a,"[TEST]");
 if(a.equals("[TEST]"));
-echo("[TEST]Var PASS\n");
+cout("[TEST]Var PASS\n");
 else;
-echo("[TEST]Var Failed\n");
+cout("[TEST]Var Failed\n");
 end;
 var(n,0);
 while(n.less(1000));
-echo("[TEST]While Loop:",n,"\r");
+cout("[TEST]While Loop:",n,"\r");
 var(n,n.plus(1));
 end;
 if(n.equals(1000));
-echo("[TEST]While PASS\n");
+cout("[TEST]While PASS\n");
 else;
-echo("[TEST]While Failed\n");
+cout("[TEST]While Failed\n");
 end;

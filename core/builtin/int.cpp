@@ -26,13 +26,13 @@ std::unique_ptr<root> root_int::convert_type(const std::string& t)
 }
 root* root_int::new_this()
 {
-	REG_FUNCTION("plus", new variable(new plus(this)));
-	REG_FUNCTION("minus", new variable(new minus(this)));
-	REG_FUNCTION("equals", new variable(new equals(this)));
-	REG_FUNCTION("less", new variable(new less(this)));
-	REG_FUNCTION("more", new variable(new more(this)));
-	REG_FUNCTION("multiply", new variable(new multiply(this)));
-	REG_FUNCTION("division", new variable(new division(this)));
+	member->insert("plus", new variable(new plus(this)));
+	member->insert("minus", new variable(new minus(this)));
+	member->insert("equals", new variable(new equals(this)));
+	member->insert("less", new variable(new less(this)));
+	member->insert("more", new variable(new more(this)));
+	member->insert("multiply", new variable(new multiply(this)));
+	member->insert("division", new variable(new division(this)));
 
 	return this;
 }

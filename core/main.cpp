@@ -9,7 +9,7 @@
 #include <Windows.h>
 #endif
 using namespace std;
-void Dump(ast::tree t)
+void Dump(const ast::tree& t)
 {
 	std::cout << "\"" << t.data << "\" : {\n";//"type:" << t.type << ",\n";
 	for (const auto& x : t.args)
@@ -25,13 +25,14 @@ void Run(const std::string& _file)
 	file f(_file);
 	auto x = ast::split(f.read());
 	auto n = ast::analysis(x);
-	cout << "File " << _file << " Parsed in " << 1000.0 * (clock() - time) / CLOCKS_PER_SEC << " ms" << endl;
+	cout << "File " << _file << " Parsed in " << 1000.0 * (double(clock()) - time) / CLOCKS_PER_SEC << " ms" << endl;
 	//Dump(n);
-	time = clock();
-	_function t;
-	t.new_this();
-	t.run(n);
-	cout << "File " << _file << " Finished in " << 1.000 * (clock() - time) / CLOCKS_PER_SEC << " s" << endl;
+	time = clock();{
+		_function t;
+		t.new_this();
+		t.run(n);
+	}
+	cout << "\nFile " << _file << " Finished in " << 1.000 * (double(clock()) - time) / CLOCKS_PER_SEC << " s" << endl;
 }
 
 int main(int argc, char** argv)

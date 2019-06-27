@@ -1,6 +1,5 @@
 ﻿#ifndef FUNCTION_H
 #define FUNCTION_H
-#include <utility>
 #include "domain.h"
 #include "ast.h"
 #define CMD_PAIR(key,value) std::make_pair(key,std::_function<variable*(std::vector<variable*>)>(value))
@@ -10,10 +9,10 @@ public:
 	root* new_this() override;
 	void run(const ast::tree&);
 	root* make_copy() override;
-	variable* member_access(const std::string& name);
+	variable* member_access(const std::string& name) const;
 private:
 	static std::string ReplaceAll(std::string str, const std::string& from, const std::string& to);
-	variable* Process(const ast::tree& T);
+	variable* Process(const ast::tree& T) const;
 	ast::tree Tree;
 };
 #endif

@@ -31,7 +31,7 @@ root* _function::make_copy()
 	x->Tree = this->Tree;
 	return x;
 }
-variable* _function::member_access(const std::string& name)
+variable* _function::member_access(const std::string& name) const
 {
 	if (name.find('.') != std::string::npos)
 	{
@@ -83,7 +83,7 @@ std::string _function::ReplaceAll(std::string str, const std::string & from, con
 	}
 	return str;
 }
-variable* _function::Process(const ast::tree & T)
+variable* _function::Process(const ast::tree & T) const
 {
 	if (T.args.empty())
 	{

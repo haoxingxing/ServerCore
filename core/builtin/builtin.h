@@ -11,8 +11,9 @@ public:
 	{
 		return new builtin(parent);
 	};
+	~builtin();
 	FUNCTION_DECLARATION(var);
-	FUNCTION_DECLARATION(echo);
-	FUNCTION_DECLARATION(input);
+private:
+	root* hd = nullptr;
 };
 #endif // BUILTIN_H

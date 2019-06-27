@@ -6,6 +6,7 @@
 #include "../global.h"
 #include "log.h"
 #include "translates_CN.h"
+#include "configs.h"
  /*
   * convert pointer to std::string
   *  ptr -> long long -> std::string

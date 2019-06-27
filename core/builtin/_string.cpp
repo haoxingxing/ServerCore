@@ -11,7 +11,7 @@ std::unique_ptr<root> root_string::convert_type(const std::string& t)
 }
 root* root_string::new_this()
 {
-	REG_FUNCTION("equals", new variable(new equals(this)));
+	member->insert("equals", new variable(new equals(this)));
 	return this;
 }
 FUNCTION_DEFINITION(root_string::equals)
