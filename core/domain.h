@@ -30,7 +30,6 @@ public:
 		return _data.find(key) != _data.end();
 	};
 
-	static std::vector<std::string> SplitString(const std::string& s, const std::string& c);
 protected:
 	std::map<std::string, variable*> _data{};
 };
