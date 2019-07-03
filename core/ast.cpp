@@ -2,11 +2,12 @@
 #include "domain.h"
 #include "exception.h"
 #include <algorithm>
+#include <utility>
 #include "tools.h"
-std::vector<std::string> ast::split(const std::string& raw /*取新鲜活虾一篮*/)
+std::vector<std::string> ast::split(const std::string& raw)
 {
 	std::vector<std::string> r; //准备好盘子
-	auto v = stropr::split_string(raw, ";");  //一只一只摆好
+	auto v = stropr::split_string(raw, ";");
 	for (auto m : v)
 	{
 		while (m.find('#') != std::string::npos) {
@@ -35,8 +36,7 @@ bool ast::find_end_key(const std::string& s)
 {
 	return s == "end";
 }
-// t=true
-ast::tree* ast::find_method(std::string& raw)
+ast::tree* ast::find_method(std::string raw)
 {
 	if (stropr::find(raw, '=') != std::string::npos)
 	{
@@ -65,11 +65,12 @@ ast::tree* ast::find_method(std::string& raw)
 	}
 	if (stropr::find(raw, '!') != std::string::npos)
 	{
-		auto x = stropr::find(raw, '!');
-		return new tree(tree::_operation::NOT, "", {}, nullptr, find_method(raw.substr(x + 1)));
+		return new tree(tree::_operation::NOT, "", {}, nullptr, find_method(raw.substr(stropr::find(raw, '!') + 1)));
 	}
 	if (stropr::find(raw, '(') != std::string::npos && stropr::find(raw, ')') != std::string::npos)
 	{
+		if (raw[0] == '(' && raw[raw.size() - 1] == ')')
+			return find_method(stropr::dig(raw));
 		auto args = stropr::merge(stropr::split_string(stropr::dig(raw, '(', ')'), ","), ",");
 		std::vector<tree*> t;
 		t.reserve(args.size());
@@ -86,15 +87,79 @@ ast::tree* ast::find_method(std::string& raw)
 		auto x = stropr::split_to_two_part(raw, '.');
 		return new tree(tree::_operation::DOT, "", {}, find_method(x[0]), find_method(x[1]));
 	}
-
 	return new ast::tree(tree::EMPTY, raw, {});
 }
 
-ast::tree* ast::analysis(const std::vector<std::string>& raw  /* 送来的干净的虾 */)
+ast::tree::tree(_operation __operation, std::string _key, std::vector<tree*> _args, tree* _left, tree* _right) :
+	left(_left), right(_right), args(std::move(_args)), key(std::move(_key)), operation(__operation)
 {
-	//TODO: cout("Hello World\n")
-	//TODO: t=true
-	//TODO: cout(!t)
-	//return new tree("1", "1");
-	return nullptr;
+}
+ast::tree* ast::analysis(const std::vector<std::string>& _raw)
+{
+	std::vector<std::string> raw = _raw;
+	tree* root = new tree(tree::_operation::FN, "function", {});
+	for (size_t i = 0; i < raw.size(); i++)
+	{
+		std::string verify_head = raw[i].substr(0, stropr::find_not_alphabet(raw[i]));
+		SWITCH_BEGIN(verify_head)
+			SWITCH_CASE("if")
+		{
+			tree* if_body = new tree(tree::IF, "if-body", {}, nullptr, find_method(raw[i].substr(2)));
+			std::vector<std::string> ift, else_body, * hd = &ift;
+			size_t start_counter = 0, end_counter = 0;
+			for (size_t find = i + 1; find < raw.size(); find++)
+			{
+				auto key = raw[find].substr(0, stropr::find_not_alphabet(raw[find]));
+				if (find_start_key(key))
+				{
+					start_counter += 1;
+				}
+				if (find_end_key(key))
+				{
+					if (end_counter == start_counter) {
+						i = find + 1;
+						break;
+					}
+					end_counter++;
+				}
+				if (key == "else")
+					hd = &else_body;
+				else
+					hd->push_back(raw[find]);
+			}
+			if_body->args.push_back(analysis(ift));
+			if_body->args.push_back(analysis(else_body));
+			root->args.push_back(if_body);
+		}
+		SWITCH_CASE("while")
+		{
+			tree* while_body = new tree(tree::WHILE, "while-body", {}, nullptr, find_method(raw[i].substr(5)));
+			std::vector<std::string> body;
+			size_t start_counter = 0, end_counter = 0;
+			for (size_t find = i + 1; find < raw.size(); find++)
+			{
+				auto key = raw[find].substr(0, stropr::find_not_alphabet(raw[find]));
+				if (find_start_key(key))
+				{
+					start_counter += 1;
+				}
+				if (find_end_key(key))
+				{
+					if (end_counter == start_counter) {
+						i = find + 1;
+						break;
+					}
+					end_counter++;
+				}
+				body.push_back(raw[find]);
+			}
+			while_body->args.push_back(analysis(body));
+			root->args.push_back(while_body);
+		}
+		SWITCH_DEFAULT{
+			root->args.push_back(find_method(raw[i]));
+		}
+			SWITCH_END
+	}
+	return root;
 }

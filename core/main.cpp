@@ -34,10 +34,10 @@ void dump(ast::tree* v)
 	cout << "{";
 	cout << "\"left\":";
 	dump(v->left);
-	cout << "\"" << v->key << '"' << ":{";
+	cout << ",\"" << v->key << '"' << ":[";
 	for (auto n : v->args)
 		dump(n);
-	cout << "},";
+	cout << "],";
 	cout << "\"operation\":" << v->operation << " ,";
 	cout << "\"right\":";
 	dump(v->right);
@@ -53,11 +53,21 @@ int main(int argc, char** argv)
 	//	dump(tmp);
 		//n = "builtin.cout(\"Hello World!\",\"2333\").plus(233).haha()";
 		//cout << endl << stropr::dig(n) << endl << n << endl;
-	std::string n;
 	while (true)
 	{
-		getline(cin, n);
-		dump(ast::find_method(n));
+		std::vector<std::string> n;
+		n.emplace_back();
+		for (size_t i = 0;; i++) {
+			getline(cin, n[i]);
+			if (n[i] == "END") {
+				n.erase(n.end() - 1);
+				break;
+			}
+			n.emplace_back();
+		}
+		auto handle = ast::analysis(n);
+		dump(handle);
+		delete handle;
 		cout << endl;
 	}
 	//auto x = stropr::SeparateStringPrioritized("\"23 = 3\"t=\"23=3\"");
