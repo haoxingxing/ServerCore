@@ -37,8 +37,8 @@ void dump(ast::tree* v)
 	cout << "\"" << v->key << '"' << ":{";
 	for (auto n : v->args)
 		dump(n);
-	cout << "\"operation\":" << v->operation << " ,";
 	cout << "},";
+	cout << "\"operation\":" << v->operation << " ,";
 	cout << "\"right\":";
 	dump(v->right);
 	cout << "},";
@@ -46,17 +46,20 @@ void dump(ast::tree* v)
 
 int main(int argc, char** argv)
 {
-	std::string n = "builtin.cout(\"Hello World!\",\"2333\").plus(233).haha()";
-	auto tmp = ast::find_method(n);
-	dump(tmp);
-	//n = "builtin.cout(\"Hello World!\",\"2333\").plus(233).haha()";
-	//cout << endl << stropr::dig(n) << endl << n << endl;
-	//while (true)
-	//{
-	//	cin >> n;
-	//	dump(ast::find_method(n));
-	//}
-
+	//	std::string n = "cout(\"Hello World!\".append(\"StarCore\")).plus(1)";
+	//	cout << n << endl;
+	//	auto tmp = ast::find_method(n);
+	//	cout << n << endl;
+	//	dump(tmp);
+		//n = "builtin.cout(\"Hello World!\",\"2333\").plus(233).haha()";
+		//cout << endl << stropr::dig(n) << endl << n << endl;
+	std::string n;
+	while (true)
+	{
+		getline(cin, n);
+		dump(ast::find_method(n));
+		cout << endl;
+	}
 	//auto x = stropr::SeparateStringPrioritized("\"23 = 3\"t=\"23=3\"");
 	//#ifdef _WIN32
 	//	system("chcp 65001");

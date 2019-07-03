@@ -1,5 +1,6 @@
 #include "tools.h"
 #include <algorithm>
+#include <iostream>
 
 std::vector<std::string> stropr::split_string(const std::string& s, const std::string& c)
 {
@@ -20,12 +21,36 @@ std::vector<std::string> stropr::split_string(const std::string& s, const std::s
 
 std::string stropr::dig(std::string& data, const char& start, const char& end)
 {
+	//std::cout << data << "~";
 	auto _start = find(data, start);
 	if (_start > data.size())
 		return "";
-	auto _end = find(data.substr(_start), end) + _start;
+	size_t _end;
+	for (_end = _start; _end < data.size() && data[_end] != end;)
+	{
+		if (data[_end] == '"')
+			_end = data.substr(_end + 1).find_first_of('"') + _end + 1;
+		else if (data[_end] == '(') {
+			for (size_t counter = 0; _end < data.size(); _end++)
+			{
+				if (data[_end] == '"')
+					_end = data.substr(_end + 1).find_first_of('"') + _end + 1;
+				if (data[_end] == '(')
+					counter++;
+				else if (data[_end] == ')')
+					counter--;
+				if (counter == 0 && data[_end] == ')')
+				{
+					break;
+				}
+			}
+			//_end = data.substr(_end + 1).find_first_of(')') + _end + 1;
+		}
+	}
+	//auto _end = find(data.substr(_start), end) + _start;
 	auto tmp = data.substr(_start + 1, _end - _start - 1);
 	data.erase(_start, _end - _start + 1);
+	//std::cout << _start << "~" << _end << "~" << data << "~" << tmp << std::endl;
 	return tmp;
 }
 std::vector<std::string> stropr::merge(const std::vector<std::string>& args, const std::string& de)
@@ -95,6 +120,27 @@ size_t stropr::find(const std::string& raw, char obj)
 	{
 		if (raw[i] == '"')
 			i = raw.substr(i + 1).find_first_of('"') + i + 2;
+		else if (raw[i] == '(') {
+			if (obj == '(')
+				return i;
+			for (size_t counter = 0; i < raw.size(); i++)
+			{
+				if (raw[i] == '"')
+					i = raw.substr(i + 1).find_first_of('"') + i + 1;
+				if (raw[i] == '(')
+					counter++;
+				else if (raw[i] == ')') {
+					if (obj == ')')
+						return i;
+					counter--;
+				}
+				if (counter == 0 && raw[i] == ')')
+				{
+					break;
+				}
+			}
+			//_end = data.substr(_end + 1).find_first_of(')') + _end + 1;
+		}
 		else
 		{
 			if (obj == raw[i])
@@ -111,15 +157,19 @@ size_t stropr::find_last(const std::string& raw, char find)
 		if (raw[i] == '"')
 		{
 			i = raw.substr(0, i - 1).find_last_of('"') - 1;
-			if (i > raw.size())
-				i = 0;
 		}
+		//else  if (raw[i] == ')')
+		//{
+		//	i = raw.substr(0, i - 1).find_last_of('(') - 1;
+		//}
 		else
 		{
 			if (find == raw[i])
 				return i;
 			i--;
 		}
+		if (i > raw.size())
+			i = 0;
 	}
 	return std::string::npos;
 }

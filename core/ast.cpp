@@ -40,19 +40,36 @@ ast::tree* ast::find_method(std::string& raw)
 {
 	if (stropr::find(raw, '=') != std::string::npos)
 	{
-		/*a = "=b"*/
 		auto x = stropr::split_to_two_part(raw, '=');
 		return new tree(tree::_operation::EQUAL, "", {}, find_method(x[0]), find_method(x[1]));
 	}
-	if (stropr::find(raw, '.') != std::string::npos)
+	if (stropr::find(raw, '*') != std::string::npos)
 	{
-		/*a = "=b"*/
-		auto x = stropr::split_to_two_part(raw, '.');
-		return new tree(tree::_operation::DOT, "", {}, find_method(x[0]), find_method(x[1]));
+		auto x = stropr::split_to_two_part(raw, '*');
+		return new tree(tree::_operation::CHEN, "", {}, find_method(x[0]), find_method(x[1]));
+	}
+	if (stropr::find(raw, '/') != std::string::npos)
+	{
+		auto x = stropr::split_to_two_part(raw, '/');
+		return new tree(tree::_operation::CHU, "", {}, find_method(x[0]), find_method(x[1]));
+	}
+	if (stropr::find(raw, '+') != std::string::npos)
+	{
+		auto x = stropr::split_to_two_part(raw, '+');
+		return new tree(tree::_operation::PLUS, "", {}, find_method(x[0]), find_method(x[1]));
+	}
+	if (stropr::find(raw, '-') != std::string::npos)
+	{
+		auto x = stropr::split_to_two_part(raw, '-');
+		return new tree(tree::_operation::MINUS, "", {}, find_method(x[0]), find_method(x[1]));
+	}
+	if (stropr::find(raw, '!') != std::string::npos)
+	{
+		auto x = stropr::find(raw, '!');
+		return new tree(tree::_operation::NOT, "", {}, nullptr, find_method(raw.substr(x + 1)));
 	}
 	if (stropr::find(raw, '(') != std::string::npos && stropr::find(raw, ')') != std::string::npos)
 	{
-		//n(dwa,awd,"wad(dwa)")
 		auto args = stropr::merge(stropr::split_string(stropr::dig(raw, '(', ')'), ","), ",");
 		std::vector<tree*> t;
 		t.reserve(args.size());
@@ -61,6 +78,13 @@ ast::tree* ast::find_method(std::string& raw)
 			t.push_back(find_method(n));
 		}
 		return new tree(tree::_operation::EXEC, "", t, find_method(raw));
+	}
+
+	if (stropr::find(raw, '.') != std::string::npos)
+	{
+		/*a = "=b"*/
+		auto x = stropr::split_to_two_part(raw, '.');
+		return new tree(tree::_operation::DOT, "", {}, find_method(x[0]), find_method(x[1]));
 	}
 
 	return new ast::tree(tree::EMPTY, raw, {});
