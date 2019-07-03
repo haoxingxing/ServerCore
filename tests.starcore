@@ -1,6 +1,5 @@
 #!./build/StarCore*
 # Test File
-import("iostream");
 cout("[TEST]Hello World!\n");
 if(true);
 cout("[TEST]True PASS\n");
@@ -9,16 +8,16 @@ if(false);
 else;
 cout("[TEST]Else PASS\n");
 end;
-var(a,"[TEST]");
+a="[TEST]";
 if(a.equals("[TEST]"));
 cout("[TEST]Var PASS\n");
 else;
 cout("[TEST]Var Failed\n");
 end;
-var(n,0);
+n=0;
 while(n.less(1000));
 cout("[TEST]While Loop:",n,"\r");
-var(n,n.plus(1));
+n=n.plus(1);
 end;
 if(n.equals(1000));
 cout("[TEST]While PASS\n");

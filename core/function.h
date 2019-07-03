@@ -7,12 +7,9 @@ class _function :public root {
 public:
 	explicit _function(root* parent = nullptr);
 	root* new_this() override;
-	void run(const ast::tree&);
 	root* make_copy() override;
-	variable* member_access(const std::string& name) const;
+	static variable* process(ast::tree* T, domain* def);
 private:
-	static std::string ReplaceAll(std::string str, const std::string& from, const std::string& to);
-	variable* Process(const ast::tree& T) const;
-	ast::tree Tree;
+	ast::tree* Tree;
 };
 #endif

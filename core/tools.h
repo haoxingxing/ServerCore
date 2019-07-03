@@ -13,6 +13,7 @@ namespace stropr
 	 */
 	std::vector<std::string> split_string(const std::string& source, const std::string& c);
 
+	std::string ReplaceAll(std::string str, const std::string& from, const std::string& to);
 	/*
 	 * Separate a substr
 	 */

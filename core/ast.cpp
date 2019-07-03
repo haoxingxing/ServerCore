@@ -6,26 +6,26 @@
 #include "tools.h"
 std::vector<std::string> ast::split(const std::string& raw)
 {
-	std::vector<std::string> r; //准备好盘子
+	std::vector<std::string> r;
 	auto v = stropr::split_string(raw, ";");
 	for (auto m : v)
 	{
 		while (m.find('#') != std::string::npos) {
 			if (m.find('\n') != std::string::npos)
 			{
-				m = m.substr(m.find_first_of('\n') + 1); //去除污泥等杂物
+				m = m.substr(m.find_first_of('\n') + 1);
 			}
 			else
 			{
-				m = stropr::split_string(m, "#")[0]; //去除污泥等杂物 * 2
+				m = stropr::split_string(m, "#")[0]; 
 			}
 		}
 		m = stropr::clean_str(m);
 		if (m.empty())
-			continue;  //没肉的不要
-		r.push_back(m); //摆摆好
+			continue;
+		r.push_back(m);
 	}
-	return stropr::merge(r, ";");//送到厨房
+	return stropr::merge(r, ";");
 }
 
 bool ast::find_start_key(const std::string& s)
