@@ -2,4 +2,4 @@
 cmake .
 make
 build/StarCore*
-build/StarCore* tests.starcore
+build/StarCore* tests.sc
