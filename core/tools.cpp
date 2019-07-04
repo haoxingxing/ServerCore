@@ -150,6 +150,39 @@ size_t stropr::find(const std::string& raw, char obj)
 	}
 	return std::string::npos;
 }
+size_t stropr::find(const std::string& raw, const std::string& find)
+{
+	auto size_c = find.size();
+	for (size_t i = 0; i < raw.size();)
+	{
+		if (raw[i] == '"')
+			i = raw.substr(i + 1).find_first_of('"') + i + 2;
+		else if (raw[i] == '(') {
+			for (size_t counter = 0; i < raw.size(); i++)
+			{
+				if (raw[i] == '"')
+					i = raw.substr(i + 1).find_first_of('"') + i + 1;
+				if (raw[i] == '(')
+					counter++;
+				else if (raw[i] == ')') {
+					counter--;
+				}
+				if (counter == 0 && raw[i] == ')')
+				{
+					break;
+				}
+			}
+			//_end = data.substr(_end + 1).find_first_of(')') + _end + 1;
+		}
+		else
+		{
+			if (raw.substr(i,size_c) == find)
+				return i;
+			i++;
+		}
+	}
+	return std::string::npos;
+}
 size_t stropr::find_last(const std::string& raw, char find)
 {
 	for (size_t i = raw.size() - 1; i > 0;)
@@ -180,6 +213,39 @@ std::vector<std::string> stropr::split_to_two_part(const std::string& source, ch
 	buf.push_back(source.substr(0, mid));
 	buf.push_back(source.substr(std::min(source.size(), mid + 1)));
 	return buf;
+}
+
+std::vector<std::string> stropr::split_to_two_part(const std::string& source, const std::string& c)
+{
+	auto size_c = c.size();
+	for (size_t i = 0; i < source.size();)
+	{
+		if (source[i] == '"')
+			i = source.substr(i + 1).find_first_of('"') + i + 2;
+		else if (source[i] == '(') {
+			for (size_t counter = 0; i < source.size(); i++)
+			{
+				if (source[i] == '"')
+					i = source.substr(i + 1).find_first_of('"') + i + 1;
+				if (source[i] == '(')
+					counter++;
+				else if (source[i] == ')') {
+					counter--;
+				}
+				if (counter == 0 && source[i] == ')')
+				{
+					break;
+				}
+			}
+		}
+		else
+		{
+			if (source.substr(i,size_c) == c)
+				return std::vector<std::string>({source.substr(0,i),source.substr(i+size_c)});
+			i++;
+		}
+	}
+	return std::vector<std::string>();
 }
 
 std::string stropr::ReplaceAll(std::string str, const std::string& from, const std::string& to)

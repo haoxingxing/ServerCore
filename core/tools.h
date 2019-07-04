@@ -39,6 +39,7 @@ namespace stropr
 	 * Find char in string without ""
 	 */
 	size_t find(const std::string& raw, char find);
+	size_t find(const std::string& raw, const std::string& find);
 	/*
 	 * Find last char in string without ""
 	 */
@@ -47,5 +48,6 @@ namespace stropr
 	 * Separate string without ""
 	 */
 	std::vector<std::string> split_to_two_part(const std::string& source, char c);
+	std::vector<std::string> split_to_two_part(const std::string& source,const std::string& c);
 }
 #endif // TOOLS_H

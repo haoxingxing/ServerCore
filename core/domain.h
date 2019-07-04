@@ -9,7 +9,8 @@ class domain
 public:
 	domain();
 	virtual ~domain();
-
+	domain* parent;
+	std::vector<domain*> childrens;
 	// Insert a element
 	virtual void insert(const std::string& key, variable* value);
 	// Remove a element
@@ -29,7 +30,7 @@ public:
 	virtual bool contains(const std::string& key) {
 		return _data.find(key) != _data.end();
 	};
-	//long long const_count = 0;
+	long long ID_count = 0;
 protected:
 	std::map<std::string, variable*> _data{};
 };

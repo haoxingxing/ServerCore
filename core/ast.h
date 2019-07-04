@@ -29,7 +29,7 @@ public:
 			DOT /* . */,
 			NOT /* ! */,
 			EXEC /* () */,
-			EQUAL /* = */,
+			MAKE /* = */,
 			PLUS /* + */,
 			MINUS /* - */,
 			MULTIPLY /* * */,
@@ -37,6 +37,14 @@ public:
 			FN /* function */,
 			IF /* if */,
 			WHILE /* while */,
+			MORE /* > */,
+			LESS /* < */,
+			MORE_EQUAL /* >= */,
+			EQUAL /* == */,
+			LESS_EQUAL /* <= */,
+			NOT_EQUAL /* != */,
+			AND /* && */,
+			OR /* || */,
 		}operation;
 
 		tree(_operation __operation, std::string _key, std::vector<tree*> _args = {}, tree* _left = nullptr, tree* _right = nullptr);;

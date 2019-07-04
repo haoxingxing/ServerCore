@@ -20,9 +20,9 @@ std::unique_ptr<root> root_bool::convert_type(const std::string& t)
 }
 root* root_bool::new_this()
 {
-	member->insert("negate", new variable(new negate(this)));
-	member->insert("and", new variable(new _and(this)));
-	member->insert("or", new variable(new _or(this)));
+	member->insert("!", new variable(new negate(this)));
+	member->insert("&&", new variable(new _and(this)));
+	member->insert("||", new variable(new _or(this)));
 	return this;
 }
 FUNCTION_DEFINITION(root_bool::negate)

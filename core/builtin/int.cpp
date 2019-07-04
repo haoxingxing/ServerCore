@@ -26,13 +26,15 @@ std::unique_ptr<root> root_int::convert_type(const std::string& t)
 }
 root* root_int::new_this()
 {
-	member->insert("__PLUS__", new variable(new plus(this)));
-	member->insert("__MINUS__", new variable(new minus(this)));
-	member->insert("equals", new variable(new equals(this)));
-	member->insert("less", new variable(new less(this)));
-	member->insert("more", new variable(new more(this)));
-	member->insert("__MULTIPLY__", new variable(new multiply(this)));
-	member->insert("__DIVISION__", new variable(new division(this)));
+	member->insert("+", new variable(new plus(this)));
+	member->insert("-", new variable(new minus(this)));
+	member->insert("==", new variable(new equals(this)));
+	member->insert(">=", new variable(new more_equals(this)));
+	member->insert("<=", new variable(new less_equals(this)));
+	member->insert("<", new variable(new less(this)));
+	member->insert(">", new variable(new more(this)));
+	member->insert("*", new variable(new multiply(this)));
+	member->insert("/", new variable(new division(this)));
 
 	return this;
 }
@@ -77,4 +79,16 @@ FUNCTION_DEFINITION(root_int::equals)
 	if (args.size() != 1)
 		ERR_ARG_LEN(1);
 	return new variable(new root_bool(GET_TYPE("int", root_int, parent)->d == GET_TYPE("int", root_int, args[0]->get())->d));
+}
+FUNCTION_DEFINITION(root_int::more_equals)
+{
+	if (args.size() != 1)
+		ERR_ARG_LEN(1);
+	return new variable(new root_bool(GET_TYPE("int", root_int, parent)->d >= GET_TYPE("int", root_int, args[0]->get())->d));
+}
+FUNCTION_DEFINITION(root_int::less_equals)
+{
+	if (args.size() != 1)
+		ERR_ARG_LEN(1);
+	return new variable(new root_bool(GET_TYPE("int", root_int, parent)->d <= GET_TYPE("int", root_int, args[0]->get())->d));
 }

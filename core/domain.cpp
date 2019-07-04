@@ -14,6 +14,9 @@ domain::~domain()
 	std::for_each(_data.begin(), _data.end(), [&](const std::pair<std::string, variable*> & d) {
 		delete d.second;
 		});
+	std::for_each(childrens.begin(), childrens.end(), [&](domain*d) {
+		delete d;
+		});
 	DEB(PRINT_POINTER(this));
 }
 void domain::insert(const std::string& key, variable* value)

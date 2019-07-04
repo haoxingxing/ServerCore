@@ -72,7 +72,8 @@ int main(int argc, char** argv)
 	}
 #ifdef UsingMemoryLeakCheck
 	MemoryLeak_Probe::MemoryLeakCheck();
-	std::cout << endl << ast::tree::counter << endl;
+	if (ast::tree::counter!=0)
+		WARN("tree memory leaked:"+std::to_string(ast::tree::counter));
 #endif
 	return 0;
 }

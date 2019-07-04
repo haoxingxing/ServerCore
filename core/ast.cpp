@@ -39,10 +39,51 @@ bool ast::find_end_key(const std::string& s)
 }
 ast::tree* ast::find_method(std::string raw)
 {
+	if (stropr::find(raw, "&&") != std::string::npos)
+	{
+		auto x = stropr::split_to_two_part(raw, "&&");
+		return new tree(tree::_operation::AND, "", {}, find_method(x[0]), find_method(x[1]));
+	}
+	if (stropr::find(raw, "||") != std::string::npos)
+	{
+		auto x = stropr::split_to_two_part(raw, "||");
+		return new tree(tree::_operation::OR, "", {}, find_method(x[0]), find_method(x[1]));
+	}
+	if (stropr::find(raw, "==") != std::string::npos)
+	{
+		auto x = stropr::split_to_two_part(raw, "==");
+		return new tree(tree::_operation::EQUAL, "", {}, find_method(x[0]), find_method(x[1]));
+	}
+	if (stropr::find(raw, "!=") != std::string::npos)
+	{
+		auto x = stropr::split_to_two_part(raw, "!=");
+		return new tree(tree::_operation::NOT_EQUAL, "", {}, find_method(x[0]), find_method(x[1]));
+	}
+	if (stropr::find(raw, ">=") != std::string::npos)
+	{
+		auto x = stropr::split_to_two_part(raw, ">=");
+		return new tree(tree::_operation::MORE_EQUAL, "", {}, find_method(x[0]), find_method(x[1]));
+	}
+	if (stropr::find(raw, "<=") != std::string::npos)
+	{
+		auto x = stropr::split_to_two_part(raw, "<=");
+		return new tree(tree::_operation::LESS_EQUAL, "", {}, find_method(x[0]), find_method(x[1]));
+	}
+
 	if (stropr::find(raw, '=') != std::string::npos)
 	{
 		auto x = stropr::split_to_two_part(raw, '=');
-		return new tree(tree::_operation::EQUAL, "", {}, find_method(x[0]), find_method(x[1]));
+		return new tree(tree::_operation::MAKE, "", {}, find_method(x[0]), find_method(x[1]));
+	}
+	if (stropr::find(raw, '>') != std::string::npos)
+	{
+		auto x = stropr::split_to_two_part(raw, '>');
+		return new tree(tree::_operation::MORE, "", {}, find_method(x[0]), find_method(x[1]));
+	}
+	if (stropr::find(raw, '<') != std::string::npos)
+	{
+		auto x = stropr::split_to_two_part(raw, '<');
+		return new tree(tree::_operation::LESS, "", {}, find_method(x[0]), find_method(x[1]));
 	}
 	if (stropr::find(raw, '*') != std::string::npos)
 	{
