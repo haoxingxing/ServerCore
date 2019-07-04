@@ -156,12 +156,12 @@ size_t stropr::find_last(const std::string& raw, char find)
 	{
 		if (raw[i] == '"')
 		{
-			i = raw.substr(0, i - 1).find_last_of('"') - 1;
+			i = raw.substr(0, i).find_last_of('"') - 1;
 		}
-		//else  if (raw[i] == ')')
-		//{
-		//	i = raw.substr(0, i - 1).find_last_of('(') - 1;
-		//}
+		else  if (raw[i] == ')')
+		{
+			i = find_last(raw.substr(0, i), '(') - 1;
+		}
 		else
 		{
 			if (find == raw[i])
@@ -182,7 +182,7 @@ std::vector<std::string> stropr::split_to_two_part(const std::string& source, ch
 	return buf;
 }
 
-std::string stropr::ReplaceAll(std::string str, const std::string & from, const std::string & to)
+std::string stropr::ReplaceAll(std::string str, const std::string& from, const std::string& to)
 {
 	size_t start_pos = 0;
 	while ((start_pos = str.find(from, start_pos)) != std::string::npos)
