@@ -1,6 +1,6 @@
 # EXAM.IO
-echo("key someting\n");
+cout("key someting\n");
 while(true);
-input(tmp);
-echo(tmp,"\n");
+cin(tmp);
+cout(tmp,"\n");
 end;

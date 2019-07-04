@@ -1,6 +1,6 @@
 # EXAM.WHILE
-var(count,0);
+count=0;
 while(true);
-var(count,count.plus(1));
-echo("\rwhile->",count," times");
+count=count.plus(1);
+cout("\rwhile->",count," times");
 end;

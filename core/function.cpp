@@ -128,23 +128,16 @@ variable* _function::process(ast::tree* T, domain* def)
 	}
 	case ast::tree::WHILE:
 	{
-		variable* condition = nullptr;
+		variable* condition;
 		for (condition = process(T->right, def); condition != nullptr
 			? GET_TYPE("bool", root_bool, condition->get())->access()
 			: false; condition = process(T->right, def))
 		{
 			delete condition;
-			for (const auto& arg : T->args)
-			{
-				if (arg->key != "return")
-				{
-					delete process(arg, def);
-				}
-				else
-				{
-					return process(arg, def);
-				};
-			}
+			auto ret = process(T->args[0], def);
+			if (ret != nullptr)
+				return ret;
+			delete ret;
 		}
 		delete condition;
 		return nullptr;

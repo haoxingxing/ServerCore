@@ -14,35 +14,42 @@ void dump(ast::tree* v);
 void Run(const std::string& _file)
 {
 	srand(time(nullptr));
-	auto time = clock();
+	auto start_time = clock();
 	file f(_file);
 	auto x = ast::split(f.read());
 	auto n = ast::analysis(x);
+	auto end_time = clock();
 	dump(n);
-	cout << "\nFile " << _file << " Parsed in " << 1000.0 * (double(clock()) - time) / CLOCKS_PER_SEC << " ms" << endl;
-	time = clock(); {
+	cout << "\nFile " << _file << " Parsed in " << 1000.0 * (double(end_time) - start_time) / CLOCKS_PER_SEC << " ms" << endl;
+	start_time = clock();
+	{
 		_function t;
 		t.new_this();
 		delete t.process(n, t.member);
 	}
-	cout << "\nFile " << _file << " Finished in " << 1.000 * (double(clock()) - time) / CLOCKS_PER_SEC << " s" << endl;
+	cout << "\nFile " << _file << " Finished in " << 1.000 * (double(clock()) - start_time) / CLOCKS_PER_SEC << " s" << endl;
 }
 
 void dump(ast::tree* v)
 {
-	if (v == nullptr)
+	if (v == nullptr) {
+		cout << "null";
 		return;
+	}
 	cout << "{";
 	cout << "\"left\":";
 	dump(v->left);
-	cout << ",\"" << v->key << '"' << ":[";
-	for (auto n : v->args)
-		dump(n);
+	cout << R"(,"key":")" << stropr::ReplaceAll(v->key, "\"", "\\\"") << R"(","body")" << ":[";
+	for (size_t i = 0; i < v->args.size(); i++) {
+		dump(v->args[i]);
+		if (i != v->args.size() - 1)
+			cout << ",";
+	}
 	cout << "],";
 	cout << "\"operation\":" << v->operation << " ,";
 	cout << "\"right\":";
 	dump(v->right);
-	cout << "},";
+	cout << "}";
 }
 
 int main(int argc, char** argv)

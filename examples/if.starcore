@@ -1,12 +1,12 @@
 # EXAM.IF
-echo("Input-1:");
-input(value-1);
-echo("Input-2:");
-input(value-2);
-if(value-1.equals(value-2));
-echo("THE SAME");
+cout("Input-1:");
+cin(value1);
+cout("Input-2:");
+cin(value2);
+if(value1.equals(value2));
+cout("THE SAME");
 else;
-echo("NOT SAME");
+cout("NOT SAME");
 end;
 
 

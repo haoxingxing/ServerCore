@@ -1,2 +1,2 @@
 # EXAM.HELLOWORLD
-echo("Hello World!");
+cout("Hello World!");

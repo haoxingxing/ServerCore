@@ -17,7 +17,7 @@ std::vector<std::string> ast::split(const std::string& raw)
 			}
 			else
 			{
-				m = stropr::split_string(m, "#")[0]; 
+				m = stropr::split_string(m, "#")[0];
 			}
 		}
 		m = stropr::clean_str(m);
@@ -117,12 +117,12 @@ ast::tree* ast::analysis(const std::vector<std::string>& _raw)
 				if (find_end_key(key))
 				{
 					if (end_counter == start_counter) {
-						i = find + 1;
+						i = find;
 						break;
 					}
 					end_counter++;
 				}
-				if (key == "else")
+				if (key == "else" && end_counter == start_counter)
 					hd = &else_body;
 				else
 					hd->push_back(raw[find]);
@@ -146,7 +146,7 @@ ast::tree* ast::analysis(const std::vector<std::string>& _raw)
 				if (find_end_key(key))
 				{
 					if (end_counter == start_counter) {
-						i = find + 1;
+						i = find;
 						break;
 					}
 					end_counter++;
