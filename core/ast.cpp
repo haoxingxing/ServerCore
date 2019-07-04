@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <utility>
 #include "tools.h"
+int ast::tree::counter = 0;
 std::vector<std::string> ast::split(const std::string& raw)
 {
 	std::vector<std::string> r;
@@ -46,12 +47,12 @@ ast::tree* ast::find_method(std::string raw)
 	if (stropr::find(raw, '*') != std::string::npos)
 	{
 		auto x = stropr::split_to_two_part(raw, '*');
-		return new tree(tree::_operation::CHEN, "", {}, find_method(x[0]), find_method(x[1]));
+		return new tree(tree::_operation::MULTIPLY, "", {}, find_method(x[0]), find_method(x[1]));
 	}
 	if (stropr::find(raw, '/') != std::string::npos)
 	{
 		auto x = stropr::split_to_two_part(raw, '/');
-		return new tree(tree::_operation::CHU, "", {}, find_method(x[0]), find_method(x[1]));
+		return new tree(tree::_operation::DIVISION, "", {}, find_method(x[0]), find_method(x[1]));
 	}
 	if (stropr::find(raw, '+') != std::string::npos)
 	{
@@ -93,6 +94,7 @@ ast::tree* ast::find_method(std::string raw)
 ast::tree::tree(_operation __operation, std::string _key, std::vector<tree*> _args, tree* _left, tree* _right) :
 	left(_left), right(_right), args(std::move(_args)), key(std::move(_key)), operation(__operation)
 {
+	counter++;
 }
 ast::tree* ast::analysis(const std::vector<std::string>& _raw)
 {

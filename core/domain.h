@@ -29,7 +29,7 @@ public:
 	virtual bool contains(const std::string& key) {
 		return _data.find(key) != _data.end();
 	};
-
+	//long long const_count = 0;
 protected:
 	std::map<std::string, variable*> _data{};
 };

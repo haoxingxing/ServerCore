@@ -8,10 +8,16 @@ class ast
 public:
 	struct tree
 	{
+		static int counter;
 		~tree()
 		{
 			delete right;
 			delete left;
+			for (const auto& a : args)
+			{
+				delete a;
+			}
+			counter--;
 		}
 		tree* left;
 		tree* right;
@@ -26,11 +32,11 @@ public:
 			EQUAL /* = */,
 			PLUS /* + */,
 			MINUS /* - */,
-			CHEN /* * */,
-			CHU /* / */,
+			MULTIPLY /* * */,
+			DIVISION /* / */,
 			FN /* function */,
 			IF /* if */,
-			WHILE /* while */,			
+			WHILE /* while */,
 		}operation;
 
 		tree(_operation __operation, std::string _key, std::vector<tree*> _args = {}, tree* _left = nullptr, tree* _right = nullptr);;

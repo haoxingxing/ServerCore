@@ -26,11 +26,11 @@ public:
 	virtual std::string what() { return type; };
 	virtual variable* access_member(const std::string& name);
 	virtual variable* execute(const std::vector<variable*>&) { return nullptr; };
-	virtual variable* _PLUS(variable*) { return nullptr; };
-	virtual variable* _MINUS(variable*) { return nullptr; };
-	virtual variable* _CHEN(variable*) { return nullptr; };
-	virtual variable* _CHU(variable*) { return nullptr; };
-	virtual variable* _NOT() { return nullptr; };
+	//virtual variable* _PLUS(variable*) { return nullptr; };
+	//virtual variable* _MINUS(variable*) { return nullptr; };
+	//virtual variable* _MULTIPLY(variable*) { return nullptr; };
+	//virtual variable* _DIVISION(variable*) { return nullptr; };
+	//virtual variable* _NOT() { return nullptr; };
 	template<typename T>
 	T* to() { return dynamic_cast<T*>(this); };
 	domain* member = nullptr;

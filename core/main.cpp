@@ -27,6 +27,7 @@ void Run(const std::string& _file)
 		t.new_this();
 		delete t.process(n, t.member);
 	}
+	delete n;
 	cout << "\nFile " << _file << " Finished in " << 1.000 * (double(clock()) - start_time) / CLOCKS_PER_SEC << " s" << endl;
 }
 
@@ -54,31 +55,6 @@ void dump(ast::tree* v)
 
 int main(int argc, char** argv)
 {
-	//	std::string n = "cout(\"Hello World!\".append(\"StarCore\")).plus(1)";
-	//	cout << n << endl;
-	//	auto tmp = ast::find_method(n);
-	//	cout << n << endl;
-	//	dump(tmp);
-	//	n = "builtin.cout(\"Hello World!\",\"2333\").plus(233).haha()";
-	//	cout << endl << stropr::dig(n) << endl << n << endl;
-	//while (true)
-	//{
-	//	std::vector<std::string> n;
-	//	n.emplace_back();
-	//	for (size_t i = 0;; i++) {
-	//		getline(cin, n[i]);
-	//		if (n[i] == "END") {
-	//			n.erase(n.end() - 1);
-	//			break;
-	//		}
-	//		n.emplace_back();
-	//	}
-	//	auto handle = ast::analysis(n);
-	//	dump(handle);
-	//	delete handle;
-	//	cout << endl;
-	//}
-	//auto x = stropr::SeparateStringPrioritized("\"23 = 3\"t=\"23=3\"");
 #ifdef _WIN32
 	system("chcp 65001");
 #endif
@@ -97,6 +73,7 @@ int main(int argc, char** argv)
 	}
 #ifdef UsingMemoryLeakCheck
 	MemoryLeak_Probe::MemoryLeakCheck();
+	std::cout << endl << ast::tree::counter << endl;
 #endif
 	return 0;
 }

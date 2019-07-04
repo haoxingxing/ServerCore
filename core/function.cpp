@@ -35,20 +35,36 @@ variable* _function::process(ast::tree* T, domain* def)
 	{
 	case ast::tree::EMPTY:
 	{
-		if (T->key.empty())
-			return new variable((new root_void())->new_this());
-		if (std::find_if(T->key.begin(), T->key.end(), [](char c) { return !std::isdigit(c); }) == T->key.end())
-			return new variable((new root_int(std::stoi(T->key)))->new_this());
+		if (def->contains(T->key))
+				return def->get(T->key)->copy();
+		if (T->key.empty()){
+			auto* hd = new variable((new root_void())->new_this());
+			def->insert(T->key,hd);
+			return hd->copy();
+		}
+		if (std::find_if(T->key.begin(), T->key.end(), [](char c) { return !std::isdigit(c); }) == T->key.end()){
+			auto* hd = new variable((new root_int(std::stoi(T->key)))->new_this());
+			def->insert(T->key,hd);
+			return hd->copy();
+		}
 		if (T->key.find('"') != std::string::npos) {
 			auto x = T->key.substr(1).substr(0, T->key.size() - 2);
 			x = stropr::ReplaceAll(x, "\\n", "\n");
 			x = stropr::ReplaceAll(x, "\\r", "\r");
-			return new variable((new root_string(x))->new_this());
+			auto* hd =  new variable((new root_string(x))->new_this());
+			def->insert(T->key,hd);
+			return hd->copy();
 		}
-		if (T->key == "true" || T->key == "false")
-			return  new variable((new root_bool(T->key == "true"))->new_this());
-		if (T->key.find('\'') != std::string::npos)
-			return new variable((new root_char(T->key.length() < 3 ? char(0) : (T->key.substr(1).substr(0, T->key.size() - 2).at(0))))->new_this());
+		if (T->key == "true" || T->key == "false"){
+			auto* hd = new variable((new root_bool(T->key == "true"))->new_this());
+			def->insert(T->key,hd);
+			return hd->copy();
+		}
+		if (T->key.find('\'') != std::string::npos){
+			auto* hd = new variable((new root_char(T->key.length() < 3 ? char(0) : (T->key.substr(1).substr(0, T->key.size() - 2).at(0))))->new_this());
+			def->insert(T->key,hd);
+			return hd->copy();
+		}
 		return def->get(T->key)->copy();
 	}
 	case ast::tree::DOT:
@@ -87,23 +103,47 @@ variable* _function::process(ast::tree* T, domain* def)
 	}
 	case ast::tree::NOT:
 	{
-		return process(T->right, def)->get()->_NOT();
+		ast::tree* tmp = new ast::tree(ast::tree::EXEC, "", {}, new ast::tree(ast::tree::DOT, "", {}, T->right, new ast::tree(ast::tree::EMPTY, "__NOT__", {})));;
+		auto ret = process(tmp, def);
+		tmp->left->left = nullptr;
+		delete tmp;
+		return ret;
 	}
-	case ast::tree::CHEN:
+	case ast::tree::MULTIPLY:
 	{
-		return process(T->right, def)->get()->_CHEN(process(T->left, def));
+		ast::tree* tmp = new ast::tree(ast::tree::EXEC, "", { T->right }, new ast::tree(ast::tree::DOT, "", {}, T->left, new ast::tree(ast::tree::EMPTY, "__MULTIPLY__", {})));;
+		auto ret = process(tmp, def);
+		tmp->left->left = nullptr;
+		tmp->args.clear();
+		delete tmp;
+		return ret;
 	}
-	case ast::tree::CHU:
+	case ast::tree::DIVISION:
 	{
-		return process(T->right, def)->get()->_CHU(process(T->left, def));
+		ast::tree* tmp = new ast::tree(ast::tree::EXEC, "", { T->right }, new ast::tree(ast::tree::DOT, "", {}, T->left, new ast::tree(ast::tree::EMPTY, "__DIVISION__", {})));;
+		auto ret = process(tmp, def);
+		tmp->left->left = nullptr;
+		tmp->args.clear();
+		delete tmp;
+		return ret;
 	}
 	case ast::tree::PLUS:
 	{
-		return process(T->right, def)->get()->_PLUS(process(T->left, def));
+		ast::tree* tmp = new ast::tree(ast::tree::EXEC, "", { T->right }, new ast::tree(ast::tree::DOT, "", {}, T->left, new ast::tree(ast::tree::EMPTY, "__PLUS__", {})));;
+		auto ret = process(tmp, def);
+		tmp->left->left = nullptr;
+		tmp->args.clear();
+		delete tmp;
+		return ret;
 	}
 	case ast::tree::MINUS:
 	{
-		return process(T->right, def)->get()->_MINUS(process(T->left, def));
+		ast::tree* tmp = new ast::tree(ast::tree::EXEC, "", { T->right }, new ast::tree(ast::tree::DOT, "", {}, T->left, new ast::tree(ast::tree::EMPTY, "__MINUS__", {})));;
+		auto ret = process(tmp, def);
+		tmp->left->left = nullptr;
+		tmp->args.clear();
+		delete tmp;
+		return ret;
 	}
 	case ast::tree::EQUAL:
 	{
@@ -123,7 +163,7 @@ variable* _function::process(ast::tree* T, domain* def)
 				delete tmp_condition;
 				return process(T->args[0], def);
 			}
-		delete tmp_condition;
+			delete tmp_condition;
 		return process(T->args[1], def);
 	}
 	case ast::tree::WHILE:
