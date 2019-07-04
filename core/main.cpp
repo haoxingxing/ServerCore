@@ -13,7 +13,6 @@ using namespace std;
 void dump(ast::tree* v);
 void Run(const std::string& _file)
 {
-	srand(unsigned int(time(nullptr)));
 	auto start_time = clock();
 	file f(_file);
 	auto x = ast::split(f.read());
