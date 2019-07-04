@@ -69,7 +69,26 @@ ast::tree* ast::find_method(std::string raw)
 		auto x = stropr::split_to_two_part(raw, "<=");
 		return new tree(tree::_operation::LESS_EQUAL, "", {}, find_method(x[0]), find_method(x[1]));
 	}
-
+	if (stropr::find(raw, "+=") != std::string::npos)
+	{
+		auto x = stropr::split_to_two_part(raw, "+=");
+		return new tree(tree::_operation::PLUS_EQUAL, "", {}, find_method(x[0]), find_method(x[1]));
+	}
+	if (stropr::find(raw, "-=") != std::string::npos)
+	{
+		auto x = stropr::split_to_two_part(raw, "-=");
+		return new tree(tree::_operation::MINUS_EQUAL, "", {}, find_method(x[0]), find_method(x[1]));
+	}
+	if (stropr::find(raw, "*=") != std::string::npos)
+	{
+		auto x = stropr::split_to_two_part(raw, "*=");
+		return new tree(tree::_operation::MULTIPLY_EQUAL, "", {}, find_method(x[0]), find_method(x[1]));
+	}
+	if (stropr::find(raw, "/=") != std::string::npos)
+	{
+		auto x = stropr::split_to_two_part(raw, "/=");
+		return new tree(tree::_operation::DIVISION_EQUAL, "", {}, find_method(x[0]), find_method(x[1]));
+	}
 	if (stropr::find(raw, '=') != std::string::npos)
 	{
 		auto x = stropr::split_to_two_part(raw, '=');

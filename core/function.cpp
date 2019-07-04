@@ -90,14 +90,14 @@ variable* _function::process(ast::tree* T, domain* def)
 		return nullptr;
 	}
 	case ast::tree::EXEC:
-	{		
+	{
 		variable* _this = process(T->left, def);
 		//def->insert("_returned_this",_this);
 		std::vector<variable*> c;
 		for (const auto& arg : T->args)
 			c.push_back(process(arg, def));
 		auto _ret = _this->get()->execute(c);
-		for (const auto& m : c){
+		for (const auto& m : c) {
 			delete m;
 		}
 		delete _this;
@@ -175,6 +175,42 @@ variable* _function::process(ast::tree* T, domain* def)
 		return ret;
 	}
 	case ast::tree::MORE_EQUAL:
+	{
+		ast::tree* tmp = new ast::tree(ast::tree::EXEC, "", { T->right }, new ast::tree(ast::tree::DOT, "", {}, T->left, new ast::tree(ast::tree::EMPTY, ">=", {})));;
+		auto ret = process(tmp, def);
+		tmp->left->left = nullptr;
+		tmp->args.clear();
+		delete tmp;
+		return ret;
+	}
+	case ast::tree::PLUS_EQUAL:
+	{
+		ast::tree* tmp = new ast::tree(ast::tree::EXEC, "", { T->right }, new ast::tree(ast::tree::DOT, "", {}, T->left, new ast::tree(ast::tree::EMPTY, "+=", {})));;
+		auto ret = process(tmp, def);
+		tmp->left->left = nullptr;
+		tmp->args.clear();
+		delete tmp;
+		return ret;
+	}
+	case ast::tree::MINUS_EQUAL:
+	{
+		ast::tree* tmp = new ast::tree(ast::tree::EXEC, "", { T->right }, new ast::tree(ast::tree::DOT, "", {}, T->left, new ast::tree(ast::tree::EMPTY, "-=", {})));;
+		auto ret = process(tmp, def);
+		tmp->left->left = nullptr;
+		tmp->args.clear();
+		delete tmp;
+		return ret;
+	}
+	case ast::tree::DIVISION_EQUAL:
+	{
+		ast::tree* tmp = new ast::tree(ast::tree::EXEC, "", { T->right }, new ast::tree(ast::tree::DOT, "", {}, T->left, new ast::tree(ast::tree::EMPTY, "/=", {})));;
+		auto ret = process(tmp, def);
+		tmp->left->left = nullptr;
+		tmp->args.clear();
+		delete tmp;
+		return ret;
+	}
+	case ast::tree::MULTIPLY_EQUAL:
 	{
 		ast::tree* tmp = new ast::tree(ast::tree::EXEC, "", { T->right }, new ast::tree(ast::tree::DOT, "", {}, T->left, new ast::tree(ast::tree::EMPTY, ">=", {})));;
 		auto ret = process(tmp, def);

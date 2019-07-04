@@ -45,6 +45,10 @@ public:
 			NOT_EQUAL /* != */,
 			AND /* && */,
 			OR /* || */,
+			PLUS_EQUAL /* += */,
+			MINUS_EQUAL /* -= */,
+			MULTIPLY_EQUAL /* *= */,
+			DIVISION_EQUAL /* /= */
 		}operation;
 
 		tree(_operation __operation, std::string _key, std::vector<tree*> _args = {}, tree* _left = nullptr, tree* _right = nullptr);;

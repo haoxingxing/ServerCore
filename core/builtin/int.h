@@ -20,6 +20,11 @@ public:
 	FUNCTION_DECLARATION(multiply);
 	FUNCTION_DECLARATION(division);
 	FUNCTION_DECLARATION(minus);
+	FUNCTION_DECLARATION(plus_equal);
+	FUNCTION_DECLARATION(minus_equal);
+	FUNCTION_DECLARATION(mul_equal);
+	FUNCTION_DECLARATION(div_equal);
+
 private:
 	int d;
 };
