@@ -63,7 +63,7 @@ variable* _function::process(ast::tree* T, domain* def)
 		if (T->key.find('\'') != std::string::npos) {
 			auto* hd = new variable((new root_char(T->key.length() < 3 ? char(0) : (T->key.substr(1).substr(0, T->key.size() - 2).at(0))))->new_this());
 			def->insert(T->key, hd);
-			return hd->copy();
+			return hd;
 		}
 		return def->get(T->key)->copy();
 	}
@@ -96,6 +96,7 @@ variable* _function::process(ast::tree* T, domain* def)
 		std::vector<variable*> c;
 		for (const auto& arg : T->args)
 			c.push_back(process(arg, def));
+
 		auto _ret = _this->get()->execute(c);
 		for (const auto& m : c) {
 			delete m;

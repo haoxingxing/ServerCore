@@ -11,7 +11,7 @@
 #endif
 using namespace std;
 void dump(ast::tree* v);
-void Run(const std::string& _file)
+void RunFile(const std::string& _file)
 {
 	auto start_time = clock();
 	file f(_file);
@@ -28,6 +28,48 @@ void Run(const std::string& _file)
 	}
 	delete n;
 	cout << "\nFile " << _file << " Finished in " << 1.000 * (double(clock()) - start_time) / CLOCKS_PER_SEC << " s" << endl;
+}
+
+void cmdRun() {
+	cout << "Cmdline Input {" << endl;
+	string cmds;
+	int line = 1,tabs = 1;
+	while (true) {
+		cout <<  line++;
+		for (int i = 0; i < tabs; i++)
+			cout << "	";
+		string tmp;
+		getline(cin, tmp);
+		if (tmp.find('}') == cmds.npos) {
+			cmds.append(tmp);
+			if (tmp=="end" || tmp == "end;")
+				tabs--;
+			if (tmp.find("if(") != tmp.npos)
+				tabs++;
+			if (tmp.find("while(") != tmp.npos)
+				tabs++;
+
+		}
+		else
+		{
+			cmds.append(tmp.substr(0, tmp.find('}'))+";");
+			break;
+		}
+	}
+	auto x = ast::split(cmds);
+	auto n = ast::analysis(x);
+	dump(n);
+	cout << endl;
+	auto start_time = clock();
+	{
+		_function t;
+		t.new_this();
+		delete t.process(n, t.member);
+	}
+	delete n;
+	cout << "\n Finished in " << 1.000 * (double(clock()) - start_time) / CLOCKS_PER_SEC << " s" << endl;
+
+	
 }
 
 void dump(ast::tree* v)
@@ -64,11 +106,12 @@ int main(int argc, char** argv)
 	{
 #ifndef DEBUG
 		log::print(log::Info, "StarCore " REPO_VERSION);
+		cmdRun();
 #endif
 	}
 	else if (argc > 1)
 	{
-		Run(string(argv[1]));
+		RunFile(string(argv[1]));
 	}
 #ifdef UsingMemoryLeakCheck
 	MemoryLeak_Probe::MemoryLeakCheck();
