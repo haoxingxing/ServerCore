@@ -9,10 +9,6 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: install cmake
-      run: |
-        apt update
-        apt install cmake
     - name: cmake
       run: cmake .
     - name: make
